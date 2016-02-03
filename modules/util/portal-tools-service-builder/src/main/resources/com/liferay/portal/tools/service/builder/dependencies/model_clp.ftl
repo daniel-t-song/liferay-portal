@@ -38,8 +38,8 @@ import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.exportimport.lar.StagedModelType;
-import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil;
 
 import java.io.Serializable;
 
@@ -255,22 +255,6 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 			@Override
 			public ${column.type} is${column.methodName}() {
 				return _${column.name};
-			}
-		</#if>
-
-		<#if entity.hasColumn("createDate", "Date") && entity.hasColumn("modifiedDate", "Date") && (column.name == "modifiedDate")>
-			@Override
-			public boolean hasSetModifiedDate() {
-				try {
-					Class<?> clazz = _${entity.varName}RemoteModel.getClass();
-
-					Method method = clazz.getMethod("hasSetModifiedDate");
-
-					return (boolean)method.invoke(null);
-				}
-				catch (Exception e) {
-					throw new UnsupportedOperationException(e);
-				}
 			}
 		</#if>
 
@@ -1045,7 +1029,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 		StringBundler sb = new StringBundler(${entity.regularColList?size * 3 + 4});
 
 		sb.append("<model><model-name>");
-		sb.append("${packagePath}.model.${entity.name}");
+		sb.append("${apiPackagePath}.model.${entity.name}");
 		sb.append("</model-name>");
 
 		<#list entity.regularColList as column>
