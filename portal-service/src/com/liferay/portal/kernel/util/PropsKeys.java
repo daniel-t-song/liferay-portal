@@ -103,8 +103,6 @@ public interface PropsKeys {
 
 	public static final String AUDIT_MESSAGE_COM_LIFERAY_PORTAL_MODEL_LAYOUT_VIEW = "audit.message.com.liferay.portal.kernel.model.Layout.VIEW";
 
-	public static final String AUDIT_MESSAGE_SCHEDULER_JOB = "audit.message.scheduler.job";
-
 	public static final String AUTH_FAILURE = "auth.failure";
 
 	public static final String AUTH_FORWARD_BY_LAST_PATH = "auth.forward.by.last.path";
@@ -790,8 +788,6 @@ public interface PropsKeys {
 	public static final String FIELD_ENABLE_COM_LIFERAY_PORTAL_MODEL_ORGANIZATION_STATUS = "field.enable.com.liferay.portal.kernel.model.Organization.status";
 
 	public static final String FINALIZE_MANAGER_THREAD_ENABLED = "finalize.manager.thread.enabled";
-
-	public static final String FLAGS_GUEST_USERS_ENABLED = "flags.guest.users.enabled";
 
 	public static final String FULL_PAGE_DISPLAYABLE = "full.page.displayable";
 

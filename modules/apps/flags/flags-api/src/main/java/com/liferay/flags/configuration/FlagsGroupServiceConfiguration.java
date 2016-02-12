@@ -16,7 +16,7 @@ package com.liferay.flags.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
-import com.liferay.portal.metatype.annotations.ExtendedObjectClassDefinition;
+import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 
 /**
  * @author Peter Fellwock
@@ -58,7 +58,7 @@ public interface FlagsGroupServiceConfiguration {
 	)
 	public String emailSubject();
 
-	@Meta.AD(deflt = "true", required = false)
+	@Meta.AD(deflt = "flase", required = false)
 	public boolean guestUsersEnabled();
 
 	@Meta.AD(

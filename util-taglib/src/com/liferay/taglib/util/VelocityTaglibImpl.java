@@ -43,7 +43,6 @@ import com.liferay.taglib.ui.AssetLinksTag;
 import com.liferay.taglib.ui.AssetTagsSummaryTag;
 import com.liferay.taglib.ui.BreadcrumbTag;
 import com.liferay.taglib.ui.DiscussionTag;
-import com.liferay.taglib.ui.FlagsTag;
 import com.liferay.taglib.ui.IconTag;
 import com.liferay.taglib.ui.JournalArticleTag;
 import com.liferay.taglib.ui.JournalContentSearchTag;
@@ -324,26 +323,6 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 	}
 
 	@Override
-	public void flags(
-			String className, long classPK, String contentTitle, boolean label,
-			String message, long reportedUserId)
-		throws Exception {
-
-		FlagsTag flagsTag = new FlagsTag();
-
-		setUp(flagsTag);
-
-		flagsTag.setClassName(className);
-		flagsTag.setClassPK(classPK);
-		flagsTag.setContentTitle(contentTitle);
-		flagsTag.setLabel(label);
-		flagsTag.setMessage(message);
-		flagsTag.setReportedUserId(reportedUserId);
-
-		flagsTag.runTag();
-	}
-
-	@Override
 	public AssetCategoriesSummaryTag<?> getAssetCategoriesSummaryTag()
 		throws Exception {
 
@@ -390,15 +369,6 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 		setUp(discussionTag);
 
 		return discussionTag;
-	}
-
-	@Override
-	public FlagsTag getFlagsTag() throws Exception {
-		FlagsTag flagsTag = new FlagsTag();
-
-		setUp(flagsTag);
-
-		return flagsTag;
 	}
 
 	@Override

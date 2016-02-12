@@ -126,7 +126,8 @@
 	</command>
 
 	<command name="addPageVariationPG">
-		<execute function="AssertClick" locator1="Staging#STAGING_MENU_MANAGE_PAGE_VARIATION" value1="Page Variations" />
+		<execute function="Click" locator1="Icon#HISTORY_VERTICAL_ELLIPSIS" />
+		<execute function="Click" locator1="Staging#STAGING_MENU_MANAGE_PAGE_VARIATION" />
 
 		<execute function="SelectFrame" locator1="IFrame#PAGE_VARIATION_IFRAME" />
 		<execute function="AssertClick" locator1="Button#ADD_PAGE_VARIATION" value1="Add Page Variation" />
@@ -153,6 +154,7 @@
 	</command>
 
 	<command name="addSitePagesVariationPG">
+		<execute function="Click" locator1="Icon#HISTORY_VERTICAL_ELLIPSIS" />
 		<execute function="Click" locator1="Staging#MANAGE_VARIATIONS" />
 
 		<var name="key_sitePagesVariationName" value="${sitePagesVariationName}" />
@@ -436,6 +438,7 @@
 	</command>
 
 	<command name="editSitePageVariationPG">
+		<execute function="Click" locator1="Icon#HISTORY_VERTICAL_ELLIPSIS" />
 		<execute function="Click" locator1="Staging#MANAGE_VARIATIONS" />
 
 		<execute function="SelectFrame" locator1="IFrame#SITE_VARIATION_IFRAME" />
@@ -450,6 +453,33 @@
 		<execute function="SelectFrame" locator1="IFrame#SITE_VARIATION_IFRAME" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Site page variation was updated." />
 		<execute function="SelectFrameTop" value1="relative=top" />
+	</command>
+
+	<command name="editStagingConfiguration">
+		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
+
+		<execute function="AssertClick" locator1="MenuItem#STAGING_CONFIGURATION" value1="Staging Configuration" />
+
+		<if>
+			<equals arg1="${pageVersioningEnabled}" arg2="true" />
+			<then>
+				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
+				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
+			</then>
+		</if>
+
+		<if>
+			<isset var="isNotEditable" />
+			<then>
+				<var name="key_contentName" value="${isNotEditable}" />
+
+				<execute function="AssertNotEditable" locator1="SiteSettingsStaging#CONTENT_CHECKBOX" />
+			</then>
+		</if>
+
+		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
+		<execute function="Pause" locator1="5000" />
 	</command>
 
 	<command name="enablePageInSitePagesVariation">
@@ -510,7 +540,9 @@
 	</command>
 
 	<command name="mergeSitePagesVariation">
+		<execute function="Click" locator1="Icon#HISTORY_VERTICAL_ELLIPSIS" />
 		<execute function="Click" locator1="Staging#MANAGE_VARIATIONS" />
+
 		<execute function="SelectFrame" locator1="IFrame#SITE_VARIATION_IFRAME" />
 
 		<var name="key_sitePagesVariationName" value="${sitePagesVariationName}" />
