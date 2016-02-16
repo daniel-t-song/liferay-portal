@@ -668,13 +668,6 @@ public class FileSystemStore extends BaseStore {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationAdmin(
-		ConfigurationAdmin configurationAdmin) {
-
-		this.configurationAdmin = configurationAdmin;
-	}
-
 	protected void validate() {
 		try {
 			Dictionary<String, Object> fileSystemDictionary =
@@ -708,6 +701,7 @@ public class FileSystemStore extends BaseStore {
 		}
 	}
 
+	@Reference
 	protected ConfigurationAdmin configurationAdmin;
 
 	private static volatile FileSystemStoreConfiguration

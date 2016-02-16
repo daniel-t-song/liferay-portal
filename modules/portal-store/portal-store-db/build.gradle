@@ -1,3 +1,9 @@
+configurations {
+	compile {
+		transitive = false
+	}
+}
+
 dependencies {
 	provided group: "aopalliance", name: "aopalliance", version: "1.0"
 	provided group: "com.liferay.portal", name: "portal-impl", version: liferay.portalVersion
