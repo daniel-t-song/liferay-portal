@@ -92,12 +92,8 @@ public class AuditRouterProxyBeanConfigurator {
 		ProxyMessageListener proxyMessageListener) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setSingleDestinationMessageSenderFactory(
-		SingleDestinationMessageSenderFactory
-			singleDestinationMessageSenderFactory) {
-	}
-
 	private ServiceRegistration<AuditRouter> _auditRouterSesrviceRegistration;
 
+	@Reference
+	protected SingleDestinationMessageSenderFactory _singleDestinationMessageSenderFactory;
 }
