@@ -40,22 +40,21 @@ public class KaleoPortalInstanceLifecycleListener
 	}
 
 	@Reference
-	private KaleoConditionLocalService kaleoConditionLocalService;
+	private KaleoConditionLocalService _kaleoConditionLocalService;
 
 	@Reference
-	private KaleoDefinitionLocalService kaleoDefinitionLocalService;
+	private KaleoDefinitionLocalService _kaleoDefinitionLocalService;
 
 	@Reference
-	private KaleoNodeLocalService kaleoNodeLocalService;
+	private KaleoNodeLocalService _kaleoNodeLocalService;
 
 	@Reference
-	private KaleoTaskLocalService kaleoTaskLocalService;
+	private KaleoTaskLocalService _kaleoTaskLocalService;
 
 	@Reference
-	private KaleoTransitionLocalService kaleoTransitionLocalService;
+	private KaleoTransitionLocalService _kaleoTransitionLocalService;
 
 	@Reference
 	private PortalKaleoManager _portalKaleoManager;
-
 
 }
