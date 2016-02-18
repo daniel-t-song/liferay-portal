@@ -467,6 +467,12 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		}
 	}
 
+	@Reference(unbind = "-")
+	public void setSingleVMPool(SingleVMPool singleVMPool) {
+		_portalCache = (PortalCache<String, Long>)singleVMPool.getPortalCache(
+				UserImporter.class.getName(), false);
+	}
+
 	protected void addRole(
 			long companyId, LDAPGroup ldapGroup, UserGroup userGroup)
 		throws Exception {
@@ -1544,7 +1550,6 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	@Reference
 	private LockManager _lockManager;
 
-	@Reference
 	private PortalCache<String, Long> _portalCache;
 
 	@Reference
