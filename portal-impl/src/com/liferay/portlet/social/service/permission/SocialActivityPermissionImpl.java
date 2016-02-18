@@ -49,7 +49,7 @@ public class SocialActivityPermissionImpl implements SocialActivityPermission {
 		}
 
 		if (permissionChecker.hasPermission(
-				groupId, getPortletId(), getPortletId(), actionId)) {
+				groupId, getPortletId(), 0, actionId)) {
 
 			return true;
 		}

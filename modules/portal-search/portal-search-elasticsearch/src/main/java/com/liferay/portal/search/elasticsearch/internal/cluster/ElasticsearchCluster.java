@@ -61,6 +61,32 @@ public class ElasticsearchCluster {
 		_replicasClusterListener = null;
 	}
 
+	@Reference(unbind = "-")
+	protected void setClusterExecutor(ClusterExecutor clusterExecutor) {
+		_clusterExecutor = clusterExecutor;
+	}
+
+	@Reference(unbind = "-")
+	protected void setClusterMasterExecutor(
+		ClusterMasterExecutor clusterMasterExecutor) {
+
+		_clusterMasterExecutor = clusterMasterExecutor;
+	}
+
+	@Reference(unbind = "-")
+	protected void setCompanyLocalService(
+		CompanyLocalService companyLocalService) {
+
+		_companyLocalService = companyLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
 	protected class ReplicasClusterContextImpl
 		implements ReplicasClusterContext {
 
@@ -123,18 +149,10 @@ public class ElasticsearchCluster {
 
 	}
 
-	@Reference
 	private ClusterExecutor _clusterExecutor;
-
-	@Reference
 	private ClusterMasterExecutor _clusterMasterExecutor;
-
-	@Reference
 	private CompanyLocalService _companyLocalService;
-
-	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
-
 	private ReplicasClusterListener _replicasClusterListener;
 
 }

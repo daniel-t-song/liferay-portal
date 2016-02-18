@@ -8,8 +8,8 @@
 			groups: {
 				'form': {
 					base: PATH_FORM_RENDERER + '/js/',
-					combine: Liferay.AUI.getCombine(),
 					filter: LiferayAUI.getFilterConfig(),
+					combine: Liferay.AUI.getCombine(),
 					modules: {
 						'liferay-ddm-form-renderer': {
 							path: 'form.js',

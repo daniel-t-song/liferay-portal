@@ -1,3 +1,9 @@
+configurations {
+	compile {
+		transitive = false
+	}
+}
+
 dependencies {
 	testCompile project(":portal-workflow:portal-workflow-kaleo-api")
 	testCompile project(":portal-workflow:portal-workflow-kaleo-service")

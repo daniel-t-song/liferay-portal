@@ -23,11 +23,14 @@ portletURL.setParameter("displayStyle", "descriptive");
 
 DDMDataProviderSearch ddmDataProviderSearch = new DDMDataProviderSearch(renderRequest, portletURL);
 
-OrderByComparator<DDMDataProviderInstance> orderByComparator = DDMDataProviderPortletUtil.getDDMDataProviderOrderByComparator(ddmDataProviderDisplayContext.getOrderByCol(), ddmDataProviderDisplayContext.getOrderByType());
+String orderByCol = ParamUtil.getString(request, "orderByCol", "modified-date");
+String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
-ddmDataProviderSearch.setOrderByCol(ddmDataProviderDisplayContext.getOrderByCol());
+OrderByComparator<DDMDataProviderInstance> orderByComparator = DDMDataProviderPortletUtil.getDDMDataProviderOrderByComparator(orderByCol, orderByType);
+
+ddmDataProviderSearch.setOrderByCol(orderByCol);
 ddmDataProviderSearch.setOrderByComparator(orderByComparator);
-ddmDataProviderSearch.setOrderByType(ddmDataProviderDisplayContext.getOrderByType());
+ddmDataProviderSearch.setOrderByType(orderByType);
 %>
 
 <liferay-util:include page="/search_bar.jsp" servletContext="<%= application %>" />

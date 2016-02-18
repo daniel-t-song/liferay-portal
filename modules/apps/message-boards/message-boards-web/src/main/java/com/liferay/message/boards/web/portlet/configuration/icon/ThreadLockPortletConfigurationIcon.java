@@ -14,69 +14,44 @@
 
 package com.liferay.message.boards.web.portlet.configuration.icon;
 
-import com.liferay.message.boards.kernel.model.MBMessageDisplay;
 import com.liferay.message.boards.kernel.model.MBThread;
 import com.liferay.message.boards.web.constants.MBPortletKeys;
-import com.liferay.message.boards.web.portlet.action.ActionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS_ADMIN,
-		"path=/message_boards/view_message"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class ThreadLockPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		MBMessageDisplay messageDisplay = null;
+	public ThreadLockPortletConfigurationIcon(
+		PortletRequest portletRequest, MBThread thread) {
 
-		try {
-			messageDisplay = ActionUtil.getMessageDisplay(portletRequest);
-		}
-		catch (PortalException pe) {
-			return null;
-		}
+		super(portletRequest);
 
-		String key = "lock";
-
-		MBThread thread = messageDisplay.getThread();
-
-		if (thread.isLocked()) {
-			key = "unlock";
-		}
-
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), key);
+		_thread = thread;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		if (_thread.isLocked()) {
+			return "unlock";
+		}
 
+		return "lock";
+	}
+
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, MBPortletKeys.MESSAGE_BOARDS_ADMIN,
 			PortletRequest.ACTION_PHASE);
@@ -84,18 +59,7 @@ public class ThreadLockPortletConfigurationIcon
 		portletURL.setParameter(
 			ActionRequest.ACTION_NAME, "/message_boards/edit_message");
 
-		MBMessageDisplay messageDisplay = null;
-
-		try {
-			messageDisplay = ActionUtil.getMessageDisplay(portletRequest);
-		}
-		catch (PortalException pe) {
-			return null;
-		}
-
-		MBThread thread = messageDisplay.getThread();
-
-		if (thread.isLocked()) {
+		if (_thread.isLocked()) {
 			portletURL.setParameter(Constants.CMD, Constants.UNLOCK);
 		}
 		else {
@@ -105,30 +69,17 @@ public class ThreadLockPortletConfigurationIcon
 		portletURL.setParameter(
 			"redirect", PortalUtil.getCurrentURL(portletRequest));
 		portletURL.setParameter(
-			"threadId", String.valueOf(thread.getThreadId()));
+			"threadId", String.valueOf(_thread.getThreadId()));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 103;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		try {
-			MBMessageDisplay messageDisplay = ActionUtil.getMessageDisplay(
-				portletRequest);
-
-			MBThread thread = messageDisplay.getThread();
-
 			return MBCategoryPermission.contains(
 				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), thread.getCategoryId(),
+				themeDisplay.getScopeGroupId(), _thread.getCategoryId(),
 				ActionKeys.LOCK_THREAD);
 		}
 		catch (PortalException pe) {
@@ -136,5 +87,7 @@ public class ThreadLockPortletConfigurationIcon
 
 		return false;
 	}
+
+	private final MBThread _thread;
 
 }

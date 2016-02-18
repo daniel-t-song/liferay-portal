@@ -72,10 +72,12 @@ public class SolrSearchEngineConfigurator
 		return clazz.getClassLoader();
 	}
 
+	@Reference(target = "(!(search.engine.impl=*))", unbind = "-")
 	protected void setIndexSearcher(IndexSearcher indexSearcher) {
 		_indexSearcher = indexSearcher;
 	}
 
+	@Reference(target = "(!(search.engine.impl=*))", unbind = "-")
 	protected void setIndexWriter(IndexWriter indexWriter) {
 		_indexWriter = indexWriter;
 	}
@@ -105,12 +107,8 @@ public class SolrSearchEngineConfigurator
 		_searchEngines.remove(searchEngineId);
 	}
 
-	@Reference(target = "(!(search.engine.impl=*))")
 	private IndexSearcher _indexSearcher;
-
-	@Reference(target = "(!(search.engine.impl=*))")
 	private IndexWriter _indexWriter;
-
 	private final Map<String, SearchEngine> _searchEngines =
 		new ConcurrentHashMap<>();
 

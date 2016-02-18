@@ -244,9 +244,6 @@ public class DDMStructureServiceImpl extends DDMStructureServiceBaseImpl {
 		DDMStructure structure = ddmStructurePersistence.findByPrimaryKey(
 			structureId);
 
-		DDMStructurePermission.check(
-			getPermissionChecker(), structure, ActionKeys.VIEW);
-
 		DDMStructurePermission.checkAddStruturePermission(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
 			structure.getClassNameId());
@@ -262,9 +259,6 @@ public class DDMStructureServiceImpl extends DDMStructureServiceBaseImpl {
 
 		DDMStructure structure = ddmStructurePersistence.findByPrimaryKey(
 			structureId);
-
-		DDMStructurePermission.check(
-			getPermissionChecker(), structure, ActionKeys.VIEW);
 
 		DDMStructurePermission.checkAddStruturePermission(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
@@ -287,7 +281,7 @@ public class DDMStructureServiceImpl extends DDMStructureServiceBaseImpl {
 	@Override
 	public void deleteStructure(long structureId) throws PortalException {
 		DDMStructurePermission.check(
-			getPermissionChecker(), structureId, ActionKeys.DELETE);
+			getPermissionChecker(), structureId, ActionKeys.VIEW);
 
 		ddmStructureLocalService.deleteStructure(structureId);
 	}

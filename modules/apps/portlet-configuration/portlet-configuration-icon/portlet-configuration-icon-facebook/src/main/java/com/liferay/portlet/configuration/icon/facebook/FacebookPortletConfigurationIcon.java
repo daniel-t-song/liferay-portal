@@ -14,34 +14,28 @@
 
 package com.liferay.portlet.configuration.icon.facebook;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
-import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(immediate = true, service = PortletConfigurationIcon.class)
 public class FacebookPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
+	public FacebookPortletConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
+	}
+
 	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "add-to-facebook");
+	public String getMessage() {
+		return "add-to-facebook";
 	}
 
 	@Override
@@ -50,14 +44,7 @@ public class FacebookPortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public String getURL() {
 		PortletPreferences portletSetup =
 			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
 				themeDisplay.getLayout(), portletDisplay.getId());
@@ -70,22 +57,12 @@ public class FacebookPortletConfigurationIcon
 	}
 
 	@Override
-	public double getWeight() {
-		return 4.0;
-	}
-
-	@Override
 	public boolean isLabel() {
 		return true;
 	}
 
 	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public boolean isShow() {
 		PortletPreferences portletSetup =
 			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
 				themeDisplay.getLayout(), portletDisplay.getId());

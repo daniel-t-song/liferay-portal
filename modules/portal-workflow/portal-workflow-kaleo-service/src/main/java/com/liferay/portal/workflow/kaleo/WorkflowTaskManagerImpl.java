@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.NaturalOrderStringComparator;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
@@ -47,6 +48,7 @@ import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.KaleoSignaler;
 import com.liferay.portal.workflow.kaleo.runtime.TaskManager;
 import com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector;
+import com.liferay.portal.workflow.kaleo.runtime.util.ClassLoaderUtil;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
@@ -824,9 +826,17 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 		for (KaleoTaskAssignment configuredKaleoTaskAssignment :
 				configuredKaleoTaskAssignments) {
 
+			String[] assigneeScriptRequiredContexts = StringUtil.split(
+				configuredKaleoTaskAssignment.
+					getAssigneeScriptRequiredContexts());
+
+			ClassLoader[] classLoaders = ClassLoaderUtil.getClassLoaders(
+				assigneeScriptRequiredContexts);
+
 			Collection<KaleoTaskAssignment> kaleoTaskAssignments =
 				_taskAssignmentSelector.calculateTaskAssignments(
-					configuredKaleoTaskAssignment, executionContext);
+					configuredKaleoTaskAssignment, executionContext,
+					classLoaders);
 
 			calculatedKaleoTaskAssignments.addAll(kaleoTaskAssignments);
 		}

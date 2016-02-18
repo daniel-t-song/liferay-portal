@@ -1,5 +1,5 @@
 dependencies {
-	provided group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
+	compile group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
 }
 
 liferay {

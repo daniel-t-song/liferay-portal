@@ -8,8 +8,8 @@
 			groups: {
 				ddl: {
 					base: PATH_DDL_FORM_WEB + '/admin/js/',
-					combine: Liferay.AUI.getCombine(),
 					filter: LiferayAUI.getFilterConfig(),
+					combine: Liferay.AUI.getCombine(),
 					modules: {
 						'liferay-ddl-form-builder': {
 							path: 'form_builder.js',

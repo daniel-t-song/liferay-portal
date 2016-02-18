@@ -624,6 +624,13 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		return hits;
 	}
 
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
 	@Reference(service = CompositeFacetProcessor.class, unbind = "-")
 	protected void setFacetProcessor(
 		FacetProcessor<SearchRequestBuilder> facetProcessor) {
@@ -638,11 +645,21 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		_filterTranslator = filterTranslator;
 	}
 
+	@Reference(unbind = "-")
+	protected void setGroupByTranslator(GroupByTranslator groupByTranslator) {
+		_groupByTranslator = groupByTranslator;
+	}
+
 	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	protected void setQueryTranslator(
 		QueryTranslator<QueryBuilder> queryTranslator) {
 
 		_queryTranslator = queryTranslator;
+	}
+
+	@Reference(unbind = "-")
+	protected void setStatsTranslator(StatsTranslator statsTranslator) {
+		_statsTranslator = statsTranslator;
 	}
 
 	protected void updateFacetCollectors(
@@ -741,20 +758,12 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		ElasticsearchIndexSearcher.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
-
-	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
-
 	private FacetProcessor<SearchRequestBuilder> _facetProcessor;
 	private FilterTranslator<QueryBuilder> _filterTranslator;
-
-	@Reference
 	private GroupByTranslator _groupByTranslator;
-
 	private boolean _logExceptionsOnly;
 	private QueryTranslator<QueryBuilder> _queryTranslator;
-
-	@Reference
 	private StatsTranslator _statsTranslator;
 
 }

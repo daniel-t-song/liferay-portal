@@ -39,7 +39,7 @@ public class SiteDisplaySettingsFormNavigatorEntry
 
 	@Override
 	public String getCategoryKey() {
-		return FormNavigatorConstants.CATEGORY_KEY_SITES_LANGUAGES;
+		return FormNavigatorConstants.CATEGORY_KEY_SITES_MISCELLANEOUS;
 	}
 
 	@Override

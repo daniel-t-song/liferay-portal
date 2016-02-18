@@ -15,67 +15,48 @@
 package com.liferay.document.library.web.portlet.configuration.icon;
 
 import com.liferay.document.library.kernel.util.DLUtil;
-import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.document.library.web.display.context.logic.UIItemsBuilder;
-import com.liferay.document.library.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 
-import java.util.ResourceBundle;
-
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
-		"path=/document_library/view_file_entry"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class OpenInMSOfficeFileEntryPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", getLocale(portletRequest), getClass());
+	public OpenInMSOfficeFileEntryPortletConfigurationIcon(
+		PortletRequest portletRequest, FileEntry fileEntry,
+		FileVersion fileVersion) {
 
-		return LanguageUtil.get(resourceBundle, "open-in-ms-office");
+		super(portletRequest);
+
+		_fileEntry = fileEntry;
+		_fileVersion = fileVersion;
 	}
 
 	@Override
-	public String getOnClick(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "open-in-ms-office";
+	}
 
+	@Override
+	public String getOnClick() {
 		StringBundler sb = new StringBundler(4);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		try {
-			FileEntry fileEntry = ActionUtil.getFileEntry(portletRequest);
-
 			String webDavURL = DLUtil.getWebDavURL(
-				themeDisplay, fileEntry.getFolder(), fileEntry,
+				themeDisplay, _fileEntry.getFolder(), _fileEntry,
 				PropsValues.
 					DL_FILE_ENTRY_OPEN_IN_MS_OFFICE_MANUAL_CHECK_IN_REQUIRED);
 
@@ -87,41 +68,29 @@ public class OpenInMSOfficeFileEntryPortletConfigurationIcon
 			sb.append(webDavURL);
 			sb.append("');");
 		}
-		catch (Exception e) {
+		catch (PortalException pe) {
 		}
 
 		return sb.toString();
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
+	public String getURL() {
 		return "javascript:;";
 	}
 
 	@Override
-	public double getWeight() {
-		return 107;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		try {
 			HttpServletRequest request = PortalUtil.getHttpServletRequest(
 				portletRequest);
 
-			FileEntry fileEntry = ActionUtil.getFileEntry(portletRequest);
-
-			FileVersion fileVersion = ActionUtil.getFileVersion(
-				portletRequest, fileEntry);
-
 			UIItemsBuilder uiItemsBuilder = new UIItemsBuilder(
-				request, fileVersion);
+				request, _fileVersion);
 
 			return uiItemsBuilder.isOpenInMsOfficeActionAvailable();
 		}
-		catch (Exception e) {
+		catch (PortalException pe) {
 		}
 
 		return false;
@@ -136,5 +105,8 @@ public class OpenInMSOfficeFileEntryPortletConfigurationIcon
 	public boolean isUseDialog() {
 		return true;
 	}
+
+	private final FileEntry _fileEntry;
+	private final FileVersion _fileVersion;
 
 }

@@ -74,7 +74,7 @@ public interface DateDDMFormFieldTypeSettings
 
 	@DDMFormField(
 		dataType = "ddm-validation", type = "validation",
-		visibilityExpression = "FALSE"
+		visibilityExpression = "false"
 	)
 	@Override
 	public DDMFormFieldValidation validation();

@@ -44,7 +44,8 @@ public class ExportLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 
 		PortletRequestDispatcher portletRequestDispatcher =
 			getPortletRequestDispatcher(
-				resourceRequest, "/export/processes_list/view.jsp");
+				resourceRequest,
+				"/export/processes_list/export_layouts_processes.jsp");
 
 		portletRequestDispatcher.include(resourceRequest, resourceResponse);
 	}

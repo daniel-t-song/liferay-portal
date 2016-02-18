@@ -37,10 +37,6 @@ if (exportImportConfiguration.getType() == ExportImportConfigurationConstants.TY
 }
 
 GroupDisplayContextHelper groupDisplayContextHelper = new GroupDisplayContextHelper(request);
-
-Map<String, Serializable> settingsMap = exportImportConfiguration.getSettingsMap();
-
-Map<String, String[]> parameterMap = (Map<String, String[]>)settingsMap.get("parameterMap");
 %>
 
 <div class="container-fluid-1280">
@@ -51,7 +47,6 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)settingsMap.get("par
 				<portlet:param name="<%= Constants.CMD %>" value="<%= cmd %>" />
 				<portlet:param name="tabs1" value='<%= privateLayout ? "private-pages" : "public-pages" %>' />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupDisplayContextHelper.getGroupId()) %>" />
-				<portlet:param name="layoutSetBranchId" value='<%= MapUtil.getString(parameterMap, "layoutSetBranchId") %>' />
 				<portlet:param name="selPlid" value="<%= String.valueOf(selPlid) %>" />
 				<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 				<portlet:param name="quickPublish" value="<%= Boolean.FALSE.toString() %>" />
@@ -132,6 +127,8 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)settingsMap.get("par
 										}
 
 										portletDataHandlerClassNames.add(portletDataHandlerClassName);
+
+										Map<String, Serializable> settingsMap = exportImportConfiguration.getSettingsMap();
 
 										settingsMap.put("portletId", portlet.getRootPortletId());
 

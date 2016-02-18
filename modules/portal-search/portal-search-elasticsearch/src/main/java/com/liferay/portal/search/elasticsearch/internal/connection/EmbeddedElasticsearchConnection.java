@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
@@ -179,19 +178,6 @@ public class EmbeddedElasticsearchConnection
 
 		stopWatch.start();
 
-		if (_log.isWarnEnabled()) {
-			StringBundler sb = new StringBundler(6);
-
-			sb.append("Liferay is configured to use embedded Elasticsearch ");
-			sb.append("as its search engine. Do NOT use embedded ");
-			sb.append("Elasticsearch in production. Embedded Elasticsearch ");
-			sb.append("is useful for development and demonstration purposes. ");
-			sb.append("Remote Elasticsearch connections can be configured in ");
-			sb.append("the Control Panel.");
-
-			_log.warn(sb);
-		}
-
 		if (_log.isDebugEnabled()) {
 			_log.debug(
 				"Starting embedded Elasticsearch cluster " +
@@ -263,6 +249,18 @@ public class EmbeddedElasticsearchConnection
 		super.removeSettingsContributor(settingsContributor);
 	}
 
+	@Reference(unbind = "-")
+	protected void setClusterSettingsContext(
+		ClusterSettingsContext clusterSettingsContext) {
+
+		_clusterSettingsContext = clusterSettingsContext;
+	}
+
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_props = props;
+	}
+
 	private void configureNetworking(Settings.Builder builder) {
 		String networkBindHost = elasticsearchConfiguration.networkBindHost();
 
@@ -305,12 +303,8 @@ public class EmbeddedElasticsearchConnection
 	private static final Log _log = LogFactoryUtil.getLog(
 		EmbeddedElasticsearchConnection.class);
 
-	@Reference
 	private ClusterSettingsContext _clusterSettingsContext;
-
 	private Node _node;
-
-	@Reference
 	private Props _props;
 
 }

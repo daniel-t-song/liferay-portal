@@ -17,7 +17,9 @@ package com.liferay.portal.scripting;
 import com.liferay.portal.kernel.scripting.ScriptingContainer;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingExecutor;
+import com.liferay.portal.kernel.util.AggregateClassLoader;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,44 +40,20 @@ public abstract class BaseScriptingExecutor implements ScriptingExecutor {
 	@Override
 	public Map<String, Object> eval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile)
+			Set<String> outputNames, File scriptFile,
+			ClassLoader... classloaders)
 		throws ScriptingException {
 
 		try {
 			String script = FileUtil.read(scriptFile);
 
-			return eval(allowedClasses, inputObjects, outputNames, script);
+			return eval(
+				allowedClasses, inputObjects, outputNames, script,
+				classloaders);
 		}
 		catch (IOException ioe) {
 			throw new ScriptingException(ioe);
 		}
-	}
-
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #eval(Set, Map, Set, File)}
-	 */
-	@Deprecated
-	@Override
-	public Map<String, Object> eval(
-			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile,
-			ClassLoader... classloaders)
-		throws ScriptingException {
-
-		return eval(allowedClasses, inputObjects, outputNames, scriptFile);
-	}
-
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #eval(Set, Map, Set, String)}
-	 */
-	@Deprecated
-	@Override
-	public Map<String, Object> eval(
-			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, String script, ClassLoader... classloaders)
-		throws ScriptingException {
-
-		return eval(allowedClasses, inputObjects, outputNames, script);
 	}
 
 	@Override
@@ -83,10 +61,30 @@ public abstract class BaseScriptingExecutor implements ScriptingExecutor {
 		return null;
 	}
 
-	protected ClassLoader getClassLoader() {
+	protected ClassLoader getAggregateClassLoader(ClassLoader... classLoaders) {
+		return AggregateClassLoader.getAggregateClassLoader(
+			getScriptingExecutorClassLoader(), classLoaders);
+	}
+
+	protected ClassLoader getScriptingExecutorClassLoader() {
+		return _scriptingExecutorClassLoader;
+	}
+
+	protected void initScriptingExecutorClassLoader() {
 		Class<?> clazz = getClass();
 
-		return clazz.getClassLoader();
+		ClassLoader classLoader = clazz.getClassLoader();
+
+		if (!classLoader.equals(PortalClassLoaderUtil.getClassLoader())) {
+			_scriptingExecutorClassLoader =
+				AggregateClassLoader.getAggregateClassLoader(
+					PortalClassLoaderUtil.getClassLoader(), classLoader);
+		}
+		else {
+			_scriptingExecutorClassLoader = classLoader;
+		}
 	}
+
+	private ClassLoader _scriptingExecutorClassLoader;
 
 }

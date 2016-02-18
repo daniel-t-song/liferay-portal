@@ -61,10 +61,6 @@ entriesChecker.setCssClass("entry-selector");
 
 EntriesMover entriesMover = new EntriesMover(scopeGroupId);
 
-String[] entryColumns = dlPortletInstanceSettingsHelper.getEntryColumns();
-
-dlSearchContainer.setHeaderNames(ListUtil.fromArray(entryColumns));
-
 String orderByCol = GetterUtil.getString((String)request.getAttribute("view.jsp-orderByCol"));
 String orderByType = GetterUtil.getString((String)request.getAttribute("view.jsp-orderByType"));
 
@@ -210,6 +206,8 @@ if (portletTitleBasedNavigation && (folderId != DLFolderConstants.DEFAULT_PARENT
 <div class="document-container" id="<portlet:namespace />entriesContainer">
 
 	<%
+	String[] entryColumns = dlPortletInstanceSettingsHelper.getEntryColumns();
+
 	String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 	%>
 
@@ -295,7 +293,7 @@ if (portletTitleBasedNavigation && (folderId != DLFolderConstants.DEFAULT_PARENT
 								</c:when>
 								<c:when test="<%= Validator.isNotNull(latestFileVersion.getExtension()) %>">
 									<liferay-ui:search-container-column-text>
-										<div class="sticker-default sticker-lg <%= dlViewFileVersionDisplayContext.getCssClassFileMimeType() %>">
+										<div class="sticker sticker-default sticker-lg <%= dlViewFileVersionDisplayContext.getCssClassFileMimeType() %>">
 											<%= StringUtil.shorten(StringUtil.upperCase(latestFileVersion.getExtension()), 3, StringPool.BLANK) %>
 										</div>
 									</liferay-ui:search-container-column-text>

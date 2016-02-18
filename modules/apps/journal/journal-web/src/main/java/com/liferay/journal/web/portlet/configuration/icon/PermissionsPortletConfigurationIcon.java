@@ -14,58 +14,39 @@
 
 package com.liferay.journal.web.portlet.configuration.icon;
 
-import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.permission.JournalArticlePermission;
 import com.liferay.journal.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.security.PermissionsURLTag;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + JournalPortletKeys.JOURNAL,
-		"path=/edit_article.jsp"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class PermissionsPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "permissions");
+	public PermissionsPortletConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "permissions";
+	}
 
+	@Override
+	public String getURL() {
 		String url = StringPool.BLANK;
 
 		try {
-			JournalArticle article = ActionUtil.getArticle(portletRequest);
-
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)portletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
+			JournalArticle article = getArticle();
 
 			url = PermissionsURLTag.doTag(
 				StringPool.BLANK, JournalArticle.class.getName(),
@@ -82,22 +63,13 @@ public class PermissionsPortletConfigurationIcon
 	}
 
 	@Override
-	public double getWeight() {
-		return 101.0;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		try {
-			JournalArticle article = ActionUtil.getArticle(portletRequest);
+			JournalArticle article = getArticle();
 
 			if ((article == null) || article.isNew()) {
 				return false;
 			}
-
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)portletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
 
 			if (JournalArticlePermission.contains(
 					themeDisplay.getPermissionChecker(), article,
@@ -120,6 +92,10 @@ public class PermissionsPortletConfigurationIcon
 	@Override
 	public boolean isUseDialog() {
 		return true;
+	}
+
+	protected JournalArticle getArticle() throws Exception {
+		return ActionUtil.getArticle(portletRequest);
 	}
 
 }

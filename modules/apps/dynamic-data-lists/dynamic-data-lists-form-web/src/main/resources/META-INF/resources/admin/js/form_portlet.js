@@ -75,6 +75,8 @@ AUI.add(
 						instance.one('#loader').remove();
 
 						instance.get('formBuilder').render(instance.one('#formBuilder'));
+
+						instance.enableButtons();
 					},
 
 					bindUI: function() {
@@ -96,6 +98,14 @@ AUI.add(
 						instance.get('formBuilder').destroy();
 
 						(new A.EventHandle(instance._eventHandlers)).detach();
+					},
+
+					enableButtons: function() {
+						var instance = this;
+
+						var buttons = instance.all('.ddl-button');
+
+						Liferay.Util.toggleDisabled(buttons, false);
 					},
 
 					openPublishModal: function() {

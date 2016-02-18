@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 
+import javax.portlet.PortletRequest;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -32,10 +34,14 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class BaseJSPPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	public abstract String getJspPath();
+	public BaseJSPPortletConfigurationIcon(
+		ServletContext servletContext, String jspPath,
+		PortletRequest portletRequest) {
 
-	public ServletContext getServletContext() {
-		return _servletContext;
+		super(portletRequest);
+
+		_servletContext = servletContext;
+		_jspPath = jspPath;
 	}
 
 	@Override
@@ -43,20 +49,18 @@ public abstract class BaseJSPPortletConfigurationIcon
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
 
-		String jspPath = getJspPath();
-
-		if (Validator.isNull(jspPath)) {
+		if (Validator.isNull(_jspPath)) {
 			return false;
 		}
 
 		RequestDispatcher requestDispatcher =
-			_servletContext.getRequestDispatcher(jspPath);
+			_servletContext.getRequestDispatcher(_jspPath);
 
 		try {
 			requestDispatcher.include(request, response);
 		}
 		catch (ServletException se) {
-			_log.error("Unable to include JSP " + jspPath, se);
+			_log.error("Unable to include JSP " + _jspPath, se);
 
 			return false;
 		}
@@ -64,13 +68,10 @@ public abstract class BaseJSPPortletConfigurationIcon
 		return true;
 	}
 
-	public void setServletContext(ServletContext servletContext) {
-		_servletContext = servletContext;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseJSPPortletConfigurationIcon.class);
 
-	private ServletContext _servletContext;
+	private final String _jspPath;
+	private final ServletContext _servletContext;
 
 }

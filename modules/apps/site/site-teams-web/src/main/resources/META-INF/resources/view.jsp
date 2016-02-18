@@ -29,8 +29,6 @@ pageContext.setAttribute("portletURL", portletURL);
 
 SearchContainer teamSearchContainer = new TeamSearch(renderRequest, PortletURLUtil.clone(portletURL, renderResponse));
 
-teamSearchContainer.setRowChecker(new EmptyOnClickRowChecker(renderResponse));
-
 TeamDisplayTerms searchTerms = (TeamDisplayTerms)teamSearchContainer.getSearchTerms();
 
 int teamsCount = TeamServiceUtil.searchCount(scopeGroupId, searchTerms.getKeywords(), searchTerms.getKeywords(), new LinkedHashMap<String, Object>());
@@ -68,7 +66,7 @@ teamSearchContainer.setTotal(teamsCount);
 
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-display-buttons
-			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
+			displayViews='<%= new String[] {"descriptive", "list"} %>'
 			portletURL="<%= displayStyleURL %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
@@ -107,6 +105,7 @@ teamSearchContainer.setTotal(teamsCount);
 	<liferay-ui:search-container
 		emptyResultsMessage="there-are-no-site-teams.-you-can-add-a-site-team-by-clicking-the-plus-button-on-the-bottom-right-corner"
 		id="teams"
+		rowChecker="<%= new EmptyOnClickRowChecker(renderResponse) %>"
 		searchContainer="<%= teamSearchContainer %>"
 		total="<%= teamsCount %>"
 	>
@@ -155,25 +154,6 @@ teamSearchContainer.setTotal(teamsCount);
 					<liferay-ui:search-container-column-jsp
 						path="/team_action.jsp"
 					/>
-				</c:when>
-				<c:when test='<%= displayStyle.equals("icon") %>'>
-
-					<%
-					row.setCssClass("col-md-2 col-sm-4 col-xs-6");
-					%>
-
-					<liferay-ui:search-container-column-text>
-						<liferay-frontend:icon-vertical-card
-							actionJsp="/team_action.jsp"
-							actionJspServletContext="<%= application %>"
-							cssClass="entry-display-style"
-							icon="users"
-							resultRow="<%= row %>"
-							rowChecker="<%= teamSearchContainer.getRowChecker() %>"
-							subtitle="<%= team.getDescription() %>"
-							title="<%= team.getName() %>"
-						/>
-					</liferay-ui:search-container-column-text>
 				</c:when>
 				<c:when test='<%= displayStyle.equals("list") %>'>
 					<liferay-ui:search-container-column-text

@@ -27,7 +27,7 @@ import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.service.DDMDataProviderInstanceService;
 import com.liferay.dynamic.data.mapping.service.permission.DDMDataProviderInstancePermission;
-import com.liferay.dynamic.data.mapping.service.permission.DDMDataProviderPermission;
+import com.liferay.dynamic.data.mapping.service.permission.DDMPermission;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormFactory;
 import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
@@ -150,20 +150,6 @@ public class DDMDataProviderDisplayContext {
 		return _ddmDataProviderTracker.getDDMDataProviderTypes();
 	}
 
-	public String getOrderByCol() {
-		String orderByCol = ParamUtil.getString(
-			_renderRequest, "orderByCol", "modified-date");
-
-		return orderByCol;
-	}
-
-	public String getOrderByType() {
-		String orderByType = ParamUtil.getString(
-			_renderRequest, "orderByType", "asc");
-
-		return orderByType;
-	}
-
 	public PortletURL getPortletURL() {
 		PortletURL portletURL = _renderResponse.createRenderURL();
 
@@ -225,16 +211,16 @@ public class DDMDataProviderDisplayContext {
 
 	public String getUserPortraitURL(long userId) throws PortalException {
 		User user = _userLocalService.getUser(userId);
-
 		return user.getPortraitURL(
 			_ddmDataProviderRequestHelper.getThemeDisplay());
 	}
 
 	public boolean isShowAddDataProviderButton() {
-		return DDMDataProviderPermission.contains(
+		return DDMPermission.contains(
 			_ddmDataProviderRequestHelper.getPermissionChecker(),
 			_ddmDataProviderRequestHelper.getScopeGroupId(),
-			DDMActionKeys.ADD_DATA_PROVIDER_INSTANCE);
+			DDMActionKeys.ADD_DATA_PROVIDER_INSTANCE,
+			DDMDataProviderInstance.class.getName());
 	}
 
 	public boolean isShowDeleteDataProviderIcon(

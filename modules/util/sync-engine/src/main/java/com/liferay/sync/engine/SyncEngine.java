@@ -20,15 +20,19 @@ import com.liferay.sync.engine.documentlibrary.util.BatchDownloadEvent;
 import com.liferay.sync.engine.documentlibrary.util.BatchEventManager;
 import com.liferay.sync.engine.documentlibrary.util.FileEventUtil;
 import com.liferay.sync.engine.documentlibrary.util.ServerEventUtil;
+import com.liferay.sync.engine.filesystem.BarbaryWatcher;
+import com.liferay.sync.engine.filesystem.JPathWatcher;
 import com.liferay.sync.engine.filesystem.SyncWatchEventProcessor;
 import com.liferay.sync.engine.filesystem.Watcher;
-import com.liferay.sync.engine.filesystem.util.WatcherManager;
+import com.liferay.sync.engine.filesystem.listener.SyncSiteWatchEventListener;
+import com.liferay.sync.engine.filesystem.listener.WatchEventListener;
 import com.liferay.sync.engine.model.SyncAccount;
 import com.liferay.sync.engine.model.SyncFile;
 import com.liferay.sync.engine.model.SyncSite;
 import com.liferay.sync.engine.service.SyncAccountService;
 import com.liferay.sync.engine.service.SyncFileService;
 import com.liferay.sync.engine.service.SyncSiteService;
+import com.liferay.sync.engine.service.SyncWatchEventService;
 import com.liferay.sync.engine.service.persistence.SyncAccountPersistence;
 import com.liferay.sync.engine.upgrade.util.UpgradeUtil;
 import com.liferay.sync.engine.util.ConnectionRetryUtil;
@@ -36,6 +40,7 @@ import com.liferay.sync.engine.util.FileKeyUtil;
 import com.liferay.sync.engine.util.FileLockRetryUtil;
 import com.liferay.sync.engine.util.FileUtil;
 import com.liferay.sync.engine.util.LoggerUtil;
+import com.liferay.sync.engine.util.OSDetector;
 import com.liferay.sync.engine.util.SyncEngineUtil;
 
 import java.io.IOException;
@@ -218,7 +223,20 @@ public class SyncEngine {
 			ServerEventUtil.synchronizeSyncSites(syncAccountId);
 		}
 
-		Watcher watcher = WatcherManager.getWatcher(syncAccountId);
+		SyncWatchEventService.deleteSyncWatchEvents(syncAccountId);
+
+		WatchEventListener watchEventListener = new SyncSiteWatchEventListener(
+			syncAccountId);
+
+		Watcher watcher = null;
+
+		if (OSDetector.isApple()) {
+			watcher = new BarbaryWatcher(
+				syncAccountFilePath, watchEventListener);
+		}
+		else {
+			watcher = new JPathWatcher(syncAccountFilePath, watchEventListener);
+		}
 
 		watcher.walkFileTree(syncAccountFilePath);
 

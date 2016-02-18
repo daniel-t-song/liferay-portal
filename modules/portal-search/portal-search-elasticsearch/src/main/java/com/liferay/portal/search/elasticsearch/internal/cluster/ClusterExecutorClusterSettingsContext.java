@@ -64,7 +64,11 @@ public class ClusterExecutorClusterSettingsContext
 		return _clusterExecutor.isEnabled();
 	}
 
-	@Reference
+	@Reference(unbind = "-")
+	protected void setClusterExecutor(ClusterExecutor clusterExecutor) {
+		_clusterExecutor = clusterExecutor;
+	}
+
 	private ClusterExecutor _clusterExecutor;
 
 }

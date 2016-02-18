@@ -57,7 +57,6 @@ AUI.add(
 								config,
 								{
 									dataType: field.get('dataType'),
-									readOnly: false,
 									type: field.get('type')
 								}
 							)

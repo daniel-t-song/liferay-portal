@@ -64,6 +64,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -654,12 +655,13 @@ public class MBUtil {
 
 	public static String[] getThreadPriority(
 			MBGroupServiceSettings mbGroupServiceSettings, String languageId,
-			double value)
+			double value, ThemeDisplay themeDisplay)
 		throws Exception {
 
 		String[] priorities = mbGroupServiceSettings.getPriorities(languageId);
 
-		String[] priorityPair = _findThreadPriority(value, priorities);
+		String[] priorityPair = _findThreadPriority(
+			value, themeDisplay, priorities);
 
 		if (priorityPair == null) {
 			String defaultLanguageId = LocaleUtil.toLanguageId(
@@ -668,7 +670,7 @@ public class MBUtil {
 			priorities = mbGroupServiceSettings.getPriorities(
 				defaultLanguageId);
 
-			priorityPair = _findThreadPriority(value, priorities);
+			priorityPair = _findThreadPriority(value, themeDisplay, priorities);
 		}
 
 		return priorityPair;
@@ -976,7 +978,7 @@ public class MBUtil {
 	}
 
 	private static String[] _findThreadPriority(
-		double value, String[] priorities) {
+		double value, ThemeDisplay themeDisplay, String[] priorities) {
 
 		for (int i = 0; i < priorities.length; i++) {
 			String[] priority = StringUtil.split(
@@ -988,6 +990,11 @@ public class MBUtil {
 				double priorityValue = GetterUtil.getDouble(priority[2]);
 
 				if (value == priorityValue) {
+					if (!priorityImage.startsWith(Http.HTTP)) {
+						priorityImage =
+							themeDisplay.getPathThemeImages() + priorityImage;
+					}
+
 					return new String[] {priorityName, priorityImage};
 				}
 			}

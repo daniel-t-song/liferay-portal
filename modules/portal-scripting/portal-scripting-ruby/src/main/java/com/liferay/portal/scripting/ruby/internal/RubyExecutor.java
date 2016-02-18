@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.scripting.ExecutionException;
 import com.liferay.portal.kernel.scripting.ScriptingContainer;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingExecutor;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.NamedThreadFactory;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -77,21 +78,24 @@ public class RubyExecutor extends BaseScriptingExecutor {
 	@Override
 	public Map<String, Object> eval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile)
+			Set<String> outputNames, File scriptFile,
+			ClassLoader... classLoaders)
 		throws ScriptingException {
 
 		return eval(
-			allowedClasses, inputObjects, outputNames, scriptFile,
-			(String)null);
+			allowedClasses, inputObjects, outputNames, scriptFile, null,
+			classLoaders);
 	}
 
 	@Override
 	public Map<String, Object> eval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, String script)
+			Set<String> outputNames, String script, ClassLoader... classLoaders)
 		throws ScriptingException {
 
-		return eval(allowedClasses, inputObjects, outputNames, null, script);
+		return eval(
+			allowedClasses, inputObjects, outputNames, null, script,
+			classLoaders);
 	}
 
 	@Override
@@ -132,7 +136,8 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 	protected Map<String, Object> doEval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile, String script)
+			Set<String> outputNames, File scriptFile, String script,
+			ClassLoader... classLoaders)
 		throws ScriptingException {
 
 		if (allowedClasses != null) {
@@ -151,7 +156,12 @@ public class RubyExecutor extends BaseScriptingExecutor {
 				localContextProvider.getRubyInstanceConfig();
 
 			rubyInstanceConfig.setCurrentDirectory(_basePath);
-			rubyInstanceConfig.setLoader(getClassLoader());
+
+			if (ArrayUtil.isNotEmpty(classLoaders)) {
+				rubyInstanceConfig.setLoader(
+					getAggregateClassLoader(classLoaders));
+			}
+
 			rubyInstanceConfig.setLoadPaths(_loadPaths);
 
 			for (Map.Entry<String, Object> entry : inputObjects.entrySet()) {
@@ -207,16 +217,19 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 	protected Map<String, Object> eval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile, String script)
+			Set<String> outputNames, File scriptFile, String script,
+			ClassLoader... classLoaders)
 		throws ScriptingException {
 
 		if (!_executeInSeparateThread) {
 			return doEval(
-				allowedClasses, inputObjects, outputNames, scriptFile, script);
+				allowedClasses, inputObjects, outputNames, scriptFile, script,
+				classLoaders);
 		}
 
 		EvalCallable evalCallable = new EvalCallable(
-			allowedClasses, inputObjects, outputNames, scriptFile, script);
+			allowedClasses, inputObjects, outputNames, scriptFile, script,
+			classLoaders);
 
 		FutureTask<Map<String, Object>> futureTask = new FutureTask<>(
 			evalCallable);
@@ -239,6 +252,8 @@ public class RubyExecutor extends BaseScriptingExecutor {
 	}
 
 	protected void initialize() {
+		initScriptingExecutorClassLoader();
+
 		org.jruby.embed.ScriptingContainer scriptingContainer =
 			new org.jruby.embed.ScriptingContainer(
 				LocalContextScope.THREADSAFE);
@@ -262,7 +277,7 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 		rubyInstanceConfig.setJitThreshold(
 			_rubyScriptingConfiguration.compileThreshold());
-		rubyInstanceConfig.setLoader(getClassLoader());
+		rubyInstanceConfig.setLoader(getScriptingExecutorClassLoader());
 
 		String[] loadPaths = StringUtil.split(
 			_rubyScriptingConfiguration.loadPaths());
@@ -311,23 +326,26 @@ public class RubyExecutor extends BaseScriptingExecutor {
 
 		public EvalCallable(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, File scriptFile, String script) {
+			Set<String> outputNames, File scriptFile, String script,
+			ClassLoader[] classLoaders) {
 
 			_allowedClasses = allowedClasses;
 			_inputObjects = inputObjects;
 			_outputNames = outputNames;
 			_scriptFile = scriptFile;
 			_script = script;
+			_classLoaders = classLoaders;
 		}
 
 		@Override
 		public Map<String, Object> call() throws Exception {
 			return doEval(
 				_allowedClasses, _inputObjects, _outputNames, _scriptFile,
-				_script);
+				_script, _classLoaders);
 		}
 
 		private final Set<String> _allowedClasses;
+		private final ClassLoader[] _classLoaders;
 		private final Map<String, Object> _inputObjects;
 		private final Set<String> _outputNames;
 		private final String _script;

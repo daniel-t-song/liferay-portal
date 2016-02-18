@@ -31,7 +31,7 @@ public class PortletConfigurationIconMenu {
 			PortletResponse portletResponse) {
 
 		return PortletConfigurationIconTracker.getPortletConfigurationIcons(
-			portletId, portletRequest, _comparator);
+			portletId, portletRequest, portletResponse, _comparator);
 	}
 
 	public void setComparator(Comparator<?> comparator) {

@@ -421,11 +421,14 @@ portletURL.setParameter("portletResource", portletResource);
 							</aui:fieldset>
 						</c:if>
 
-						<%
-						Group group = themeDisplay.getScopeGroup();
-						%>
+						<aui:fieldset cssClass="options-group" label="permissions">
 
-						<liferay-staging:permissions action="export" descriptionCSSClass="permissions-description" global="<%= group.isCompany() %>" labelCSSClass="permissions-label" />
+							<%
+							Group group = themeDisplay.getScopeGroup();
+							%>
+
+							<aui:input helpMessage='<%= group.isCompany() ? "publish-global-permissions-help" : "export-import-permissions-help" %>' label="permissions" name="<%= PortletDataHandlerKeys.PERMISSIONS %>" type="toggle-switch" />
+						</aui:fieldset>
 					</c:if>
 
 					<aui:button-row>

@@ -15,9 +15,7 @@ Export-Package:\
 	com.liferay.portal.security.sso.google.constants
 Import-Package:\
 	!com.fasterxml.jackson.core,\
-	\
 	!com.google.*,\
-	\
 	!org.apache.http.*,\
 	*
 Include-Resource:\

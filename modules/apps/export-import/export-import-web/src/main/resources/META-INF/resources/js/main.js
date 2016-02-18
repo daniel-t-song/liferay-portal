@@ -635,14 +635,6 @@ AUI.add(
 						instance._setRemoteLabels();
 					},
 
-					_isBackgroundTaskInProgress: function() {
-						var instance = this;
-
-						var processesNode = instance.get('processesNode');
-
-						return !!processesNode.one('.background-task-status-in-progress');
-					},
-
 					_isChecked: function(nodeName) {
 						var instance = this;
 
@@ -729,14 +721,6 @@ AUI.add(
 					_renderProcesses: function() {
 						var instance = this;
 
-						var checkedCheckboxes = A.all('input[name="' + instance.ns('rowIds') + '"]:checked');
-
-						if (checkedCheckboxes && checkedCheckboxes.size() > 0) {
-							instance._scheduleRenderProcess();
-
-							return;
-						}
-
 						var processesNode = instance.get('processesNode');
 
 						if (processesNode) {
@@ -793,26 +777,22 @@ AUI.add(
 
 											processesNode.setContent(this.get('responseData'));
 
-											instance._updateincompleteProcessMessage(instance._isBackgroundTaskInProgress(), processesNode.one('.incomplete-process-message'));
+											var renderInterval = RENDER_INTERVAL_IDLE;
 
-											instance._scheduleRenderProcess();
+											var inProgress = !!processesNode.one('.background-task-status-in-progress');
+
+											if (inProgress) {
+												renderInterval = RENDER_INTERVAL_IN_PROGRESS;
+											}
+
+											instance._updateincompleteProcessMessage(inProgress, processesNode.one('.incomplete-process-message'));
+
+											A.later(renderInterval, instance, instance._renderProcesses);
 										}
 									}
 								}
 							);
 						}
-					},
-
-					_scheduleRenderProcess: function() {
-						var instance = this;
-
-						var renderInterval = RENDER_INTERVAL_IDLE;
-
-						if (instance._isBackgroundTaskInProgress()) {
-							renderInterval = RENDER_INTERVAL_IN_PROGRESS;
-						}
-
-						A.later(renderInterval, instance, instance._renderProcesses);
 					},
 
 					_setConfigurationLabels: function(portletId) {

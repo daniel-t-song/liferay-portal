@@ -15,71 +15,45 @@
 package com.liferay.document.library.web.portlet.configuration.icon;
 
 import com.liferay.document.library.web.constants.DLPortletKeys;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_ADMIN},
-	service = PortletConfigurationIcon.class
-)
 public class DocumentTypesPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", getLocale(portletRequest), getClass());
+	public DocumentTypesPortletConfigurationIcon(
+		PortletRequest portletRequest) {
 
-		return LanguageUtil.get(resourceBundle, "document-types");
+		super(portletRequest);
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "document-types";
+	}
 
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
 			PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter(
 			"mvcPath", "/document_library/view_file_entry_types.jsp");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 101;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		User user = themeDisplay.getUser();
 
 		if (user.isDefaultUser()) {
@@ -89,6 +63,7 @@ public class DocumentTypesPortletConfigurationIcon
 		return true;
 	}
 
+	@Override
 	public boolean isToolTip() {
 		return false;
 	}

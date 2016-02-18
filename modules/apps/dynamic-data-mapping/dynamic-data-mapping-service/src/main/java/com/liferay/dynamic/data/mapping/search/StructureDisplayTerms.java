@@ -24,6 +24,8 @@ import javax.portlet.PortletRequest;
  */
 public class StructureDisplayTerms extends DisplayTerms {
 
+	public static final String CLASS_NAME_ID = "classNameId";
+
 	public static final String DESCRIPTION = "description";
 
 	public static final String NAME = "name";
@@ -33,9 +35,14 @@ public class StructureDisplayTerms extends DisplayTerms {
 	public StructureDisplayTerms(PortletRequest portletRequest) {
 		super(portletRequest);
 
+		classNameId = ParamUtil.getLong(portletRequest, CLASS_NAME_ID);
 		description = ParamUtil.getString(portletRequest, DESCRIPTION);
 		name = ParamUtil.getString(portletRequest, NAME);
 		storageType = ParamUtil.getString(portletRequest, STORAGE_TYPE);
+	}
+
+	public long getClassNameId() {
+		return classNameId;
 	}
 
 	public String getDescription() {
@@ -50,6 +57,7 @@ public class StructureDisplayTerms extends DisplayTerms {
 		return storageType;
 	}
 
+	protected long classNameId;
 	protected String description;
 	protected String name;
 	protected String storageType;

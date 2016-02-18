@@ -51,12 +51,13 @@ public class SchedulerProxyMessagingConfigurator {
 		Destination destination = _destinationFactory.createDestination(
 			destinationConfiguration);
 
-		Dictionary<String, Object> properties = new HashMapDictionary<>();
+		Dictionary<String, Object> destinationDictionary =
+			new HashMapDictionary<>();
 
-		properties.put("destination.name", destination.getName());
+		destinationDictionary.put("destination.name", destination.getName());
 
 		_destinationServiceRegistration = bundleContext.registerService(
-			Destination.class, destination, properties);
+			Destination.class, destination, destinationDictionary);
 
 		destination.register(_proxyMessageListener);
 	}

@@ -15,70 +15,44 @@
 package com.liferay.message.boards.web.portlet.configuration.icon;
 
 import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.model.MBMessageDisplay;
-import com.liferay.message.boards.kernel.model.MBThread;
 import com.liferay.message.boards.web.constants.MBPortletKeys;
-import com.liferay.message.boards.web.portlet.action.ActionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.SubscriptionLocalService;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portlet.messageboards.MBGroupServiceSettings;
 import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS_ADMIN,
-		"path=/message_boards/view_message"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class ThreadSubscriptionPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		String key = "subscribe";
+	public ThreadSubscriptionPortletConfigurationIcon(
+		PortletRequest portletRequest, MBMessage message, boolean subscribed) {
 
-		try {
-			MBMessageDisplay messageDisplay = ActionUtil.getMessageDisplay(
-				portletRequest);
+		super(portletRequest);
 
-			MBMessage message = messageDisplay.getMessage();
-
-			if (isSubscribed(portletRequest, message)) {
-				key = "unsubscribe";
-			}
-		}
-		catch (Exception e) {
-		}
-
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), key);
+		_message = message;
+		_subscribed = subscribed;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		if (_subscribed) {
+			return "unsubscribe";
+		}
 
+		return "subscribe";
+	}
+
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, MBPortletKeys.MESSAGE_BOARDS_ADMIN,
 			PortletRequest.ACTION_PHASE);
@@ -86,19 +60,7 @@ public class ThreadSubscriptionPortletConfigurationIcon
 		portletURL.setParameter(
 			ActionRequest.ACTION_NAME, "/message_boards/edit_message");
 
-		MBMessage message = null;
-
-		try {
-			MBMessageDisplay messageDisplay = ActionUtil.getMessageDisplay(
-				portletRequest);
-
-			message = messageDisplay.getMessage();
-		}
-		catch (Exception e) {
-			return null;
-		}
-
-		if (isSubscribed(portletRequest, message)) {
+		if (_subscribed) {
 			portletURL.setParameter(Constants.CMD, Constants.UNSUBSCRIBE);
 		}
 		else {
@@ -108,39 +70,16 @@ public class ThreadSubscriptionPortletConfigurationIcon
 		portletURL.setParameter(
 			"redirect", PortalUtil.getCurrentURL(portletRequest));
 		portletURL.setParameter(
-			"messageId", String.valueOf(message.getMessageId()));
+			"messageId", String.valueOf(_message.getMessageId()));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 101;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		try {
-			MBGroupServiceSettings mbGroupServiceSettings =
-				MBGroupServiceSettings.getInstance(
-					themeDisplay.getScopeGroupId());
-
-			if (!mbGroupServiceSettings.isEmailMessageAddedEnabled() &&
-				!mbGroupServiceSettings.isEmailMessageUpdatedEnabled()) {
-
-				return false;
-			}
-
-			MBMessageDisplay messageDisplay = ActionUtil.getMessageDisplay(
-				portletRequest);
-
-			MBMessage message = messageDisplay.getMessage();
-
 			return MBMessagePermission.contains(
-				themeDisplay.getPermissionChecker(), message,
+				themeDisplay.getPermissionChecker(), _message,
 				ActionKeys.SUBSCRIBE);
 		}
 		catch (PortalException pe) {
@@ -149,24 +88,7 @@ public class ThreadSubscriptionPortletConfigurationIcon
 		return false;
 	}
 
-	@Reference(unbind = "-")
-	protected void setSubscriptionLocalService(
-		SubscriptionLocalService subscriptionLocalService) {
-
-		_subscriptionLocalService = subscriptionLocalService;
-	}
-
-	private boolean isSubscribed(
-		PortletRequest portletRequest, MBMessage message) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		return _subscriptionLocalService.isSubscribed(
-			themeDisplay.getCompanyId(), themeDisplay.getUserId(),
-			MBThread.class.getName(), message.getThreadId());
-	}
-
-	private SubscriptionLocalService _subscriptionLocalService;
+	private final MBMessage _message;
+	private final boolean _subscribed;
 
 }

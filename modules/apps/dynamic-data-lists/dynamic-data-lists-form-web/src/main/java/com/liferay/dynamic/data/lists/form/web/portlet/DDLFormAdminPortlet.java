@@ -15,9 +15,9 @@
 package com.liferay.dynamic.data.lists.form.web.portlet;
 
 import com.liferay.dynamic.data.lists.form.web.configuration.DDLFormWebConfiguration;
-import com.liferay.dynamic.data.lists.form.web.configuration.DDLFormWebConfigurationActivator;
 import com.liferay.dynamic.data.lists.form.web.constants.DDLFormPortletKeys;
 import com.liferay.dynamic.data.lists.form.web.util.DDLFormAdminPortletUtil;
+import com.liferay.dynamic.data.lists.form.web.util.DDLFormWebConfigurationManager;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.lists.model.DDLRecordSetSettings;
 import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
@@ -127,10 +127,10 @@ public class DDLFormAdminPortlet extends MVCPortlet {
 	}
 
 	@Reference(policy = ReferencePolicy.DYNAMIC, unbind = "-")
-	protected void setDDLFormWebConfigurationActivator(
-		DDLFormWebConfigurationActivator ddlFormWebConfigurationActivator) {
+	protected void setDDLFormWebConfigurationManager(
+		DDLFormWebConfigurationManager ddlFormWebConfigurationManager) {
 
-		_ddlFormWebConfigurationActivator = ddlFormWebConfigurationActivator;
+		_ddlFormWebConfigurationManager = ddlFormWebConfigurationManager;
 	}
 
 	@Reference(unbind = "-")
@@ -192,13 +192,13 @@ public class DDLFormAdminPortlet extends MVCPortlet {
 
 		renderRequest.setAttribute(
 			DDLFormWebConfiguration.class.getName(),
-			_ddlFormWebConfigurationActivator.getDDLFormWebConfiguration());
+			_ddlFormWebConfigurationManager.getDDLFormWebConfiguration());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DDLFormAdminPortlet.class);
 
-	private DDLFormWebConfigurationActivator _ddlFormWebConfigurationActivator;
+	private DDLFormWebConfigurationManager _ddlFormWebConfigurationManager;
 	private DDLRecordSetLocalService _ddlRecordSetLocalService;
 	private DDMFormRenderer _ddmFormRenderer;
 

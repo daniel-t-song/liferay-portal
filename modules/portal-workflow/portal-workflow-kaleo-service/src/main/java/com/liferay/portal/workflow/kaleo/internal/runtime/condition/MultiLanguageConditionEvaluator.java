@@ -30,7 +30,8 @@ public class MultiLanguageConditionEvaluator implements ConditionEvaluator {
 
 	@Override
 	public String evaluate(
-			KaleoCondition kaleoCondition, ExecutionContext executionContext)
+			KaleoCondition kaleoCondition, ExecutionContext executionContext,
+			ClassLoader... classLoaders)
 		throws PortalException {
 
 		ScriptLanguage scriptLanguage = ScriptLanguage.parse(
@@ -45,7 +46,8 @@ public class MultiLanguageConditionEvaluator implements ConditionEvaluator {
 					scriptLanguage);
 		}
 
-		return conditionEvaluator.evaluate(kaleoCondition, executionContext);
+		return conditionEvaluator.evaluate(
+			kaleoCondition, executionContext, classLoaders);
 	}
 
 	public void setConditionEvaluators(

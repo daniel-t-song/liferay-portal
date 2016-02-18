@@ -420,10 +420,6 @@ public class Session {
 			HttpPost httpPost, Map<String, Object> parameters)
 		throws Exception {
 
-		if (parameters.isEmpty()) {
-			return;
-		}
-
 		HttpEntity httpEntity = _getEntity(parameters);
 
 		httpPost.setEntity(httpEntity);
@@ -549,10 +545,6 @@ public class Session {
 		List<NameValuePair> nameValuePairs = new ArrayList<>();
 
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-			if (_ignoredParameterKeys.contains(entry.getKey())) {
-				continue;
-			}
-
 			NameValuePair nameValuePair = new BasicNameValuePair(
 				entry.getKey(), String.valueOf(entry.getValue()));
 
@@ -593,8 +585,7 @@ public class Session {
 	private final HttpClient _httpClient;
 	private final HttpHost _httpHost;
 	private final Set<String> _ignoredParameterKeys = new HashSet<>(
-		Arrays.asList(
-			"filePath", "handlers", "syncFile", "syncSite", "uiEvent"));
+		Arrays.asList("filePath", "syncFile", "syncSite", "uiEvent"));
 	private OAuthConsumer _oAuthConsumer;
 	private final boolean _oAuthEnabled;
 	private ScheduledFuture<?> _trackTransferRateScheduledFuture;

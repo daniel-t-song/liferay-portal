@@ -39,7 +39,11 @@ public class KaleoDatabaseConverter implements DatabaseConverter {
 				clazz.getClassLoader(), ".*Kaleo.*"));
 	}
 
-	@Reference
+	@Reference(unbind = "-")
+	private void setModelMigrator(ModelMigrator modelMigrator) {
+		_modelMigrator = modelMigrator;
+	}
+
 	private ModelMigrator _modelMigrator;
 
 }

@@ -41,7 +41,7 @@ public class ResourceActionTaskAssignmentSelector
 	@Override
 	public Collection<KaleoTaskAssignment> calculateTaskAssignments(
 		KaleoTaskAssignment kaleoTaskAssignment,
-		ExecutionContext executionContext) {
+		ExecutionContext executionContext, ClassLoader... classLoaders) {
 
 		ServiceContext serviceContext = executionContext.getServiceContext();
 

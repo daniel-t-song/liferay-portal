@@ -1,5 +1,5 @@
 dependencies {
-	provided project(":apps:layout:layout-taglib")
+	compile project(":apps:layout:layout-taglib")
 }
 
 liferay {

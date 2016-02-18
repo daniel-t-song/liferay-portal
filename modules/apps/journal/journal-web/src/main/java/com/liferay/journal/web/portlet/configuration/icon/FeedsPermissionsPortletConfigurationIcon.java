@@ -14,52 +14,38 @@
 
 package com.liferay.journal.web.portlet.configuration.icon;
 
-import com.liferay.journal.constants.JournalPortletKeys;
+import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.permission.JournalPermission;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.journal.web.portlet.action.ActionUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.security.PermissionsURLTag;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + JournalPortletKeys.JOURNAL,
-		"path=/view_feeds.jsp"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class FeedsPermissionsPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "permissions");
+	public FeedsPermissionsPortletConfigurationIcon(
+		PortletRequest portletRequest) {
+
+		super(portletRequest);
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "permissions";
+	}
 
+	@Override
+	public String getURL() {
 		String url = StringPool.BLANK;
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		try {
 			url = PermissionsURLTag.doTag(
@@ -76,15 +62,7 @@ public class FeedsPermissionsPortletConfigurationIcon
 	}
 
 	@Override
-	public double getWeight() {
-		return 100.0;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		return JournalPermission.contains(
 			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(),
 			ActionKeys.PERMISSIONS);
@@ -98,6 +76,10 @@ public class FeedsPermissionsPortletConfigurationIcon
 	@Override
 	public boolean isUseDialog() {
 		return true;
+	}
+
+	protected JournalArticle getArticle() throws Exception {
+		return ActionUtil.getArticle(portletRequest);
 	}
 
 }

@@ -19,7 +19,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.blogs.kernel.model.BlogsEntry;
-import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
+import com.liferay.document.library.kernel.exception.DuplicateFileException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
@@ -28,7 +28,6 @@ import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
-import com.liferay.dynamic.data.mapping.io.DDMFormJSONDeserializerUtil;
 import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializerUtil;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
@@ -416,8 +415,6 @@ public class FileSystemImporter extends BaseImporter {
 			InputStream inputStream)
 		throws Exception {
 
-		String language = getDDMStructureLanguage(fileName);
-
 		fileName = FileUtil.stripExtension(fileName);
 
 		String name = getName(fileName);
@@ -442,22 +439,15 @@ public class FileSystemImporter extends BaseImporter {
 			}
 		}
 
-		String content = StringUtil.read(inputStream);
+		String xsd = StringUtil.read(inputStream);
 
-		DDMForm ddmForm = null;
-
-		if (language.equals(TemplateConstants.LANG_TYPE_XML)) {
-			if (isJournalStructureXSD(content)) {
-				content = journalConverter.getDDMXSD(content);
-			}
-
-			DDMXMLUtil.validateXML(content);
-
-			ddmForm = DDMFormXSDDeserializerUtil.deserialize(content);
+		if (isJournalStructureXSD(xsd)) {
+			xsd = journalConverter.getDDMXSD(xsd);
 		}
-		else {
-			ddmForm = DDMFormJSONDeserializerUtil.deserialize(content);
-		}
+
+		DDMXMLUtil.validateXML(xsd);
+
+		DDMForm ddmForm = DDMFormXSDDeserializerUtil.deserialize(xsd);
 
 		DDMFormLayout ddmFormLayout = DDMUtil.getDefaultDDMFormLayout(ddmForm);
 
@@ -611,7 +601,7 @@ public class FileSystemImporter extends BaseImporter {
 
 		String name = getName(fileName);
 
-		String script = StringUtil.read(inputStream);
+		String xsl = StringUtil.read(inputStream);
 
 		setServiceContext(fileName);
 
@@ -648,7 +638,7 @@ public class FileSystemImporter extends BaseImporter {
 					PortalUtil.getClassNameId(JournalArticle.class),
 					getKey(fileName), getMap(name), null,
 					DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, null, language,
-					replaceFileEntryURL(script), false, false, null, null,
+					replaceFileEntryURL(xsl), false, false, null, null,
 					serviceContext);
 			}
 			else {
@@ -656,7 +646,7 @@ public class FileSystemImporter extends BaseImporter {
 					userId, ddmTemplate.getTemplateId(),
 					PortalUtil.getClassNameId(DDMStructure.class), getMap(name),
 					null, DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, null,
-					language, replaceFileEntryURL(script), false, false, null,
+					language, replaceFileEntryURL(xsl), false, false, null,
 					null, serviceContext);
 			}
 		}
@@ -734,7 +724,7 @@ public class FileSystemImporter extends BaseImporter {
 					StringPool.BLANK, StringPool.BLANK, inputStream, length,
 					serviceContext);
 			}
-			catch (DuplicateFileEntryException dfee) {
+			catch (DuplicateFileException dfe) {
 				fileEntry = DLAppLocalServiceUtil.getFileEntry(
 					groupId, parentFolderId, title);
 
@@ -1349,18 +1339,6 @@ public class FileSystemImporter extends BaseImporter {
 		finally {
 			IndexWriterHelperUtil.setIndexReadOnly(indexReadOnly);
 		}
-	}
-
-	protected String getDDMStructureLanguage(String fileName) {
-		String extension = FileUtil.getExtension(fileName);
-
-		if (extension.equals(TemplateConstants.LANG_TYPE_JSON) ||
-			extension.equals(TemplateConstants.LANG_TYPE_XML)) {
-
-			return extension;
-		}
-
-		return TemplateConstants.LANG_TYPE_XML;
 	}
 
 	protected String getDDMTemplateLanguage(String fileName) {

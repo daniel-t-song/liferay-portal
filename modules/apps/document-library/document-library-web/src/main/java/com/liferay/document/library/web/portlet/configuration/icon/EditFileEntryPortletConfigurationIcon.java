@@ -16,90 +16,58 @@ package com.liferay.document.library.web.portlet.configuration.icon;
 
 import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.document.library.web.display.context.logic.FileEntryDisplayContextHelper;
-import com.liferay.document.library.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
-		"path=/document_library/view_file_entry"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class EditFileEntryPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "edit");
+	public EditFileEntryPortletConfigurationIcon(
+		PortletRequest portletRequest, FileEntry fileEntry) {
+
+		super(portletRequest);
+
+		_fileEntry = fileEntry;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "edit";
+	}
 
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
 			PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter(
 			"mvcRenderCommandName", "/document_library/edit_file_entry");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
-
-		try {
-			FileEntry fileEntry = ActionUtil.getFileEntry(portletRequest);
-
-			portletURL.setParameter(
-				"fileEntryId", String.valueOf(fileEntry.getFileEntryId()));
-		}
-		catch (Exception e) {
-			return null;
-		}
+		portletURL.setParameter(
+			"fileEntryId", String.valueOf(_fileEntry.getFileEntryId()));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 106;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		try {
-			FileEntry fileEntry = ActionUtil.getFileEntry(portletRequest);
-
 			FileEntryDisplayContextHelper fileEntryDisplayContextHelper =
 				new FileEntryDisplayContextHelper(
-					themeDisplay.getPermissionChecker(), fileEntry);
+					themeDisplay.getPermissionChecker(), _fileEntry);
 
 			return fileEntryDisplayContextHelper.isEditActionAvailable();
 		}
-		catch (Exception e) {
+		catch (PortalException pe) {
 		}
 
 		return false;
@@ -109,5 +77,7 @@ public class EditFileEntryPortletConfigurationIcon
 	public boolean isToolTip() {
 		return false;
 	}
+
+	private final FileEntry _fileEntry;
 
 }

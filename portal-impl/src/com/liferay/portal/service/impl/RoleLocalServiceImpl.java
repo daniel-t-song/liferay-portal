@@ -45,7 +45,6 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.spring.aop.Skip;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
@@ -152,16 +151,6 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 		rolePersistence.update(role);
 
 		// Resources
-
-		long ownerId = userId;
-
-		if (user.isDefaultUser()) {
-			ownerId = 0;
-		}
-
-		resourceLocalService.addResources(
-			user.getCompanyId(), 0, ownerId, Role.class.getName(),
-			role.getRoleId(), false, false, false);
 
 		if (!user.isDefaultUser()) {
 			resourceLocalService.addResources(
@@ -301,22 +290,14 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 			checkSystemRole(companyId, name, descriptionMap, type);
 		}
 
-		String[] allSystemRoles = ArrayUtil.append(
-			systemRoles, systemOrganizationRoles, systemSiteRoles);
-
-		for (String roleName : allSystemRoles) {
-			Role role = getRole(companyId, roleName);
-
-			resourceLocalService.addResources(
-				companyId, 0, 0, Role.class.getName(), role.getRoleId(), false,
-				false, false);
-		}
-
 		// All users should be able to view all system roles
 
 		Role userRole = getRole(companyId, RoleConstants.USER);
 
-		for (String roleName : allSystemRoles) {
+		String[] userViewableRoles = ArrayUtil.append(
+			systemRoles, systemOrganizationRoles, systemSiteRoles);
+
+		for (String roleName : userViewableRoles) {
 			Role role = getRole(companyId, roleName);
 
 			resourcePermissionLocalService.setResourcePermissions(
@@ -1330,16 +1311,9 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 		catch (NoSuchRoleException nsre) {
 			User user = userLocalService.getDefaultUser(companyId);
 
-			PermissionThreadLocal.setAddResource(false);
-
-			try {
-				role = roleLocalService.addRole(
-					user.getUserId(), null, 0, name, null, descriptionMap, type,
-					null, null);
-			}
-			finally {
-				PermissionThreadLocal.setAddResource(true);
-			}
+			role = roleLocalService.addRole(
+				user.getUserId(), null, 0, name, null, descriptionMap, type,
+				null, null);
 
 			if (name.equals(RoleConstants.USER)) {
 				initPersonalControlPanelPortletsPermissions(role);

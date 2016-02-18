@@ -147,13 +147,6 @@ public class ShoppingOrderLocalServiceImpl
 				order.getUserName());
 		}
 
-		// Resources
-
-		resourceLocalService.addResources(
-			order.getCompanyId(), order.getGroupId(), order.getUserId(),
-			ShoppingOrder.class.getName(), order.getOrderId(), false, true,
-			false);
-
 		return order;
 	}
 

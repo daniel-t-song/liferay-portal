@@ -18,57 +18,41 @@ import com.liferay.bookmarks.constants.BookmarksPortletKeys;
 import com.liferay.bookmarks.model.BookmarksFolder;
 import com.liferay.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.bookmarks.service.permission.BookmarksFolderPermissionChecker;
-import com.liferay.bookmarks.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.trash.kernel.util.TrashUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + BookmarksPortletKeys.BOOKMARKS_ADMIN,
-		"path=/bookmarks/view_folder"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class DeleteFolderPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		String key = "delete";
+	public DeleteFolderPortletConfigurationIcon(
+		PortletRequest portletRequest, BookmarksFolder folder) {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		super(portletRequest);
 
-		if (isTrashEnabled(themeDisplay.getScopeGroupId())) {
-			key = "move-to-the-recycle-bin";
-		}
-
-		return LanguageUtil.get(
-			getResourceBundle(themeDisplay.getLocale()), key);
+		_folder = folder;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		if (isTrashEnabled(themeDisplay.getScopeGroupId())) {
+			return "move-to-the-recycle-bin";
+		}
 
+		return "delete";
+	}
+
+	@Override
+	public String getURL() {
 		PortletURL deleteURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, BookmarksPortletKeys.BOOKMARKS_ADMIN,
 			PortletRequest.ACTION_PHASE);
@@ -77,9 +61,6 @@ public class DeleteFolderPortletConfigurationIcon
 			ActionRequest.ACTION_NAME, "/bookmarks/edit_folder");
 
 		String cmd = Constants.DELETE;
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		if (isTrashEnabled(themeDisplay.getScopeGroupId())) {
 			cmd = Constants.MOVE_TO_TRASH;
@@ -91,16 +72,7 @@ public class DeleteFolderPortletConfigurationIcon
 			portletRequest, BookmarksPortletKeys.BOOKMARKS_ADMIN,
 			PortletRequest.RENDER_PHASE);
 
-		BookmarksFolder folder = null;
-
-		try {
-			folder = ActionUtil.getFolder(portletRequest);
-		}
-		catch (Exception e) {
-			return null;
-		}
-
-		long parentFolderId = folder.getParentFolderId();
+		long parentFolderId = _folder.getParentFolderId();
 
 		if (parentFolderId ==
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
@@ -118,31 +90,20 @@ public class DeleteFolderPortletConfigurationIcon
 		deleteURL.setParameter("redirect", parentFolderURL.toString());
 
 		deleteURL.setParameter(
-			"folderId", String.valueOf(folder.getFolderId()));
+			"folderId", String.valueOf(_folder.getFolderId()));
 
 		return deleteURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 100;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		try {
-			BookmarksFolder folder = ActionUtil.getFolder(portletRequest);
-
-			if (folder == null) {
+			if (_folder == null) {
 				return false;
 			}
 
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)portletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
-
 			if (BookmarksFolderPermissionChecker.contains(
-					themeDisplay.getPermissionChecker(), folder,
+					themeDisplay.getPermissionChecker(), _folder,
 					ActionKeys.DELETE)) {
 
 				return true;
@@ -165,5 +126,7 @@ public class DeleteFolderPortletConfigurationIcon
 
 		return false;
 	}
+
+	private final BookmarksFolder _folder;
 
 }

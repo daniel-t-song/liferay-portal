@@ -19,35 +19,26 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
-import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowStateException;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {"javax.portlet.name=" + NotificationsPortletKeys.NOTIFICATIONS},
-	service = PortletConfigurationIcon.class
-)
 public class DeliveryPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
+	public DeliveryPortletConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
+	}
+
 	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "configuration");
+	public String getMessage() {
+		return "configuration";
 	}
 
 	@Override
@@ -56,18 +47,11 @@ public class DeliveryPortletConfigurationIcon
 	}
 
 	@Override
-	public String getOnClick(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
+	public String getOnClick() {
 		StringBundler sb = new StringBundler(12);
 
 		sb.append("Liferay.Portlet.openWindow({bodyCssClass: ");
 		sb.append("'dialog-with-footer', namespace: '");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		sb.append(portletDisplay.getNamespace());
 
@@ -79,7 +63,7 @@ public class DeliveryPortletConfigurationIcon
 		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "configuration"));
 		sb.append("', uri: '");
 
-		PortletURL deliveryURL = getDeliveryURL(portletRequest);
+		PortletURL deliveryURL = getDeliveryURL();
 
 		sb.append(HtmlUtil.escapeJS(deliveryURL.toString()));
 
@@ -89,21 +73,14 @@ public class DeliveryPortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		PortletURL deliveryURL = getDeliveryURL(portletRequest);
+	public String getURL() {
+		PortletURL deliveryURL = getDeliveryURL();
 
 		return deliveryURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 100;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		return true;
 	}
 
@@ -112,10 +89,7 @@ public class DeliveryPortletConfigurationIcon
 		return false;
 	}
 
-	protected PortletURL getDeliveryURL(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	protected PortletURL getDeliveryURL() {
 		PortletURL portletURL = PortletURLFactoryUtil.create(
 			portletRequest, NotificationsPortletKeys.NOTIFICATIONS,
 			themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);

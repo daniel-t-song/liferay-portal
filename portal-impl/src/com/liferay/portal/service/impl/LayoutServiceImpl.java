@@ -818,9 +818,6 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		Layout layout = layoutLocalService.getLayout(
 			groupId, privateLayout, layoutId);
 
-		LayoutPermissionUtil.check(
-			getPermissionChecker(), layout, ActionKeys.VIEW);
-
 		return layout.getName(languageId);
 	}
 
@@ -839,29 +836,8 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		long companyId, String portletId, String preferencesKey,
 		String preferencesValue) {
 
-		LayoutReference[] layoutReferences = layoutLocalService.getLayouts(
+		return layoutLocalService.getLayouts(
 			companyId, portletId, preferencesKey, preferencesValue);
-
-		List<LayoutReference> filteredLayoutReferences = new ArrayList<>(
-			layoutReferences.length);
-
-		for (LayoutReference layoutReference : layoutReferences) {
-			try {
-				if (LayoutPermissionUtil.contains(
-						getPermissionChecker(),
-						layoutReference.getLayoutSoap().getPlid(),
-						ActionKeys.VIEW)) {
-
-					filteredLayoutReferences.add(layoutReference);
-				}
-			}
-			catch (PortalException pe) {
-				continue;
-			}
-		}
-
-		return filteredLayoutReferences.toArray(
-			new LayoutReference[filteredLayoutReferences.size()]);
 	}
 
 	@Override
@@ -1798,9 +1774,6 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	public Layout updateParentLayoutIdAndPriority(
 			long plid, long parentPlid, int priority)
 		throws PortalException {
-
-		LayoutPermissionUtil.check(
-			getPermissionChecker(), plid, ActionKeys.UPDATE);
 
 		return layoutLocalService.updateParentLayoutIdAndPriority(
 			plid, parentPlid, priority);

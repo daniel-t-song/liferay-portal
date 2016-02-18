@@ -195,6 +195,20 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 		return keywordQueries.toArray(new String[keywordQueries.size()]);
 	}
 
+	@Reference(unbind = "-")
+	protected void setElasticsearchConnectionManager(
+		ElasticsearchConnectionManager elasticsearchConnectionManager) {
+
+		_elasticsearchConnectionManager = elasticsearchConnectionManager;
+	}
+
+	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
+	protected void setQueryTranslator(
+		SuggesterTranslator<SuggestBuilder> suggesterTranslator) {
+
+		_suggesterTranslator = suggesterTranslator;
+	}
+
 	protected SuggesterResult translate(
 		Suggest.Suggestion
 			<? extends Suggest.Suggestion.Entry
@@ -266,10 +280,7 @@ public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchQuerySuggester.class);
 
-	@Reference
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
-
-	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private SuggesterTranslator<SuggestBuilder> _suggesterTranslator;
 
 }

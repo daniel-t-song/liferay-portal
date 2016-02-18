@@ -36,7 +36,7 @@ public class MultiLanguageTaskAssignmentSelector
 	@Override
 	public Collection<KaleoTaskAssignment> calculateTaskAssignments(
 			KaleoTaskAssignment kaleoTaskAssignment,
-			ExecutionContext executionContext)
+			ExecutionContext executionContext, ClassLoader... classLoaders)
 		throws PortalException {
 
 		String assigneeClassName = kaleoTaskAssignment.getAssigneeClassName();
@@ -63,7 +63,7 @@ public class MultiLanguageTaskAssignmentSelector
 
 		Collection<KaleoTaskAssignment> taskAssignments =
 			taskAssignmentSelector.calculateTaskAssignments(
-				kaleoTaskAssignment, executionContext);
+				kaleoTaskAssignment, executionContext, classLoaders);
 
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();

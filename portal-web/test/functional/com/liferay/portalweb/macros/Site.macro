@@ -96,10 +96,6 @@
 				<if>
 					<equals arg1="${uncheckPropagation}" arg2="true" />
 					<then>
-						<execute macro="Panel#expandPanel">
-							<var name="panelHeading" value="Pages" />
-						</execute>
-
 						<execute function="Uncheck#uncheckToggleSwitch" locator1="Checkbox#ENABLE_PROPAGATION" />
 					</then>
 				</if>
@@ -489,7 +485,7 @@
 			<condition function="IsNotVisible" locator1="SiteSettingsDisplaySettings#DEFINE_DEFAULT_AND_AVAILABLE_SITE_LANGUAGES_RADIO" />
 			<then>
 				<execute macro="Navigator#gotoTab">
-					<var name="tab" value="Languages" />
+					<var name="tab" value="Miscellaneous" />
 				</execute>
 			</then>
 		</if>
@@ -604,6 +600,8 @@
 			<equals arg1="${friendlyURLInvalid}" arg2="true" />
 			<then>
 				<execute macro="Alert#viewRequestFailedToComplete" />
+
+				<execute function="AssertClick" locator1="SiteSettingsSiteURL#SITE_URL_LABEL" value1="Site URL" />
 
 				<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="The friendly URL has too many slashes." />
 				<execute function="AssertTextEquals" locator1="TextInput#FRIENDLY_URL" value1="${siteFriendlyURLEdit}" />
@@ -720,7 +718,7 @@
 
 					<var name="key_rowEntry" value="${siteName}" />
 
-					<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+					<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 
 					<execute function="AssertClick" locator1="MenuItem#REQUEST_MEMBERSHIP" value1="Request Membership" />
 
@@ -742,7 +740,7 @@
 
 				<var name="key_rowEntry" value="${siteName}" />
 
-				<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+				<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 
 				<execute function="AssertClick" locator1="MenuItem#JOIN" value1="Join" />
 
@@ -750,7 +748,7 @@
 				<execute function="AssertTextEquals" locator1="MySites#SITE_TABLE_SITE_NAME" value1="${siteName}" />
 				<execute function="AssertTextEquals" locator1="MySites#SITE_TABLE_SITE_NAME_MEMBERS" value1="2" />
 
-				<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+				<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 
 				<execute function="AssertVisible" locator1="MenuItem#LEAVE" />
 			</else>
@@ -776,7 +774,7 @@
 
 		<var name="key_rowEntry" value="${siteName}" />
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 
 		<execute function="AssertClick" locator1="MenuItem#LEAVE" value1="Leave" />
 
@@ -784,7 +782,7 @@
 		<execute function="AssertTextEquals" locator1="MySites#SITE_TABLE_SITE_NAME" value1="${siteName}" />
 		<execute function="AssertTextEquals" locator1="MySites#SITE_TABLE_SITE_NAME_MEMBERS" value1="1" />
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 
 		<execute function="AssertVisible" locator1="MenuItem#JOIN" />
 	</command>
@@ -841,7 +839,7 @@
 
 		<var name="key_rowEntry" value="${key_cardText}" />
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 
 		<execute function="AssertClick" locator1="MenuItem#REMOVE_MEMBERSHIP" value1="Remove Membership" />
 
@@ -869,19 +867,34 @@
 	</command>
 
 	<command name="searchCP">
-		<execute macro="Site#searchInputCP">
-			<var name="siteName" value="Site Name" />
-		</execute>
+		<var name="key_siteName" value="${siteName}" />
 
-		<execute macro="Site#viewSearchResultsCP">
-			<var name="siteName" value="Site Name" />
-		</execute>
-	</command>
-
-	<command name="searchInputCP">
 		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${siteName}" />
-
 		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute function="AssertElementPresent" locator1="Sites#SITE_TABLE_CHECKBOX" value1="${siteName}" />
+		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_NAME" value1="${siteName}" />
+		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_TYPE" value1="${siteType}" />
+
+		<if>
+			<equals arg1="${siteMember}" arg2="Organization" />
+			<then>
+				<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_MEMBERS_ORGS" value1="1 ${siteMember}" />
+			</then>
+			<elseif>
+				<equals arg1="${siteMember}" arg2="User" />
+				<then>
+					<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_MEMBERS_USERS" value1="1 ${siteMember}" />
+				</then>
+			</elseif>
+			<else>
+				<fail message="Invalid var siteMember. Must be (Organization|User)." />
+			</else>
+		</if>
+
+		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_ACTIVE" value1="Yes" />
+		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_PENDING_REQUESTS" value1="" />
+		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_TAGS" value1="" />
+		<execute function="AssertVisible" locator1="Sites#SITE_TABLE_ACTIONS" />
 	</command>
 
 	<command name="searchMemberCP">
@@ -1085,7 +1098,7 @@
 			<condition function="IsNotVisible" locator1="SiteSettingsDisplaySettings#DEFINE_DEFAULT_AND_AVAILABLE_SITE_LANGUAGES_RADIO" />
 			<then>
 				<execute macro="Navigator#gotoTab">
-					<var name="tab" value="Languages" />
+					<var name="tab" value="Miscellaneous" />
 				</execute>
 			</then>
 		</if>
@@ -1203,18 +1216,6 @@
 	<command name="viewPrivateVirtualHostUrlUserLoginRedirect">
 		<execute function="AssertTextEquals" locator1="TextInput#EMAIL_ADDRESS" value1="${userEmailAddress}" />
 		<execute function="AssertElementPresent" locator1="TextInput#PASSWORD" />
-	</command>
-
-	<command name="viewSearchResultsCP">
-		<var name="key_siteName" value="${siteName}" />
-
-		<execute function="AssertElementPresent" locator1="Sites#SITE_TABLE_CHECKBOX" value1="${siteName}" />
-		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_NAME" value1="${siteName}" />
-		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_TYPE" value1="${siteType}" />
-		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_ACTIVE" value1="Yes" />
-		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_PENDING_REQUESTS" value1="" />
-		<execute function="AssertTextEquals" locator1="Sites#SITE_TABLE_TAGS" value1="" />
-		<execute function="AssertVisible" locator1="Sites#SITE_TABLE_ACTIONS" />
 	</command>
 
 	<command name="viewSiteAdminPermissionsCP">

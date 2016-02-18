@@ -460,7 +460,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category2 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -534,7 +533,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category1 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -558,7 +556,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category2 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -605,7 +602,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category4 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -679,7 +675,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category3 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -703,7 +698,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category4 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -730,7 +724,6 @@
 
 		<execute macro="MessageboardsThread#viewPG">
 			<var name="threadBody" value="MB Root Thread2 Message Body" />
-			<var name="threadsNumber" value="0" />
 			<var name="threadSubject" value="MB Root Thread2 Message Subject" />
 		</execute>
 
@@ -742,7 +735,7 @@
 			<var name="categoryDescription" value="MB Category3 Description" />
 			<var name="categoryDescriptionEnabled" value="true" />
 			<var name="categoryName" value="MB Category3 Name" />
-			<var name="threadsNumber" value="0" />
+			<var name="threadPostCount" value="1" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -753,7 +746,7 @@
 			<var name="categoryDescription" value="MB Category4 Description" />
 			<var name="categoryDescriptionEnabled" value="true" />
 			<var name="categoryName" value="MB Category4 Name" />
-			<var name="threadsNumber" value="0" />
+			<var name="threadPostCount" value="1" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -767,7 +760,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category3 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />
@@ -791,7 +783,6 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#gotoPG">
-			<var name="categoryDescription" value="MB Category4 Description" />
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
 			<var name="startedByUserName" value="Test Test" />

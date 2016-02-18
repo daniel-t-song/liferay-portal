@@ -22,7 +22,7 @@ Group liveGroup = (Group)request.getAttribute("site.liveGroup");
 
 <liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="display-settings" />
 
-<h4 class="text-default"><liferay-ui:message key="language" /></h4>
+<h3><liferay-ui:message key="language" /></h3>
 
 <%
 UnicodeProperties typeSettingsProperties = null;
@@ -47,9 +47,9 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 %>
 
 <c:if test="<%= disabledLocaleInput %>">
-	<p class="text-muted">
+	<div class="alert alert-info">
 		<liferay-ui:message key="the-language-settings-cannot-be-edited-while-propagation-of-changes-from-the-site-template-is-enabled" />
-	</p>
+	</div>
 </c:if>
 
 <aui:input checked="<%= inheritLocales %>" disabled="<%= disabledLocaleInput %>" id="<%= GroupConstants.TYPE_SETTINGS_KEY_INHERIT_LOCALES %>" label="use-the-default-language-options" name="TypeSettingsProperties--inheritLocales--" type="radio" value="<%= true %>" />
@@ -57,8 +57,7 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 <aui:input checked="<%= !inheritLocales %>" disabled="<%= disabledLocaleInput %>" id="customLocales" label="define-a-custom-default-language-and-additional-available-languages-for-this-site" name="TypeSettingsProperties--inheritLocales--" type="radio" value="<%= false %>" />
 
 <aui:fieldset id="customLocalesFieldset">
-	<aui:fieldset cssClass="default-language">
-		<h4 class="text-muted"><liferay-ui:message key="default-language" /></h4>
+	<aui:fieldset cssClass="default-language" label="default-language">
 
 		<%
 		User user2 = company.getDefaultUser();
@@ -66,27 +65,21 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 		Locale defaultLocale = user2.getLocale();
 		%>
 
-		<p class="text-muted">
-			<%= defaultLocale.getDisplayName(locale) %>
-		</p>
+		<%= defaultLocale.getDisplayName(locale) %>
 	</aui:fieldset>
 
-	<aui:fieldset cssClass="available-languages">
-		<h4 class="text-muted"><liferay-ui:message key="available-languages" /></h4>
+	<aui:fieldset cssClass="available-languages" label="available-languages">
 
-		<p class="text-muted">
+		<%
+		for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
+		%>
 
-			<%
-			for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
-			%>
+			<%= availableLocale.getDisplayName(locale) %>,
 
-				<%= availableLocale.getDisplayName(locale) %>,
+		<%
+		}
+		%>
 
-			<%
-			}
-			%>
-
-		</p>
 	</aui:fieldset>
 </aui:fieldset>
 
@@ -111,9 +104,7 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 	Set<Locale> siteAvailableLocales = LanguageUtil.getAvailableLocales(liveGroup.getGroupId());
 	%>
 
-	<aui:fieldset cssClass="default-language">
-		<h4 class="text-default"><liferay-ui:message key="default-language" /></h4>
-
+	<aui:fieldset cssClass="default-language" label="default-language">
 		<aui:select disabled="<%= disabledLocaleInput %>" label="" name="TypeSettingsProperties--languageId--" title="language">
 
 			<%
@@ -131,9 +122,7 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 		</aui:select>
 	</aui:fieldset>
 
-	<aui:fieldset cssClass="available-languages">
-		<h4 class="text-default"><liferay-ui:message key="available-languages" /></h4>
-
+	<aui:fieldset cssClass="available-languages" label="available-languages">
 		<aui:input name='<%= "TypeSettingsProperties--" + PropsKeys.LOCALES + "--" %>' type="hidden" value="<%= StringUtil.merge(LocaleUtil.toLanguageIds(siteAvailableLocales)) %>" />
 
 		<%

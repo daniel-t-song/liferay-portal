@@ -101,7 +101,7 @@ AUI.add(
 									targetNode.prepend(alertsContainer);
 								}
 								else {
-									var navbar = rootNode.one('.portlet-body > .navbar');
+									var navbar = rootNode.one('.navbar');
 
 									if (navbar) {
 										navbar.placeAfter(alertsContainer);
@@ -192,7 +192,7 @@ AUI.add(
 								{
 									duration: instance.get('duration') / 1000,
 									easing: 'ease-out',
-									height: visible ? instance.get('boundingBox').outerHeight() + 'px' : 0
+									height: visible ? instance.get('boundingBox').getComputedStyle('height') : 0
 								},
 								function() {
 									parentNode.toggleClass('in', visible);

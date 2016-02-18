@@ -16,63 +16,44 @@ package com.liferay.message.boards.web.portlet.configuration.icon;
 
 import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.web.constants.MBPortletKeys;
-import com.liferay.message.boards.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.SubscriptionLocalService;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portlet.messageboards.MBGroupServiceSettings;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS_ADMIN,
-		"path=/message_boards/view_category"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class CategorySubscriptionPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		String key = "subscribe";
+	public CategorySubscriptionPortletConfigurationIcon(
+		PortletRequest portletRequest, MBCategory category,
+		boolean subscribed) {
 
-		try {
-			MBCategory category = ActionUtil.getCategory(portletRequest);
+		super(portletRequest);
 
-			if (isSubscribed(portletRequest, category)) {
-				key = "unsubscribe";
-			}
-		}
-		catch (Exception e) {
-		}
-
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), key);
+		_category = category;
+		_subscribed = subscribed;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		if (_subscribed) {
+			return "unsubscribe";
+		}
 
+		return "subscribe";
+	}
+
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, MBPortletKeys.MESSAGE_BOARDS_ADMIN,
 			PortletRequest.ACTION_PHASE);
@@ -80,16 +61,7 @@ public class CategorySubscriptionPortletConfigurationIcon
 		portletURL.setParameter(
 			ActionRequest.ACTION_NAME, "/message_boards/edit_category");
 
-		MBCategory category = null;
-
-		try {
-			category = ActionUtil.getCategory(portletRequest);
-		}
-		catch (Exception e) {
-			return null;
-		}
-
-		if (isSubscribed(portletRequest, category)) {
+		if (_subscribed) {
 			portletURL.setParameter(Constants.CMD, Constants.UNSUBSCRIBE);
 		}
 		else {
@@ -99,62 +71,25 @@ public class CategorySubscriptionPortletConfigurationIcon
 		portletURL.setParameter(
 			"redirect", PortalUtil.getCurrentURL(portletRequest));
 		portletURL.setParameter(
-			"mbCategoryId", String.valueOf(category.getCategoryId()));
+			"mbCategoryId", String.valueOf(_category.getCategoryId()));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 101;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		try {
-			MBGroupServiceSettings mbGroupServiceSettings =
-				MBGroupServiceSettings.getInstance(
-					themeDisplay.getScopeGroupId());
-
-			if (!mbGroupServiceSettings.isEmailMessageAddedEnabled() &&
-				!mbGroupServiceSettings.isEmailMessageUpdatedEnabled()) {
-
-				return false;
-			}
-
-			MBCategory category = ActionUtil.getCategory(portletRequest);
-
 			return MBCategoryPermission.contains(
-				themeDisplay.getPermissionChecker(), category,
+				themeDisplay.getPermissionChecker(), _category,
 				ActionKeys.SUBSCRIBE);
 		}
-		catch (Exception e) {
+		catch (PortalException pe) {
 		}
 
 		return false;
 	}
 
-	@Reference(unbind = "-")
-	protected void setSubscriptionLocalService(
-		SubscriptionLocalService subscriptionLocalService) {
-
-		_subscriptionLocalService = subscriptionLocalService;
-	}
-
-	private boolean isSubscribed(
-		PortletRequest portletRequest, MBCategory category) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		return _subscriptionLocalService.isSubscribed(
-			themeDisplay.getCompanyId(), themeDisplay.getUserId(),
-			MBCategory.class.getName(), category.getCategoryId());
-	}
-
-	private SubscriptionLocalService _subscriptionLocalService;
+	private final MBCategory _category;
+	private final boolean _subscribed;
 
 }

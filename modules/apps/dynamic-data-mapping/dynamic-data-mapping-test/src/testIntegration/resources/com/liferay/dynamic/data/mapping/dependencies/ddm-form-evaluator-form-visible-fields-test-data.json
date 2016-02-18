@@ -22,7 +22,7 @@
 				"en_US": ""
 			},
 			"type": "text",
-			"visibilityExpression": "TRUE"
+			"visibilityExpression": "true"
 		},
 		{
 			"dataType": "boolean",
@@ -44,7 +44,7 @@
 				"en_US": ""
 			},
 			"type": "checkbox",
-			"visibilityExpression": "equals(FirstName, \"Nina\")"
+			"visibilityExpression": "FirstName.equals(\"Nina\")"
 		}
 	]
 }

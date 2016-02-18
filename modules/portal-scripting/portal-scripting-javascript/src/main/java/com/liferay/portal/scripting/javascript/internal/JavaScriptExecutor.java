@@ -20,6 +20,9 @@ import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.SingleVMPool;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingExecutor;
+import com.liferay.portal.kernel.util.AggregateClassLoader;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.scripting.BaseScriptingExecutor;
@@ -62,17 +65,23 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 	@Override
 	public Map<String, Object> eval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, String script)
+			Set<String> outputNames, String script, ClassLoader... classLoaders)
 		throws ScriptingException {
 
-		Script compiledScript = getCompiledScript(script);
+		Script compiledScript = getCompiledScript(script, classLoaders);
 
 		try {
 			Context context = Context.enter();
 
 			Scriptable scriptable = context.initStandardObjects();
 
-			context.setApplicationClassLoader(getClass().getClassLoader());
+			if (ArrayUtil.isNotEmpty(classLoaders)) {
+				ClassLoader aggregateClassLoader =
+					AggregateClassLoader.getAggregateClassLoader(
+						PortalClassLoaderUtil.getClassLoader(), classLoaders);
+
+				context.setApplicationClassLoader(aggregateClassLoader);
+			}
 
 			for (Map.Entry<String, Object> entry : inputObjects.entrySet()) {
 				String key = entry.getKey();
@@ -132,6 +141,8 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
+		initScriptingExecutorClassLoader();
+
 		JavaScriptExecutorConfiguration javaScriptExecutorConfiguration =
 			Configurable.createConfigurable(
 				JavaScriptExecutorConfiguration.class, properties);
@@ -144,7 +155,8 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 			Arrays.asList(forbiddenClassNames));
 	}
 
-	protected Script getCompiledScript(String script)
+	protected Script getCompiledScript(
+			String script, ClassLoader... classLoaders)
 		throws ScriptingException {
 
 		String key = String.valueOf(script.hashCode());
@@ -158,7 +170,10 @@ public class JavaScriptExecutor extends BaseScriptingExecutor {
 		try {
 			Context context = Context.enter();
 
-			context.setApplicationClassLoader(getClass().getClassLoader());
+			if (ArrayUtil.isNotEmpty(classLoaders)) {
+				context.setApplicationClassLoader(
+					getAggregateClassLoader(classLoaders));
+			}
 
 			compiledScript = context.compileString(script, "script", 0, null);
 		}

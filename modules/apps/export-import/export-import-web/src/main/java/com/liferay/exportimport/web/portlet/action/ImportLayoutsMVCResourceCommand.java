@@ -50,7 +50,8 @@ public class ImportLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 
 		if (cmd.equals(Constants.IMPORT)) {
 			portletRequestDispatcher = getPortletRequestDispatcher(
-				resourceRequest, "/import/processes_list/view.jsp");
+				resourceRequest,
+				"/import/processes_list/import_layouts_processes.jsp");
 		}
 		else {
 			portletRequestDispatcher = getPortletRequestDispatcher(

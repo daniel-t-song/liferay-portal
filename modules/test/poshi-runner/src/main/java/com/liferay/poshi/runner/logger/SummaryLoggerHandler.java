@@ -91,30 +91,23 @@ public final class SummaryLoggerHandler {
 	}
 
 	public static LoggerElement getSummarySnapshotLoggerElement() {
-		LoggerElement loggerElement = new LoggerElement();
+		LoggerElement summaryLogLoggerElement = _summaryLogLoggerElement.copy();
 
-		loggerElement.setClassName("summary-log");
-		loggerElement.setName("div");
+		List<LoggerElement> loggerElements =
+			summaryLogLoggerElement.loggerElements("div");
 
-		LoggerElement causeLoggerElement =
-			_summaryLogLoggerElement.loggerElement("div", "cause");
+		for (LoggerElement loggerElement : loggerElements) {
+			String className = loggerElement.getClassName();
 
-		if (causeLoggerElement != null) {
-			loggerElement.addChildLoggerElement(causeLoggerElement);
+			if (className.equals("screenshots")) {
+				summaryLogLoggerElement.removeChildLoggerElement(loggerElement);
+			}
+			else if (className.equals("steps")) {
+				_removeUnneededStepsFromLoggerElement(loggerElement);
+			}
 		}
 
-		LoggerElement stepsLoggerElement =
-			_summaryLogLoggerElement.loggerElement("div", "steps");
-
-		if (stepsLoggerElement != null) {
-			stepsLoggerElement = stepsLoggerElement.copy();
-
-			_removeUnneededStepsFromLoggerElement(stepsLoggerElement);
-
-			loggerElement.addChildLoggerElement(stepsLoggerElement);
-		}
-
-		return loggerElement;
+		return summaryLogLoggerElement;
 	}
 
 	public static void passSummary(Element element) {

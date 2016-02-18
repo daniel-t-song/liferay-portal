@@ -39,11 +39,19 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 SearchContainer templateSearch = new TemplateSearch(renderRequest, portletURL, WorkflowConstants.STATUS_APPROVED);
 
-OrderByComparator<DDMTemplate> orderByComparator = DDMUtil.getTemplateOrderByComparator(ddmDisplayContext.getOrderByCol(), ddmDisplayContext.getOrderByType());
+String orderByCol = ParamUtil.getString(request, "orderByCol");
+String orderByType = ParamUtil.getString(request, "orderByType");
 
-templateSearch.setOrderByCol(ddmDisplayContext.getOrderByCol());
-templateSearch.setOrderByComparator(orderByComparator);
-templateSearch.setOrderByType(ddmDisplayContext.getOrderByType());
+if ((orderByCol != null) && (orderByType != null)) {
+	portalPreferences.setValue(DDMPortletKeys.DYNAMIC_DATA_MAPPING, "entries-order-by-col", orderByCol);
+	portalPreferences.setValue(DDMPortletKeys.DYNAMIC_DATA_MAPPING, "entries-order-by-type", orderByType);
+}
+else {
+	orderByCol = portalPreferences.getValue(DDMPortletKeys.DYNAMIC_DATA_MAPPING, "entries-order-by-col", "id");
+	orderByType = portalPreferences.getValue(DDMPortletKeys.DYNAMIC_DATA_MAPPING, "entries-order-by-type", "asc");
+}
+
+OrderByComparator<DDMTemplate> orderByComparator = DDMUtil.getTemplateOrderByComparator(orderByCol, orderByType);
 %>
 
 <portlet:actionURL var="selectURL">
@@ -71,8 +79,8 @@ templateSearch.setOrderByType(ddmDisplayContext.getOrderByType());
 				<liferay-util:param name="classPK" value="<%= String.valueOf(classPK) %>" />
 				<liferay-util:param name="eventName" value="<%= eventName %>" />
 				<liferay-util:param name="includeCheckBox" value="<%= Boolean.FALSE.toString() %>" />
-				<liferay-util:param name="orderByCol" value="<%= ddmDisplayContext.getOrderByCol() %>" />
-				<liferay-util:param name="orderByType" value="<%= ddmDisplayContext.getOrderByType() %>" />
+				<liferay-util:param name="orderByCol" value="<%= orderByCol %>" />
+				<liferay-util:param name="orderByType" value="<%= orderByType %>" />
 			</liferay-util:include>
 		</c:when>
 		<c:otherwise>
@@ -85,6 +93,9 @@ templateSearch.setOrderByType(ddmDisplayContext.getOrderByType());
 
 	<div class="container-fluid-1280">
 		<liferay-ui:search-container
+			orderByCol="<%= orderByCol %>"
+			orderByComparator="<%= orderByComparator %>"
+			orderByType="<%= orderByType %>"
 			searchContainer="<%= templateSearch %>"
 		>
 			<liferay-ui:search-container-results>

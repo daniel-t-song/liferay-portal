@@ -46,7 +46,9 @@ import org.slf4j.LoggerFactory;
  */
 public class JPathWatcher extends Watcher {
 
-	public JPathWatcher(Path filePath, WatchEventListener watchEventListener) {
+	public JPathWatcher(Path filePath, WatchEventListener watchEventListener)
+		throws IOException {
+
 		super(filePath, watchEventListener);
 	}
 

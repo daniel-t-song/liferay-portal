@@ -28,11 +28,11 @@ import java.util.List;
  * @author Eudaldo Alonso
  */
 public class PortletConfigurationIconServiceReferenceMapper
-	implements ServiceReferenceMapper<String, PortletConfigurationIcon> {
+	implements ServiceReferenceMapper<String, PortletConfigurationIconFactory> {
 
 	@Override
 	public void map(
-		ServiceReference<PortletConfigurationIcon> serviceReference,
+		ServiceReference<PortletConfigurationIconFactory> serviceReference,
 		Emitter<String> emitter) {
 
 		String portletId = (String)serviceReference.getProperty(

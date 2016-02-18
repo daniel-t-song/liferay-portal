@@ -118,28 +118,26 @@ renderResponse.setTitle(LanguageUtil.get(request, "add-new-page"));
 			<aui:input autoFocus="<%= true %>" id="addLayoutName" name="name" />
 
 			<aui:input id="addLayoutHidden" label="hide-from-navigation-menu" name="hidden" type="toggle-switch" />
+		</aui:fieldset>
 
-			<h4><liferay-ui:message key="type" /></h4>
-
-			<div id="<portlet:namespace />templateList">
+		<aui:fieldset label="type">
+			<aui:nav id="templateList">
 				<c:if test='<%= ArrayUtil.contains(types, "portlet") %>'>
-					<div data-search='<%= HtmlUtil.escape(LanguageUtil.get(request, "empty-page")) %>'>
+					<aui:nav-item data-search='<%= HtmlUtil.escape(LanguageUtil.get(request, "empty-page")) %>'>
 						<div class="active lfr-page-template-title toggler-header toggler-header-expanded" data-type="portlet">
 							<aui:input checked="<%= true %>" id="addLayoutSelectedPageTemplateBlank" label="empty-page" name="selectedPageTemplate" type="radio" />
+
+							<liferay-ui:message key="empty-page-description" />
 						</div>
 
 						<div class="lfr-page-template-options toggler-content toggler-content-expanded">
-							<p class="small text-muted">
-								<liferay-ui:message key="empty-page-description" />
-							</p>
-
 							<liferay-ui:layout-templates-list
 								layoutTemplateId="<%= PropsValues.DEFAULT_LAYOUT_TEMPLATE_ID %>"
 								layoutTemplateIdPrefix="addLayout"
 								layoutTemplates="<%= LayoutTemplateLocalServiceUtil.getLayoutTemplates(layout.getThemeId()) %>"
 							/>
 						</div>
-					</div>
+					</aui:nav-item>
 				</c:if>
 
 				<%
@@ -149,23 +147,23 @@ renderResponse.setTitle(LanguageUtil.get(request, "add-new-page"));
 					String name = HtmlUtil.escape(layoutPrototype.getName(locale));
 				%>
 
-					<div data-search="<%= name %>">
+					<aui:nav-item data-search="<%= name %>">
 						<div class="lfr-page-template-title toggler-header toggler-header-collapsed" data-prototype-id="<%= layoutPrototype.getLayoutPrototypeId() %>">
 							<aui:input id='<%= "addLayoutSelectedPageTemplate" + layoutPrototype.getUuid() %>' label="<%= name %>" name="selectedPageTemplate" type="radio" />
+
+							<%= HtmlUtil.escape(layoutPrototype.getDescription(locale)) %>
 						</div>
 
 						<div class="lfr-page-template-options toggler-content toggler-content-collapsed">
-							<p class="small text-muted">
-								<%= HtmlUtil.escape(layoutPrototype.getDescription(locale)) %>
-							</p>
-
-							<aui:input id='<%= "addLayoutLayoutPrototypeLinkEnabled" + layoutPrototype.getUuid() %>' label="automatically-apply-changes-done-to-the-page-template" name='<%= "layoutPrototypeLinkEnabled" + layoutPrototype.getUuid() %>' type="toggle-switch" value="<%= PropsValues.LAYOUT_PROTOTYPE_LINK_ENABLED_DEFAULT %>" />
+							<aui:input id='<%= "addLayoutLayoutPrototypeLinkEnabled" + layoutPrototype.getUuid() %>' label="automatically-apply-changes-done-to-the-page-template" name='<%= "layoutPrototypeLinkEnabled" + layoutPrototype.getUuid() %>' type="checkbox" value="<%= PropsValues.LAYOUT_PROTOTYPE_LINK_ENABLED_DEFAULT %>" />
 						</div>
-					</div>
+					</aui:nav-item>
 
 				<%
 				}
+				%>
 
+				<%
 				liferayPortletRequest.setAttribute(WebKeys.LAYOUT_DESCRIPTIONS, layoutsAdminDisplayContext.getLayoutDescriptions());
 
 				int layoutsCount = LayoutLocalServiceUtil.getLayoutsCount(layoutsAdminDisplayContext.getGroup(), privateLayout);
@@ -184,42 +182,38 @@ renderResponse.setTitle(LanguageUtil.get(request, "add-new-page"));
 					ResourceBundle layoutTypeResourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, layoutTypeController.getClass());
 				%>
 
-					<div data-search='<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + type) %>'>
+					<aui:nav-item data-search='<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + type) %>'>
 						<div class="lfr-page-template-title toggler-header toggler-header-collapsed" data-type="<%= type %>">
 							<aui:input disabled="<%= (layoutsCount == 0) && !layoutTypeController.isFirstPageable() %>" id='<%= "addLayoutSelectedPageTemplate" + type %>' label='<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + type) %>' name="selectedPageTemplate" type="radio" />
+
+							<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + type + ".description") %>
 						</div>
 
 						<div class="lfr-page-template-options toggler-content toggler-content-collapsed">
-							<p class="small text-muted">
-								<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + type + ".description") %>
-							</p>
-
 							<%= layoutTypeController.includeEditContent(request, response, selLayout) %>
 						</div>
-					</div>
+					</aui:nav-item>
 
 				<%
 				}
 				%>
 
 				<c:if test='<%= ArrayUtil.contains(types, "portlet") %>'>
-					<div data-search="portlet">
+					<aui:nav-item data-search="portlet">
 						<div class="lfr-page-template-title toggler-header toggler-header-collapsed" data-type="portlet">
 							<aui:input id="addLayoutSelectedPageTemplateCopyOfPage" label="copy-of-a-page" name="selectedPageTemplate" type="radio" />
+
+							<liferay-ui:message key="copy-of-a-page-description" />
 						</div>
 
 						<div class="lfr-page-template-options toggler-content toggler-content-collapsed">
-							<p class="small text-muted">
-								<liferay-ui:message key="copy-of-a-page-description" />
-							</p>
-
 							<liferay-util:include page="/html/portal/layout/edit/portlet_applications.jsp">
 								<liferay-util:param name="copyLayoutIdPrefix" value="addLayout" />
 							</liferay-util:include>
 						</div>
-					</div>
+					</aui:nav-item>
 				</c:if>
-			</div>
+			</aui:nav>
 		</aui:fieldset>
 	</aui:fieldset-group>
 

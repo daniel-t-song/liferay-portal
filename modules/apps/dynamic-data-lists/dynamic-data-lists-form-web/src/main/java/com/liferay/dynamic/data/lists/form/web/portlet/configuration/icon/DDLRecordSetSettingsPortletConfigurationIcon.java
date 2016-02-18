@@ -14,51 +14,36 @@
 
 package com.liferay.dynamic.data.lists.form.web.portlet.configuration.icon;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Marcellus Tavares
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + com.liferay.dynamic.data.lists.form.web.constants.DDLFormPortletKeys.DYNAMIC_DATA_LISTS_FORM_ADMIN,
-		"path=/admin/edit_record_set.jsp"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class DDLRecordSetSettingsPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "settings");
+	public DDLRecordSetSettingsPortletConfigurationIcon(
+		PortletRequest portletRequest) {
+
+		super(portletRequest);
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "settings";
+	}
 
+	@Override
+	public String getURL() {
 		return "javascript:Liferay.DDL.openSettings(" +
-			String.valueOf(getRecordSetId(portletRequest)) + ")";
+			String.valueOf(getRecordSetId()) + ")";
 	}
 
 	@Override
-	public double getWeight() {
-		return 110.0;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		return true;
 	}
 
@@ -72,7 +57,7 @@ public class DDLRecordSetSettingsPortletConfigurationIcon
 		return false;
 	}
 
-	protected long getRecordSetId(PortletRequest portletRequest) {
+	protected long getRecordSetId() {
 		return ParamUtil.getLong(portletRequest, "recordSetId");
 	}
 

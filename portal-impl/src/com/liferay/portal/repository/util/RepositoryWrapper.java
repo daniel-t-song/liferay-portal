@@ -156,24 +156,24 @@ public class RepositoryWrapper implements Repository {
 	@Deprecated
 	@Override
 	public void checkInFileEntry(
-			long fileEntryId, boolean majorVersion, String changeLog,
+			long fileEntryId, boolean major, String changeLog,
 			ServiceContext serviceContext)
 		throws PortalException {
 
 		_repository.checkInFileEntry(
 			com.liferay.portal.kernel.repository.util.RepositoryUserUtil.
 				getUserId(),
-			fileEntryId, majorVersion, changeLog, serviceContext);
+			fileEntryId, major, changeLog, serviceContext);
 	}
 
 	@Override
 	public void checkInFileEntry(
-			long userId, long fileEntryId, boolean majorVersion,
-			String changeLog, ServiceContext serviceContext)
+			long userId, long fileEntryId, boolean major, String changeLog,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		_repository.checkInFileEntry(
-			userId, fileEntryId, majorVersion, changeLog, serviceContext);
+			userId, fileEntryId, major, changeLog, serviceContext);
 	}
 
 	@Override

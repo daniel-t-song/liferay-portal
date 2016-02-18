@@ -76,21 +76,12 @@ public class TempFileEntryUtil {
 			InputStream inputStream, String mimeType)
 		throws PortalException {
 
-		boolean dlAppHelperEnabled = DLAppHelperThreadLocal.isEnabled();
+		TemporaryFileEntriesCapability temporaryFileEntriesCapability =
+			_getTemporaryFileEntriesCapability(groupId);
 
-		try {
-			DLAppHelperThreadLocal.setEnabled(false);
-
-			TemporaryFileEntriesCapability temporaryFileEntriesCapability =
-				_getTemporaryFileEntriesCapability(groupId);
-
-			return temporaryFileEntriesCapability.addTemporaryFileEntry(
-				new TemporaryFileEntriesScope(_UUID, userId, folderName),
-				fileName, mimeType, inputStream);
-		}
-		finally {
-			DLAppHelperThreadLocal.setEnabled(dlAppHelperEnabled);
-		}
+		return temporaryFileEntriesCapability.addTemporaryFileEntry(
+			new TemporaryFileEntriesScope(_UUID, userId, folderName), fileName,
+			mimeType, inputStream);
 	}
 
 	public static void deleteTempFileEntry(long fileEntryId)
@@ -112,21 +103,11 @@ public class TempFileEntryUtil {
 			long groupId, long userId, String folderName, String fileName)
 		throws PortalException {
 
-		boolean dlAppHelperEnabled = DLAppHelperThreadLocal.isEnabled();
+		TemporaryFileEntriesCapability temporaryFileEntriesCapability =
+			_getTemporaryFileEntriesCapability(groupId);
 
-		try {
-			DLAppHelperThreadLocal.setEnabled(false);
-
-			TemporaryFileEntriesCapability temporaryFileEntriesCapability =
-				_getTemporaryFileEntriesCapability(groupId);
-
-			temporaryFileEntriesCapability.deleteTemporaryFileEntry(
-				new TemporaryFileEntriesScope(_UUID, userId, folderName),
-				fileName);
-		}
-		finally {
-			DLAppHelperThreadLocal.setEnabled(dlAppHelperEnabled);
-		}
+		temporaryFileEntriesCapability.deleteTemporaryFileEntry(
+			new TemporaryFileEntriesScope(_UUID, userId, folderName), fileName);
 	}
 
 	public static String getOriginalTempFileName(String tempFileName) {

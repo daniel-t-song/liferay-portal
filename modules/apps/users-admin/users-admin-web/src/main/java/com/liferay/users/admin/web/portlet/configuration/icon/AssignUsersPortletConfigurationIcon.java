@@ -14,54 +14,37 @@
 
 package com.liferay.users.admin.web.portlet.configuration.icon;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.permission.OrganizationPermissionUtil;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 import com.liferay.users.admin.web.portlet.action.ActionUtil;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Pei-Jung Lan
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN,
-		"path=/users_admin/view"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class AssignUsersPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "assign-users");
+	public AssignUsersPortletConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "assign-users";
+	}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	@Override
+	public String getURL() {
 		try {
 			PortletURL portletURL = PortletURLFactoryUtil.create(
 				portletRequest, UsersAdminPortletKeys.USERS_ADMIN,
@@ -89,15 +72,7 @@ public class AssignUsersPortletConfigurationIcon
 	}
 
 	@Override
-	public double getWeight() {
-		return 103;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		try {
 			PermissionChecker permissionChecker =
 				themeDisplay.getPermissionChecker();

@@ -14,24 +14,19 @@
 
 package com.liferay.portlet.configuration.icon.minimize;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
-import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(immediate = true, service = PortletConfigurationIcon.class)
 public class MinimizePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
+
+	public MinimizePortletConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
+	}
 
 	@Override
 	public String getCssClass() {
@@ -39,59 +34,27 @@ public class MinimizePortletConfigurationIcon
 	}
 
 	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		String key = "minimize";
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public String getMessage() {
 		if (portletDisplay.isStateMin()) {
-			key = "restore";
+			return "restore";
 		}
 
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), key);
+		return "minimize";
 	}
 
 	@Override
-	public String getOnClick(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public String getOnClick() {
 		return "Liferay.Portlet.minimize('#p_p_id_".concat(
 			portletDisplay.getId()).concat("_', this); return false;");
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public String getURL() {
 		return portletDisplay.getURLMin();
 	}
 
 	@Override
-	public double getWeight() {
-		return 6.0;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public boolean isShow() {
 		return portletDisplay.isShowMinIcon();
 	}
 

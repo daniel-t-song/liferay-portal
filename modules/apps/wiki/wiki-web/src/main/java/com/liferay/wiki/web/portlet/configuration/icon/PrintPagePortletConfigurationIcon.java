@@ -14,10 +14,8 @@
 
 package com.liferay.wiki.web.portlet.configuration.icon;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -25,41 +23,34 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
-import com.liferay.wiki.web.portlet.action.ActionUtil;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
+import javax.portlet.WindowStateException;
 
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + WikiPortletKeys.WIKI_ADMIN, "path=/wiki/view"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class PrintPagePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "print");
+	public PrintPagePortletConfigurationIcon(
+		PortletRequest portletRequest, WikiNode node, WikiPage page) {
+
+		super(portletRequest);
+
+		_node = node;
+		_page = page;
 	}
 
 	@Override
-	public String getOnClick(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "print";
+	}
 
+	@Override
+	public String getOnClick() {
 		try {
-			WikiNode node = ActionUtil.getNode(portletRequest);
-			WikiPage page = ActionUtil.getPage(portletRequest);
-
 			StringBundler sb = new StringBundler(5);
 
 			sb.append("window.open('");
@@ -69,8 +60,8 @@ public class PrintPagePortletConfigurationIcon
 				PortletRequest.RENDER_PHASE);
 
 			portletURL.setParameter("mvcRenderCommandName", "/wiki/view");
-			portletURL.setParameter("nodeName", node.getName());
-			portletURL.setParameter("title", page.getTitle());
+			portletURL.setParameter("nodeName", _node.getName());
+			portletURL.setParameter("title", _page.getTitle());
 			portletURL.setParameter("viewMode", Constants.PRINT);
 			portletURL.setWindowState(LiferayWindowState.POP_UP);
 
@@ -82,26 +73,19 @@ public class PrintPagePortletConfigurationIcon
 
 			return sb.toString();
 		}
-		catch (Exception e) {
+		catch (WindowStateException wse) {
 		}
 
 		return StringPool.BLANK;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
+	public String getURL() {
 		return "javascript:;";
 	}
 
 	@Override
-	public double getWeight() {
-		return 101;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		return true;
 	}
 
@@ -109,5 +93,8 @@ public class PrintPagePortletConfigurationIcon
 	public boolean isToolTip() {
 		return false;
 	}
+
+	private final WikiNode _node;
+	private final WikiPage _page;
 
 }

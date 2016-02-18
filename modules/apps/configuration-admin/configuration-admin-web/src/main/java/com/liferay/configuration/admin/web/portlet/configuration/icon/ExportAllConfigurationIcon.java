@@ -15,39 +15,24 @@
 package com.liferay.configuration.admin.web.portlet.configuration.icon;
 
 import com.liferay.configuration.admin.web.constants.ConfigurationAdminPortletKeys;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
-
-import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Jorge Ferrer
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" +
-			ConfigurationAdminPortletKeys.SYSTEM_SETTINGS
-	},
-	service = PortletConfigurationIcon.class
-)
 public class ExportAllConfigurationIcon extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", getLocale(portletRequest), getClass());
+	public ExportAllConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
+	}
 
-		return LanguageUtil.get(resourceBundle, "export-all-settings");
+	@Override
+	public String getMessage() {
+		return "export-all-settings";
 	}
 
 	@Override
@@ -56,9 +41,7 @@ public class ExportAllConfigurationIcon extends BasePortletConfigurationIcon {
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
+	public String getURL() {
 		LiferayPortletURL liferayPortletURL =
 			(LiferayPortletURL)PortalUtil.getControlPanelPortletURL(
 				portletRequest, ConfigurationAdminPortletKeys.SYSTEM_SETTINGS,
@@ -70,12 +53,7 @@ public class ExportAllConfigurationIcon extends BasePortletConfigurationIcon {
 	}
 
 	@Override
-	public double getWeight() {
-		return 1;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		return true;
 	}
 

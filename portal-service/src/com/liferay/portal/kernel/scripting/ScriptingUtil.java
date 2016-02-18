@@ -39,15 +39,6 @@ public class ScriptingUtil {
 			language, executeInSeparateThread);
 	}
 
-	public static Map<String, Object> eval(
-			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			Set<String> outputNames, String language, String script)
-		throws ScriptingException {
-
-		return getScripting().eval(
-			allowedClasses, inputObjects, outputNames, language, script);
-	}
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #eval(Set, Map, Set, String,
 	 *             String, String...)}
@@ -64,11 +55,6 @@ public class ScriptingUtil {
 			_getServletContextNames(classLoaders));
 	}
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #eval(Set, Map, Set, String,
-	 *             String)}
-	 */
-	@Deprecated
 	public static Map<String, Object> eval(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
 			Set<String> outputNames, String language, String script,
@@ -78,14 +64,6 @@ public class ScriptingUtil {
 		return getScripting().eval(
 			allowedClasses, inputObjects, outputNames, language, script,
 			servletContextNames);
-	}
-
-	public static void exec(
-			Set<String> allowedClasses, Map<String, Object> inputObjects,
-			String language, String script)
-		throws ScriptingException {
-
-		getScripting().exec(allowedClasses, inputObjects, language, script);
 	}
 
 	/**
@@ -103,11 +81,6 @@ public class ScriptingUtil {
 			_getServletContextNames(classLoaders));
 	}
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #exec(Set, Map, String,
-	 *             String)}
-	 */
-	@Deprecated
 	public static void exec(
 			Set<String> allowedClasses, Map<String, Object> inputObjects,
 			String language, String script, String... servletContextNames)

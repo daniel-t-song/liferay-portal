@@ -81,14 +81,7 @@ public class RepositoryServiceImpl extends RepositoryServiceBaseImpl {
 
 	@Override
 	public Repository getRepository(long repositoryId) throws PortalException {
-		Repository repository = repositoryPersistence.findByPrimaryKey(
-			repositoryId);
-
-		DLFolderPermission.check(
-			getPermissionChecker(), repository.getGroupId(),
-			repository.getDlFolderId(), ActionKeys.VIEW);
-
-		return repository;
+		return repositoryPersistence.findByPrimaryKey(repositoryId);
 	}
 
 	/**

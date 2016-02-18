@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.util.comparator.PortletConfigurationIconComparator;
+import com.liferay.portal.kernel.util.comparator.PortletConfigurationIconFactoryComparator;
 import com.liferay.taglib.ui.IconTag;
 
 import java.util.List;
@@ -44,8 +44,8 @@ public class IconOptionsTag extends IconTag {
 
 		_portletConfigurationIcons =
 			PortletConfigurationIconTracker.getPortletConfigurationIcons(
-				getPortletId(), getPortletRequest(),
-				PortletConfigurationIconComparator.INSTANCE);
+				getPortletId(), getPortletRequest(), getPortletResponse(),
+				PortletConfigurationIconFactoryComparator.INSTANCE);
 
 		return _portletConfigurationIcons;
 	}

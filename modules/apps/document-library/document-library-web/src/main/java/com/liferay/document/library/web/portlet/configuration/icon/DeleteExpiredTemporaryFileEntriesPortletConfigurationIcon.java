@@ -15,56 +15,40 @@
 package com.liferay.document.library.web.portlet.configuration.icon;
 
 import com.liferay.document.library.web.constants.DLPortletKeys;
-import com.liferay.document.library.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.repository.LocalRepository;
 import com.liferay.portal.kernel.repository.RepositoryProviderUtil;
 import com.liferay.portal.kernel.repository.capabilities.TemporaryFileEntriesCapability;
 import com.liferay.portal.kernel.repository.model.Folder;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
-		"path=/document_library/view_folder"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class DeleteExpiredTemporaryFileEntriesPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", getLocale(portletRequest), getClass());
+	public DeleteExpiredTemporaryFileEntriesPortletConfigurationIcon(
+		PortletRequest portletRequest, Folder folder) {
 
-		return LanguageUtil.get(
-			resourceBundle, "delete-expired-temporary-files");
+		super(portletRequest);
+
+		_folder = folder;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "delete-expired-temporary-files";
+	}
 
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
 			PortletRequest.ACTION_PHASE);
@@ -73,41 +57,23 @@ public class DeleteExpiredTemporaryFileEntriesPortletConfigurationIcon
 			ActionRequest.ACTION_NAME, "/document_library/edit_folder");
 		portletURL.setParameter(
 			Constants.CMD, "deleteExpiredTemporaryFileEntries");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
-
-		try {
-			Folder folder = ActionUtil.getFolder(portletRequest);
-
-			portletURL.setParameter(
-				"repositoryId", String.valueOf(folder.getRepositoryId()));
-		}
-		catch (Exception e) {
-		}
+		portletURL.setParameter(
+			"repositoryId", String.valueOf(_folder.getRepositoryId()));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 103;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		try {
-			Folder folder = ActionUtil.getFolder(portletRequest);
-
-			if (!folder.isMountPoint()) {
+			if (!_folder.isMountPoint()) {
 				return false;
 			}
 
 			LocalRepository localRepository =
 				RepositoryProviderUtil.getLocalRepository(
-					folder.getRepositoryId());
+					_folder.getRepositoryId());
 
 			if (localRepository.isCapabilityProvided(
 					TemporaryFileEntriesCapability.class)) {
@@ -115,7 +81,7 @@ public class DeleteExpiredTemporaryFileEntriesPortletConfigurationIcon
 				return true;
 			}
 		}
-		catch (Exception e) {
+		catch (PortalException pe) {
 		}
 
 		return false;
@@ -125,5 +91,7 @@ public class DeleteExpiredTemporaryFileEntriesPortletConfigurationIcon
 	public boolean isToolTip() {
 		return false;
 	}
+
+	private final Folder _folder;
 
 }

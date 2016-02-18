@@ -17,7 +17,6 @@ package com.liferay.portal.kernel.portlet.configuration.icon;
 import com.liferay.portal.kernel.portlet.configuration.icon.locator.PortletConfigurationIconLocator;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -32,63 +31,68 @@ import java.util.List;
 import java.util.Set;
 
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 /**
  * @author Eudaldo Alonso
  */
 public class PortletConfigurationIconTracker {
 
-	public static List<PortletConfigurationIcon>
-		getPortletConfigurationIcons(
+	public static List<PortletConfigurationIconFactory>
+		getPortletConfigurationFactories(
 			String portletId, PortletRequest portletRequest) {
 
-		List<PortletConfigurationIcon>
-			portletConfigurationIcons = new ArrayList<>();
+		List<PortletConfigurationIconFactory>
+			portletConfigurationIconFactories = new ArrayList<>();
 
 		for (String path : getPaths(portletId, portletRequest)) {
-			List<PortletConfigurationIcon>
-				portletPortletConfigurationIcons =
+			List<PortletConfigurationIconFactory>
+				portletPortletConfigurationIconFactories =
 					_serviceTrackerMap.getService(
 						getKey(StringPool.STAR, path));
 
-			if (portletPortletConfigurationIcons != null) {
-				portletConfigurationIcons.addAll(
-					portletPortletConfigurationIcons);
+			if (portletPortletConfigurationIconFactories != null) {
+				portletConfigurationIconFactories.addAll(
+					portletPortletConfigurationIconFactories);
 			}
 
-			portletPortletConfigurationIcons = _serviceTrackerMap.getService(
-				getKey(portletId, path));
+			portletPortletConfigurationIconFactories =
+				_serviceTrackerMap.getService(getKey(portletId, path));
 
-			if (portletPortletConfigurationIcons != null) {
-				portletConfigurationIcons.addAll(
-					portletPortletConfigurationIcons);
+			if (portletPortletConfigurationIconFactories != null) {
+				portletConfigurationIconFactories.addAll(
+					portletPortletConfigurationIconFactories);
 			}
 		}
 
-		return portletConfigurationIcons;
+		return portletConfigurationIconFactories;
 	}
 
 	public static List<PortletConfigurationIcon> getPortletConfigurationIcons(
-		String portletId, final PortletRequest portletRequest,
-		Comparator<?> comparator) {
+		String portletId, PortletRequest portletRequest,
+		PortletResponse portletResponse, Comparator<?> comparator) {
 
 		List<PortletConfigurationIcon> portletConfigurationIcons =
-			ListUtil.filter(
-				getPortletConfigurationIcons(portletId, portletRequest),
-				new PredicateFilter<PortletConfigurationIcon>() {
+			new ArrayList<>();
 
-					@Override
-					public boolean filter(
-						PortletConfigurationIcon portletConfigurationIcon) {
+		List<PortletConfigurationIconFactory>
+			portletConfigurationIconFactories = ListUtil.sort(
+				getPortletConfigurationFactories(portletId, portletRequest),
+				(Comparator<PortletConfigurationIconFactory>)comparator);
 
-						return portletConfigurationIcon.isShow(portletRequest);
-					}
+		for (PortletConfigurationIconFactory portletConfigurationIconFactory :
+				portletConfigurationIconFactories) {
 
-				});
+			PortletConfigurationIcon portletConfigurationIcon =
+				portletConfigurationIconFactory.create(
+					portletRequest, portletResponse);
 
-		portletConfigurationIcons = ListUtil.sort(
-			portletConfigurationIcons,
-			(Comparator<PortletConfigurationIcon>)comparator);
+			if ((portletConfigurationIcon != null) &&
+				portletConfigurationIcon.isShow()) {
+
+				portletConfigurationIcons.add(portletConfigurationIcon);
+			}
+		}
 
 		return portletConfigurationIcons;
 	}
@@ -135,9 +139,9 @@ public class PortletConfigurationIconTracker {
 		_serviceTrackerList = ServiceTrackerCollections.openList(
 			PortletConfigurationIconLocator.class);
 	private static final ServiceTrackerMap
-		<String, List<PortletConfigurationIcon>>
+		<String, List<PortletConfigurationIconFactory>>
 			_serviceTrackerMap = ServiceTrackerCollections.openMultiValueMap(
-				PortletConfigurationIcon.class, null,
+				PortletConfigurationIconFactory.class, null,
 				new PortletConfigurationIconServiceReferenceMapper());
 
 }

@@ -471,7 +471,7 @@ AUI.add(
 								entriesContainerSelector = 'ul.list-unstyled:last-of-type';
 							}
 
-							entriesContainer = entriesContainer.one(entriesContainerSelector) || entriesContainer.one('.taglib-empty-result-message');
+							entriesContainer = entriesContainer.one(entriesContainerSelector);
 
 							var invisibleEntry = instance._invisibleDescriptiveEntry;
 

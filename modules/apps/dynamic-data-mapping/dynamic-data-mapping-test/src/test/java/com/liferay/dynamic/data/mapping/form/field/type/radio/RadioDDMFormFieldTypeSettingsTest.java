@@ -67,7 +67,7 @@ public class RadioDDMFormFieldTypeSettingsTest
 
 		Assert.assertNotNull(validationDDMFormField);
 		Assert.assertEquals(
-			"FALSE", validationDDMFormField.getVisibilityExpression());
+			"false", validationDDMFormField.getVisibilityExpression());
 	}
 
 }

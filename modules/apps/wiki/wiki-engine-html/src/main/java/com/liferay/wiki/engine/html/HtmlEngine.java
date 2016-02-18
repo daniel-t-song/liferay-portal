@@ -19,13 +19,10 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.Router;
-import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.language.LanguageResources;
 import com.liferay.wiki.configuration.WikiGroupServiceConfiguration;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.engine.WikiEngine;
@@ -98,11 +95,6 @@ public class HtmlEngine extends BaseInputEditorWikiEngine {
 		return null;
 	}
 
-	@Override
-	protected ResourceBundleLoader getResourceBundleLoader() {
-		return _resourceBundleLoader;
-	}
-
 	@Reference(
 		target = "(javax.portlet.name=" + WikiPortletKeys.WIKI + ")",
 		unbind = "-"
@@ -112,17 +104,6 @@ public class HtmlEngine extends BaseInputEditorWikiEngine {
 			Portal.FRIENDLY_URL_SEPARATOR + friendlyURLMapper.getMapping();
 
 		_router = friendlyURLMapper.getRouter();
-	}
-
-	@Reference(
-		target = "(bundle.symbolic.name=com.liferay.wiki.engine.html)",
-		unbind = "-"
-	)
-	protected void setResourceBundleLoader(
-		ResourceBundleLoader resourceBundleLoader) {
-
-		_resourceBundleLoader = new AggregateResourceBundleLoader(
-			resourceBundleLoader, LanguageResources.RESOURCE_BUNDLE_LOADER);
 	}
 
 	@Reference
@@ -215,7 +196,6 @@ public class HtmlEngine extends BaseInputEditorWikiEngine {
 	private static final Log _log = LogFactoryUtil.getLog(HtmlEngine.class);
 
 	private String _friendlyURLMapping;
-	private ResourceBundleLoader _resourceBundleLoader;
 	private Router _router;
 	private WikiGroupServiceConfiguration _wikiGroupServiceConfiguration;
 	private WikiNodeLocalService _wikiNodeLocalService;

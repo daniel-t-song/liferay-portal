@@ -19,7 +19,6 @@
 <%
 long classNameId = GetterUtil.getLong((String)request.getAttribute("liferay-ddm:template-selector:classNameId"));
 DDMTemplate portletDisplayDDMTemplate = (DDMTemplate)request.getAttribute("liferay-ddm:template-selector:portletDisplayDDMTemplate");
-ResourceBundle resourceBundle = (ResourceBundle)request.getAttribute("liferay-ddm:template-selector:resourceBundle");
 
 long ddmTemplateGroupId = PortletDisplayTemplateUtil.getDDMTemplateGroupId(themeDisplay.getScopeGroupId());
 
@@ -72,7 +71,7 @@ Group ddmTemplateGroup = GroupLocalServiceUtil.getGroup(ddmTemplateGroupId);
 	iconCssClass="<%= icon %>"
 	id="selectDDMTemplate"
 	label="<%= true %>"
-	message='<%= LanguageUtil.format(resourceBundle, "manage-display-templates-for-x", HtmlUtil.escape(ddmTemplateGroup.getDescriptiveName(locale)), false) %>'
+	message='<%= LanguageUtil.format(request, "manage-display-templates-for-x", HtmlUtil.escape(ddmTemplateGroup.getDescriptiveName(locale)), false) %>'
 	url="javascript:;"
 />
 

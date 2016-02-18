@@ -155,7 +155,8 @@ AUI.add(
 							);
 						},
 						resultFormatter: function(query, results) {
-							return results.map(
+							return AArray.map(
+								results,
 								function(result) {
 									var calendar = result.raw;
 									var calendarResourceName = calendar.calendarResourceName;
@@ -273,20 +274,6 @@ AUI.add(
 				scheduler.removeEvents(schedulerEvent);
 
 				scheduler.syncEventsUI();
-			},
-
-			getCalendar: function(calendarId, callback) {
-				var instance = this;
-
-				instance.invokeResourceURL(
-					{
-						callback: callback,
-						queryParameters: {
-							calendarId: calendarId
-						},
-						resourceId: 'calendar'
-					}
-				);
 			},
 
 			getCalendarBookingInvitees: function(calendarBookingId, callback) {
@@ -2269,7 +2256,8 @@ AUI.add(
 					_syncInviteesContent: function(contentNode, calendarResources) {
 						var instance = this;
 
-						var values = calendarResources.map(
+						var values = AArray.map(
+							calendarResources,
 							function(item) {
 								return item.name;
 							}

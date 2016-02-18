@@ -15,41 +15,33 @@
 package com.liferay.document.library.web.portlet.configuration.icon;
 
 import com.liferay.document.library.web.constants.DLPortletKeys;
-import com.liferay.document.library.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.ResourceURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
-		"path=/document_library/view_folder"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class DownloadFolderPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
+	public DownloadFolderPortletConfigurationIcon(
+		PortletRequest portletRequest, Folder folder) {
+
+		super(portletRequest);
+
+		_folder = folder;
+	}
+
 	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "download");
+	public String getMessage() {
+		return "download";
 	}
 
 	@Override
@@ -58,52 +50,30 @@ public class DownloadFolderPortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
+	public String getURL() {
 		ResourceURL portletURL =
 			(ResourceURL)PortalUtil.getControlPanelPortletURL(
 				portletRequest, DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
 				PortletRequest.RESOURCE_PHASE);
 
 		portletURL.setResourceID("/document_library/edit_folder");
-
-		Folder folder = null;
-
-		try {
-			folder = ActionUtil.getFolder(portletRequest);
-		}
-		catch (Exception e) {
-			return null;
-		}
-
 		portletURL.setParameter(
-			"folderId", String.valueOf(folder.getFolderId()));
+			"folderId", String.valueOf(_folder.getFolderId()));
 		portletURL.setParameter(
-			"repositoryId", String.valueOf(folder.getRepositoryId()));
+			"repositoryId", String.valueOf(_folder.getRepositoryId()));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 107;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		try {
-			Folder folder = ActionUtil.getFolder(portletRequest);
-
 			return DLFolderPermission.contains(
 				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), folder.getFolderId(),
+				themeDisplay.getScopeGroupId(), _folder.getFolderId(),
 				ActionKeys.VIEW);
 		}
-		catch (Exception e) {
+		catch (PortalException pe) {
 		}
 
 		return false;
@@ -113,5 +83,7 @@ public class DownloadFolderPortletConfigurationIcon
 	public boolean isToolTip() {
 		return false;
 	}
+
+	private final Folder _folder;
 
 }

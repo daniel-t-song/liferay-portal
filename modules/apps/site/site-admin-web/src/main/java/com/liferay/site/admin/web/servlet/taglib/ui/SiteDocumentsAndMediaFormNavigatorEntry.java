@@ -39,7 +39,7 @@ public class SiteDocumentsAndMediaFormNavigatorEntry
 
 	@Override
 	public String getCategoryKey() {
-		return FormNavigatorConstants.CATEGORY_KEY_SITES_GENERAL;
+		return FormNavigatorConstants.CATEGORY_KEY_SITES_BASIC_INFORMATION;
 	}
 
 	@Override

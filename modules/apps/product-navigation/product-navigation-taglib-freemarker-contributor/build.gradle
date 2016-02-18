@@ -1,5 +1,5 @@
 dependencies {
-	provided project(":apps:product-navigation:product-navigation-taglib")
+	compile project(":apps:product-navigation:product-navigation-taglib")
 }
 
 liferay {

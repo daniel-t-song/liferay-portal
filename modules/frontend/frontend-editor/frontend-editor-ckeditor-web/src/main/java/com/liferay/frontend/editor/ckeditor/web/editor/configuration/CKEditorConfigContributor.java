@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xuggler.XugglerUtil;
@@ -431,8 +430,7 @@ public class CKEditorConfigContributor extends BaseCKEditorConfigContributor {
 		_resourceBundleLoader = new AggregateResourceBundleLoader(
 			ResourceBundleUtil.getResourceBundleLoader(
 				"content.Language", classLoader),
-			resourceBundleLoader,
-			ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
+			resourceBundleLoader);
 	}
 
 	private volatile ResourceBundleLoader _resourceBundleLoader;

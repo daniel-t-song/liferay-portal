@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -290,8 +289,7 @@ public class AlloyEditorConfigContributor
 		_resourceBundleLoader = new AggregateResourceBundleLoader(
 			ResourceBundleUtil.getResourceBundleLoader(
 				"content.Language", classLoader),
-			resourceBundleLoader,
-			ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
+			resourceBundleLoader);
 	}
 
 	private static final int _CKEDITOR_STYLE_BLOCK = 1;

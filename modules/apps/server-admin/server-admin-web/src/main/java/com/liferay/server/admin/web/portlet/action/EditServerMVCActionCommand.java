@@ -24,10 +24,10 @@ import com.liferay.portal.convert.ConvertException;
 import com.liferay.portal.convert.ConvertProcess;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
-import com.liferay.portal.kernel.cache.MultiVMPool;
-import com.liferay.portal.kernel.cache.SingleVMPool;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
 import com.liferay.portal.kernel.captcha.Captcha;
 import com.liferay.portal.kernel.captcha.CaptchaUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -40,28 +40,27 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.SanitizerLogWrapper;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.scripting.Scripting;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingHelperUtil;
-import com.liferay.portal.kernel.search.IndexWriterHelper;
+import com.liferay.portal.kernel.scripting.ScriptingUtil;
+import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershipPolicy;
-import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershipPolicyFactory;
+import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershipPolicyFactoryUtil;
 import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicy;
-import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyFactory;
+import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyFactoryUtil;
 import com.liferay.portal.kernel.security.membershippolicy.SiteMembershipPolicy;
-import com.liferay.portal.kernel.security.membershippolicy.SiteMembershipPolicyFactory;
+import com.liferay.portal.kernel.security.membershippolicy.SiteMembershipPolicyFactoryUtil;
 import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicy;
-import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicyFactory;
+import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicyFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceComponentLocalService;
-import com.liferay.portal.kernel.servlet.DirectServletRegistry;
+import com.liferay.portal.kernel.servlet.DirectServletRegistryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -79,7 +78,7 @@ import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.uuid.PortalUUID;
+import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.xuggler.XugglerInstallException;
 import com.liferay.portal.kernel.xuggler.XugglerUtil;
 import com.liferay.portal.security.lang.DoPrivilegedBean;
@@ -245,15 +244,15 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	protected void cacheMulti() throws Exception {
-		_multiVMPool.clear();
+		MultiVMPoolUtil.clear();
 	}
 
 	protected void cacheServlet() throws Exception {
-		_directServletRegistry.clearServlets();
+		DirectServletRegistryUtil.clearServlets();
 	}
 
 	protected void cacheSingle() throws Exception {
-		_singleVMPool.clear();
+		SingleVMPoolUtil.clear();
 	}
 
 	protected String convertProcess(
@@ -352,14 +351,14 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 		String className = ParamUtil.getString(actionRequest, "className");
 
 		if (!ParamUtil.getBoolean(actionRequest, "blocking")) {
-			_indexWriterHelper.reindex(
+			IndexWriterHelperUtil.reindex(
 				themeDisplay.getUserId(), "reindex",
 				PortalInstances.getCompanyIds(), className, taskContextMap);
 
 			return;
 		}
 
-		final String uuid = _portalUUID.generate();
+		final String uuid = PortalUUIDUtil.generate();
 
 		taskContextMap.put("uuid", uuid);
 
@@ -373,7 +372,7 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 
 				try {
 					BackgroundTask backgroundTask =
-						_backgroundTaskManager.getBackgroundTask(
+						BackgroundTaskManagerUtil.getBackgroundTask(
 							message.getLong(
 								BackgroundTaskConstants.BACKGROUND_TASK_ID));
 
@@ -415,11 +414,11 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 
 		};
 
-		_messageBus.registerMessageListener(
+		MessageBusUtil.registerMessageListener(
 			DestinationNames.BACKGROUND_TASK_STATUS, messageListener);
 
 		try {
-			_indexWriterHelper.reindex(
+			IndexWriterHelperUtil.reindex(
 				themeDisplay.getUserId(), "reindex",
 				PortalInstances.getCompanyIds(), className, taskContextMap);
 
@@ -428,7 +427,7 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 				TimeUnit.MILLISECONDS);
 		}
 		finally {
-			_messageBus.unregisterMessageListener(
+			MessageBusUtil.unregisterMessageListener(
 				DestinationNames.BACKGROUND_TASK_STATUS, messageListener);
 		}
 	}
@@ -439,8 +438,8 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 		long[] companyIds = PortalInstances.getCompanyIds();
 
 		for (long companyId : companyIds) {
-			_indexWriterHelper.indexQuerySuggestionDictionaries(companyId);
-			_indexWriterHelper.indexSpellCheckerDictionaries(companyId);
+			IndexWriterHelperUtil.indexQuerySuggestionDictionaries(companyId);
+			IndexWriterHelperUtil.indexSpellCheckerDictionaries(companyId);
 		}
 	}
 
@@ -471,7 +470,8 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 			SessionMessages.add(actionRequest, "language", language);
 			SessionMessages.add(actionRequest, "script", script);
 
-			_scripting.exec(null, portletObjects, language, script);
+			ScriptingUtil.exec(
+				null, portletObjects, language, script, StringPool.EMPTY_ARRAY);
 
 			unsyncPrintWriter.flush();
 
@@ -487,6 +487,18 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 
 			log.error(se.getMessage());
 		}
+	}
+
+	@Reference(unbind = "-")
+	protected void setMailService(MailService mailService) {
+		_mailService = mailService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setServiceComponentLocalService(
+		ServiceComponentLocalService serviceComponentLocalService) {
+
+		_serviceComponentLocalService = serviceComponentLocalService;
 	}
 
 	protected void shutdown(ActionRequest actionRequest) throws Exception {
@@ -819,23 +831,23 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 
 	protected void verifyMembershipPolicies() throws Exception {
 		OrganizationMembershipPolicy organizationMembershipPolicy =
-			_organizationMembershipPolicyFactory.
+			OrganizationMembershipPolicyFactoryUtil.
 				getOrganizationMembershipPolicy();
 
 		organizationMembershipPolicy.verifyPolicy();
 
 		RoleMembershipPolicy roleMembershipPolicy =
-			_roleMembershipPolicyFactory.getRoleMembershipPolicy();
+			RoleMembershipPolicyFactoryUtil.getRoleMembershipPolicy();
 
 		roleMembershipPolicy.verifyPolicy();
 
 		SiteMembershipPolicy siteMembershipPolicy =
-			_siteMembershipPolicyFactory.getSiteMembershipPolicy();
+			SiteMembershipPolicyFactoryUtil.getSiteMembershipPolicy();
 
 		siteMembershipPolicy.verifyPolicy();
 
 		UserGroupMembershipPolicy userGroupMembershipPolicy =
-			_userGroupMembershipPolicyFactory.getUserGroupMembershipPolicy();
+			UserGroupMembershipPolicyFactoryUtil.getUserGroupMembershipPolicy();
 
 		userGroupMembershipPolicy.verifyPolicy();
 	}
@@ -847,47 +859,7 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 	private static final Log _log = LogFactoryUtil.getLog(
 		EditServerMVCActionCommand.class);
 
-	@Reference
-	private BackgroundTaskManager _backgroundTaskManager;
-
-	@Reference
-	private DirectServletRegistry _directServletRegistry;
-
-	@Reference
-	private IndexWriterHelper _indexWriterHelper;
-
-	@Reference
 	private MailService _mailService;
-
-	@Reference
-	private MessageBus _messageBus;
-
-	@Reference
-	private MultiVMPool _multiVMPool;
-
-	@Reference
-	private OrganizationMembershipPolicyFactory
-		_organizationMembershipPolicyFactory;
-
-	@Reference
-	private PortalUUID _portalUUID;
-
-	@Reference
-	private RoleMembershipPolicyFactory _roleMembershipPolicyFactory;
-
-	@Reference
-	private Scripting _scripting;
-
-	@Reference
 	private ServiceComponentLocalService _serviceComponentLocalService;
-
-	@Reference
-	private SingleVMPool _singleVMPool;
-
-	@Reference
-	private SiteMembershipPolicyFactory _siteMembershipPolicyFactory;
-
-	@Reference
-	private UserGroupMembershipPolicyFactory _userGroupMembershipPolicyFactory;
 
 }

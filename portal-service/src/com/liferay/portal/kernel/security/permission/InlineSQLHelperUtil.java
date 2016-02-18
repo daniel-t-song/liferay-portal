@@ -36,10 +36,6 @@ public class InlineSQLHelperUtil {
 		return getInlineSQLHelper().isEnabled(groupId);
 	}
 
-	public static boolean isEnabled(long companyId, long groupId) {
-		return getInlineSQLHelper().isEnabled(companyId, groupId);
-	}
-
 	public static boolean isEnabled(long[] groupIds) {
 		return getInlineSQLHelper().isEnabled(groupIds);
 	}

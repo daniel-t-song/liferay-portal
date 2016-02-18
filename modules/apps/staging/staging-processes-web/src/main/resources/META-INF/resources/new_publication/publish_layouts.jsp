@@ -320,6 +320,17 @@ renderResponse.setTitle(!configuredPublish ? LanguageUtil.get(request, "new-publ
 </aui:script>
 
 <aui:script use="liferay-export-import">
+	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="publishLayouts" var="publishProcessesURL">
+		<portlet:param name="<%= SearchContainer.DEFAULT_CUR_PARAM %>" value="<%= ParamUtil.getString(request, SearchContainer.DEFAULT_CUR_PARAM) %>" />
+		<portlet:param name="<%= SearchContainer.DEFAULT_DELTA_PARAM %>" value="<%= ParamUtil.getString(request, SearchContainer.DEFAULT_DELTA_PARAM) %>" />
+		<portlet:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
+		<portlet:param name="layoutSetBranchId" value="<%= String.valueOf(layoutSetBranchId) %>" />
+		<portlet:param name="layoutSetBranchName" value="<%= layoutSetBranchName %>" />
+		<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
+		<portlet:param name="localPublishing" value="<%= String.valueOf(localPublishing) %>" />
+		<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+	</liferay-portlet:resourceURL>
+
 	new Liferay.ExportImport(
 		{
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>',
@@ -330,6 +341,7 @@ renderResponse.setTitle(!configuredPublish ? LanguageUtil.get(request, "new-publ
 			namespace: '<portlet:namespace />',
 			pageTreeId: '<%= treeId %>',
 			processesNode: '#publishProcesses',
+			processesResourceURL: '<%= publishProcessesURL.toString() %>',
 			rangeAllNode: '#rangeAll',
 			rangeDateRangeNode: '#rangeDateRange',
 			rangeLastNode: '#rangeLast',

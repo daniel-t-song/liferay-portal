@@ -18,12 +18,10 @@ import com.liferay.announcements.kernel.model.AnnouncementsEntry;
 import com.liferay.announcements.kernel.service.AnnouncementsEntryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.impl.VirtualLayout;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
-import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 
 /**
@@ -67,14 +65,14 @@ public class AnnouncementsEntryPermission {
 	}
 
 	public static void check(
-			PermissionChecker permissionChecker, long plid, String portletId,
+			PermissionChecker permissionChecker, long plid, String name,
 			String actionId)
 		throws PortalException {
 
-		if (!contains(permissionChecker, plid, portletId, actionId)) {
+		if (!contains(permissionChecker, plid, name, actionId)) {
 			throw new PrincipalException.MustHavePermission(
-				permissionChecker, AnnouncementsEntry.class.getName(),
-				portletId, actionId);
+				permissionChecker, AnnouncementsEntry.class.getName(), name,
+				actionId);
 		}
 	}
 
@@ -96,7 +94,7 @@ public class AnnouncementsEntryPermission {
 	}
 
 	public static boolean contains(
-		PermissionChecker permissionChecker, Layout layout, String portletId,
+		PermissionChecker permissionChecker, Layout layout, String name,
 		String actionId) {
 
 		if (layout instanceof VirtualLayout) {
@@ -105,26 +103,11 @@ public class AnnouncementsEntryPermission {
 			layout = virtualLayout.getSourceLayout();
 		}
 
-		boolean useDefaultPortletPermissions = false;
-
 		String primKey = PortletPermissionUtil.getPrimaryKey(
-			layout.getPlid(), portletId);
-
-		int count =
-			ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
-				permissionChecker.getCompanyId(), portletId,
-				ResourceConstants.SCOPE_INDIVIDUAL, primKey);
-
-		if (count == 0) {
-			useDefaultPortletPermissions = true;
-		}
-
-		if (useDefaultPortletPermissions) {
-			primKey = portletId;
-		}
+			layout.getPlid(), name);
 
 		return permissionChecker.hasPermission(
-			layout.getGroupId(), portletId, primKey, actionId);
+			layout.getGroupId(), name, primKey, actionId);
 	}
 
 	public static boolean contains(

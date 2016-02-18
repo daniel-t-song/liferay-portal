@@ -859,10 +859,8 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 					description, defaultFileEntryTypeId, fileEntryTypeIds,
 					restrictionType, serviceContext);
 
-				if (!ExportImportThreadLocal.isImportInProcess()) {
-					dlFileEntryTypeLocalService.cascadeFileEntryTypes(
-						serviceContext.getUserId(), dlFolder);
-				}
+				dlFileEntryTypeLocalService.cascadeFileEntryTypes(
+					serviceContext.getUserId(), dlFolder);
 			}
 
 			// Workflow definitions

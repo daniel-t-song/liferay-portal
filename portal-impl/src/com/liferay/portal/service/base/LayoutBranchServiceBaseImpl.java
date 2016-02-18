@@ -282,25 +282,6 @@ public abstract class LayoutBranchServiceBaseImpl extends BaseServiceImpl
 	}
 
 	/**
-	 * Returns the resource local service.
-	 *
-	 * @return the resource local service
-	 */
-	public com.liferay.portal.kernel.service.ResourceLocalService getResourceLocalService() {
-		return resourceLocalService;
-	}
-
-	/**
-	 * Sets the resource local service.
-	 *
-	 * @param resourceLocalService the resource local service
-	 */
-	public void setResourceLocalService(
-		com.liferay.portal.kernel.service.ResourceLocalService resourceLocalService) {
-		this.resourceLocalService = resourceLocalService;
-	}
-
-	/**
 	 * Returns the user local service.
 	 *
 	 * @return the user local service
@@ -446,8 +427,6 @@ public abstract class LayoutBranchServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.portal.kernel.service.RecentLayoutBranchLocalService recentLayoutBranchLocalService;
 	@BeanReference(type = RecentLayoutBranchPersistence.class)
 	protected RecentLayoutBranchPersistence recentLayoutBranchPersistence;
-	@BeanReference(type = com.liferay.portal.kernel.service.ResourceLocalService.class)
-	protected com.liferay.portal.kernel.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.kernel.service.UserLocalService.class)
 	protected com.liferay.portal.kernel.service.UserLocalService userLocalService;
 	@BeanReference(type = com.liferay.portal.kernel.service.UserService.class)

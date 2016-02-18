@@ -17,46 +17,35 @@ package com.liferay.message.boards.web.portlet.configuration.icon;
 import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
 import com.liferay.message.boards.web.constants.MBPortletKeys;
-import com.liferay.message.boards.web.portlet.action.ActionUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Sergio González
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS_ADMIN,
-		"path=/message_boards/view_category"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class EditCategoryPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "edit");
+	public EditCategoryPortletConfigurationIcon(
+		PortletRequest portletRequest, MBCategory category) {
+
+		super(portletRequest);
+
+		_category = category;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "edit";
+	}
 
+	@Override
+	public String getURL() {
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
 			portletRequest, MBPortletKeys.MESSAGE_BOARDS_ADMIN,
 			PortletRequest.RENDER_PHASE);
@@ -65,44 +54,23 @@ public class EditCategoryPortletConfigurationIcon
 			"mvcRenderCommandName", "/message_boards/edit_category");
 		portletURL.setParameter(
 			"redirect", PortalUtil.getCurrentURL(portletRequest));
-
-		MBCategory category = null;
-
-		try {
-			category = ActionUtil.getCategory(portletRequest);
-		}
-		catch (Exception e) {
-			return null;
-		}
-
 		portletURL.setParameter(
-			"mbCategoryId", String.valueOf(getCategoryId(category)));
+			"mbCategoryId", String.valueOf(getCategoryId(_category)));
 
 		return portletURL.toString();
 	}
 
 	@Override
-	public double getWeight() {
-		return 104;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
+	public boolean isShow() {
 		try {
-			MBCategory category = ActionUtil.getCategory(portletRequest);
-
-			if (category.getCategoryId() ==
+			if (_category.getCategoryId() ==
 					MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
 
 				return false;
 			}
 
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)portletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
-
 			if (MBCategoryPermission.contains(
-					themeDisplay.getPermissionChecker(), category,
+					themeDisplay.getPermissionChecker(), _category,
 					ActionKeys.UPDATE)) {
 
 				return true;
@@ -123,5 +91,7 @@ public class EditCategoryPortletConfigurationIcon
 
 		return categoryId;
 	}
+
+	private final MBCategory _category;
 
 }

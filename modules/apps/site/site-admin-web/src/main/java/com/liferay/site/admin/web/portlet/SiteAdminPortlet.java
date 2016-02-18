@@ -385,9 +385,8 @@ public class SiteAdminPortlet extends MVCPortlet {
 
 		List<Role> roles = new ArrayList<>();
 
-		long[] siteRolesRoleIds = ArrayUtil.unique(
-			ParamUtil.getLongValues(
-				portletRequest, "siteRolesSearchContainerPrimaryKeys"));
+		long[] siteRolesRoleIds = StringUtil.split(
+			ParamUtil.getString(portletRequest, "siteRolesRoleIds"), 0L);
 
 		for (long siteRolesRoleId : siteRolesRoleIds) {
 			if (siteRolesRoleId == 0) {
@@ -408,8 +407,8 @@ public class SiteAdminPortlet extends MVCPortlet {
 		List<Team> teams = new ArrayList<>();
 
 		long[] teamsTeamIds = ArrayUtil.unique(
-			ParamUtil.getLongValues(
-				portletRequest, "teamsSearchContainerPrimaryKeys"));
+			StringUtil.split(
+				ParamUtil.getString(portletRequest, "teamsTeamIds"), 0L));
 
 		for (long teamsTeamId : teamsTeamIds) {
 			if (teamsTeamId == 0) {

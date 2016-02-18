@@ -194,6 +194,11 @@ public class ElasticsearchConnectionManager {
 		}
 	}
 
+	@Reference(unbind = "-")
+	protected void setIndexFactory(IndexFactory indexFactory) {
+		_indexFactory = indexFactory;
+	}
+
 	protected void validate(OperationMode operationMode) {
 		if (!_elasticsearchConnections.containsKey(operationMode)) {
 			throw new MissingOperationModeException(operationMode);
@@ -207,10 +212,7 @@ public class ElasticsearchConnectionManager {
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
 	private final Map<OperationMode, ElasticsearchConnection>
 		_elasticsearchConnections = new HashMap<>();
-
-	@Reference
 	private IndexFactory _indexFactory;
-
 	private OperationMode _operationMode;
 
 }

@@ -27,7 +27,7 @@ public interface TaskAssignmentSelector {
 
 	public Collection<KaleoTaskAssignment> calculateTaskAssignments(
 			KaleoTaskAssignment kaleoTaskAssignment,
-			ExecutionContext executionContext)
+			ExecutionContext executionContext, ClassLoader... classLoaders)
 		throws PortalException;
 
 }

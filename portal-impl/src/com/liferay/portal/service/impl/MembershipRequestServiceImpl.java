@@ -51,15 +51,8 @@ public class MembershipRequestServiceImpl
 	public MembershipRequest getMembershipRequest(long membershipRequestId)
 		throws PortalException {
 
-		MembershipRequest membershipRequest =
-			membershipRequestLocalService.getMembershipRequest(
-				membershipRequestId);
-
-		GroupPermissionUtil.check(
-			getPermissionChecker(), membershipRequest.getGroupId(),
-			ActionKeys.ASSIGN_MEMBERS);
-
-		return membershipRequest;
+		return membershipRequestLocalService.getMembershipRequest(
+			membershipRequestId);
 	}
 
 	@Override

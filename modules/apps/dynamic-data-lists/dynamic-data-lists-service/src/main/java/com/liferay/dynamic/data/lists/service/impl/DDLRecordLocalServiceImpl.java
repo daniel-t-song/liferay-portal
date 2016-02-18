@@ -15,7 +15,6 @@
 package com.liferay.dynamic.data.lists.service.impl;
 
 import com.liferay.document.library.kernel.util.DLUtil;
-import com.liferay.dynamic.data.lists.model.DDLFormRecord;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.dynamic.data.lists.model.DDLRecordConstants;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
@@ -128,9 +127,15 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 
 		// Workflow
 
+		String assetClassName = (String)serviceContext.getAttribute(
+			"assetClassName");
+
+		if (assetClassName == null) {
+			assetClassName = DDLRecord.class.getName();
+		}
+
 		WorkflowHandlerRegistryUtil.startWorkflowInstance(
-			user.getCompanyId(), groupId, userId,
-			getWorkflowAssetClassName(recordSet),
+			user.getCompanyId(), groupId, userId, assetClassName,
 			recordVersion.getRecordVersionId(), recordVersion, serviceContext);
 
 		return record;
@@ -199,18 +204,20 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 
 			// Workflow
 
-			deleteWorkflowInstanceLink(
+			workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
 				record.getCompanyId(), record.getGroupId(),
-				recordVersion.getPrimaryKey());
+				DDLRecord.class.getName(), recordVersion.getPrimaryKey());
 		}
 
 		// Asset
 
-		deleteAssetEntry(record.getRecordId());
+		assetEntryLocalService.deleteEntry(
+			DDLRecord.class.getName(), record.getRecordId());
 
 		// Ratings
 
-		deleteRatingsStats(record.getRecordId());
+		ratingsStatsLocalService.deleteStats(
+			DDLRecord.class.getName(), record.getRecordId());
 
 		return record;
 	}
@@ -529,6 +536,7 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		}
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public DDLRecord updateRecord(
 			long userId, long recordId, boolean majorVersion, int displayIndex,
@@ -756,32 +764,6 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		return recordVersion;
 	}
 
-	protected void deleteAssetEntry(long recordId) throws PortalException {
-		assetEntryLocalService.deleteEntry(
-			DDLFormRecord.class.getName(), recordId);
-
-		assetEntryLocalService.deleteEntry(DDLRecord.class.getName(), recordId);
-	}
-
-	protected void deleteRatingsStats(long recordId) throws PortalException {
-		ratingsStatsLocalService.deleteStats(
-			DDLFormRecord.class.getName(), recordId);
-
-		ratingsStatsLocalService.deleteStats(
-			DDLRecord.class.getName(), recordId);
-	}
-
-	protected void deleteWorkflowInstanceLink(
-			long companyId, long groupId, long recordVersionId)
-		throws PortalException {
-
-		workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
-			companyId, groupId, DDLFormRecord.class.getName(), recordVersionId);
-
-		workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
-			companyId, groupId, DDLRecord.class.getName(), recordVersionId);
-	}
-
 	protected String getNextVersion(
 		String version, boolean majorVersion, int workflowAction) {
 
@@ -802,16 +784,8 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		return versionParts[0] + StringPool.PERIOD + versionParts[1];
 	}
 
-	protected String getWorkflowAssetClassName(DDLRecordSet recordSet) {
-		if (recordSet.getScope() == DDLRecordSetConstants.SCOPE_FORMS) {
-			return DDLFormRecord.class.getName();
-		}
-
-		return DDLRecord.class.getName();
-	}
-
 	/**
-	 * @see com.liferay.portlet.documentlibrary.util.DLFileVersionPolicyImpl#isKeepFileVersionLabel(
+	 * @see com.liferay.portlet.documentlibrary.service.impl.DLFileEntryLocalServiceImpl#isKeepFileVersionLabel(
 	 *      com.liferay.portlet.documentlibrary.model.DLFileEntry,
 	 *      com.liferay.portlet.documentlibrary.model.DLFileVersion,
 	 *      com.liferay.portlet.documentlibrary.model.DLFileVersion,

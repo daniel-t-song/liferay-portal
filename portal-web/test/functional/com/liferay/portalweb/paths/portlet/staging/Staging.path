@@ -162,7 +162,7 @@
 </tr>
 <tr>
 	<td>LIVE_MENU_MESSAGE</td>
-	<td>//span[@class='last-publication-branch']</td>
+	<td>//div[@class='staging-details']</td>
 	<td></td>
 </tr>
 <tr>

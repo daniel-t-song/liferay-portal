@@ -14,110 +14,69 @@
 
 package com.liferay.wiki.web.portlet.configuration.icon;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.SubscriptionLocalService;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.wiki.configuration.WikiGroupServiceOverriddenConfiguration;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.permission.WikiNodePermissionChecker;
 import com.liferay.wiki.web.display.context.util.WikiRequestHelper;
-import com.liferay.wiki.web.portlet.action.ActionUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + WikiPortletKeys.WIKI_ADMIN,
-		"path=/wiki/view_pages"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class NodeSubscriptionPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		String key = "subscribe";
+	public NodeSubscriptionPortletConfigurationIcon(
+		PortletRequest portletRequest, WikiNode node, boolean subscribed) {
 
-		try {
-			WikiNode node = ActionUtil.getNode(portletRequest);
+		super(portletRequest);
 
-			if (isSubscribed(portletRequest, node)) {
-				key = "unsubscribe";
-			}
-		}
-		catch (Exception e) {
-		}
-
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), key);
+		_node = node;
+		_subscribed = subscribed;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		try {
-			WikiNode node = ActionUtil.getNode(portletRequest);
-
-			PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
-				portletRequest, WikiPortletKeys.WIKI_ADMIN,
-				PortletRequest.ACTION_PHASE);
-
-			portletURL.setParameter(
-				ActionRequest.ACTION_NAME, "/wiki/edit_node");
-
-			if (isSubscribed(portletRequest, node)) {
-				portletURL.setParameter(Constants.CMD, Constants.UNSUBSCRIBE);
-			}
-			else {
-				portletURL.setParameter(Constants.CMD, Constants.SUBSCRIBE);
-			}
-
-			portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
-			portletURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
-
-			return portletURL.toString();
-		}
-		catch (Exception e) {
+	public String getMessage() {
+		if (_subscribed) {
+			return "unsubscribe";
 		}
 
-		return StringPool.BLANK;
+		return "subscribe";
 	}
 
 	@Override
-	public double getWeight() {
-		return 102;
+	public String getURL() {
+		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
+			portletRequest, WikiPortletKeys.WIKI_ADMIN,
+			PortletRequest.ACTION_PHASE);
+
+		portletURL.setParameter(ActionRequest.ACTION_NAME, "/wiki/edit_node");
+
+		if (_subscribed) {
+			portletURL.setParameter(Constants.CMD, Constants.UNSUBSCRIBE);
+		}
+		else {
+			portletURL.setParameter(Constants.CMD, Constants.SUBSCRIBE);
+		}
+
+		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
+		portletURL.setParameter("nodeId", String.valueOf(_node.getNodeId()));
+
+		return portletURL.toString();
 	}
 
 	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	public boolean isShow() {
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			portletRequest);
 
@@ -127,44 +86,20 @@ public class NodeSubscriptionPortletConfigurationIcon
 			wikiGroupServiceOverriddenConfiguration =
 				wikiRequestHelper.getWikiGroupServiceOverriddenConfiguration();
 
-		try {
-			WikiNode node = ActionUtil.getNode(portletRequest);
+		if (WikiNodePermissionChecker.contains(
+				themeDisplay.getPermissionChecker(), _node,
+				ActionKeys.SUBSCRIBE) &&
+			(wikiGroupServiceOverriddenConfiguration.emailPageAddedEnabled() ||
+			 wikiGroupServiceOverriddenConfiguration.
+				 emailPageUpdatedEnabled())) {
 
-			if (WikiNodePermissionChecker.contains(
-					themeDisplay.getPermissionChecker(), node,
-					ActionKeys.SUBSCRIBE) &&
-				(wikiGroupServiceOverriddenConfiguration.emailPageAddedEnabled(
-					) ||
-				 wikiGroupServiceOverriddenConfiguration.
-					 emailPageUpdatedEnabled())) {
-
-				return true;
-			}
-		}
-		catch (Exception e) {
+			return true;
 		}
 
 		return false;
 	}
 
-	protected boolean isSubscribed(
-		PortletRequest portletRequest, WikiNode node) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		return _subscriptionLocalService.isSubscribed(
-			themeDisplay.getCompanyId(), themeDisplay.getUserId(),
-			WikiNode.class.getName(), node.getNodeId());
-	}
-
-	@Reference(unbind = "-")
-	protected void setSubscriptionLocalService(
-		SubscriptionLocalService subscriptionLocalService) {
-
-		_subscriptionLocalService = subscriptionLocalService;
-	}
-
-	private SubscriptionLocalService _subscriptionLocalService;
+	private final WikiNode _node;
+	private final boolean _subscribed;
 
 }

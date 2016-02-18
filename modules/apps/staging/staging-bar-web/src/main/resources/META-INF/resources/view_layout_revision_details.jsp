@@ -265,14 +265,6 @@ request.setAttribute("view_layout_revision_details.jsp-layoutRevision", layoutRe
 	);
 </aui:script>
 
-<liferay-util:buffer var="pageVariationsHelpIcon">
-	<liferay-ui:icon-help message="page-variations-help" />
-</liferay-util:buffer>
-
-<liferay-util:buffer var="sitePagesVariationsHelpIcon">
-	<liferay-ui:icon-help message="pages-variations-help" />
-</liferay-util:buffer>
-
 <aui:script>
 	function <portlet:namespace />openPageVariationsDialog() {
 		var pageVariationsDialog = Liferay.Util.openWindow(
@@ -282,7 +274,11 @@ request.setAttribute("view_layout_revision_details.jsp-layoutRevision", layoutRe
 				},
 				id: 'pagesVariationsDialog',
 
-				title: '<liferay-ui:message arguments="<%= pageVariationsHelpIcon %>" key="page-variations-x" />',
+				<liferay-util:buffer var="helpIcon">
+					<liferay-ui:icon-help message="page-variations-help" />
+				</liferay-util:buffer>
+
+				title: '<liferay-ui:message arguments="<%= helpIcon %>" key="page-variations-x" />',
 
 				<liferay-portlet:renderURL var="layoutBranchesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="mvcRenderCommandName" value="viewLayoutBranches" />
@@ -302,7 +298,11 @@ request.setAttribute("view_layout_revision_details.jsp-layoutRevision", layoutRe
 				},
 				id: 'sitePagesVariationDialog',
 
-				title: '<liferay-ui:message arguments="<%= sitePagesVariationsHelpIcon %>" key="site-pages-variation-x" />',
+				<liferay-util:buffer var="helpIcon">
+					<liferay-ui:icon-help message="pages-variations-help" />
+				</liferay-util:buffer>
+
+				title: '<liferay-ui:message arguments="<%= helpIcon %>" key="site-pages-variation-x" />',
 
 				<liferay-portlet:renderURL var="layoutSetBranchesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="mvcRenderCommandName" value="viewLayoutSetBranches" />

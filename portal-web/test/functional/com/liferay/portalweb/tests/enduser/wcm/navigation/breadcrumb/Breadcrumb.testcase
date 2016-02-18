@@ -457,10 +457,6 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="Site#searchInputCP">
-			<var name="siteName" value="Child SiteName" />
-		</execute>
-
 		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="pageName" value="Parent Page Name" />

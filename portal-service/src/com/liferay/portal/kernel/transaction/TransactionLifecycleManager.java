@@ -14,9 +14,9 @@
 
 package com.liferay.portal.kernel.transaction;
 
-import com.liferay.portal.kernel.util.ArrayUtil;
-
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Shuyang Zhou
@@ -28,7 +28,7 @@ public class TransactionLifecycleManager {
 		TransactionStatus transactionStatus) {
 
 		for (TransactionLifecycleListener transactionLifecycleListener :
-				_transactionLifecycleListenersReference.get()) {
+				_transactionLifecycleListeners) {
 
 			transactionLifecycleListener.committed(
 				transactionAttribute, transactionStatus);
@@ -40,7 +40,7 @@ public class TransactionLifecycleManager {
 		TransactionStatus transactionStatus) {
 
 		for (TransactionLifecycleListener transactionLifecycleListener :
-				_transactionLifecycleListenersReference.get()) {
+				_transactionLifecycleListeners) {
 
 			transactionLifecycleListener.created(
 				transactionAttribute, transactionStatus);
@@ -52,79 +52,33 @@ public class TransactionLifecycleManager {
 		TransactionStatus transactionStatus, Throwable throwable) {
 
 		for (TransactionLifecycleListener transactionLifecycleListener :
-				_transactionLifecycleListenersReference.get()) {
+				_transactionLifecycleListeners) {
 
 			transactionLifecycleListener.rollbacked(
 				transactionAttribute, transactionStatus, throwable);
 		}
 	}
 
-	public static TransactionLifecycleListener[]
+	public static Set<TransactionLifecycleListener>
 		getRegisteredTransactionLifecycleListeners() {
 
-		TransactionLifecycleListener[] transactionLifecycleListeners =
-			_transactionLifecycleListenersReference.get();
-
-		return transactionLifecycleListeners.clone();
+		return new LinkedHashSet<>(_transactionLifecycleListeners);
 	}
 
 	public static boolean register(
 		TransactionLifecycleListener transactionLifecycleListener) {
 
-		while (true) {
-			TransactionLifecycleListener[] transactionLifecycleListeners =
-				_transactionLifecycleListenersReference.get();
-
-			if (ArrayUtil.contains(
-					transactionLifecycleListeners,
-					transactionLifecycleListener)) {
-
-				return false;
-			}
-
-			TransactionLifecycleListener[] newTransactionLifecycleListeners =
-				ArrayUtil.append(
-					transactionLifecycleListeners,
-					transactionLifecycleListener);
-
-			if (_transactionLifecycleListenersReference.compareAndSet(
-					transactionLifecycleListeners,
-					newTransactionLifecycleListeners)) {
-
-				return true;
-			}
-		}
+		return _transactionLifecycleListeners.add(transactionLifecycleListener);
 	}
 
 	public static boolean unregister(
 		TransactionLifecycleListener transactionLifecycleListener) {
 
-		while (true) {
-			TransactionLifecycleListener[] transactionLifecycleListeners =
-				_transactionLifecycleListenersReference.get();
-
-			TransactionLifecycleListener[] newTransactionLifecycleListeners =
-				ArrayUtil.remove(
-					transactionLifecycleListeners,
-					transactionLifecycleListener);
-
-			if (transactionLifecycleListeners ==
-					newTransactionLifecycleListeners) {
-
-				return false;
-			}
-
-			if (_transactionLifecycleListenersReference.compareAndSet(
-					transactionLifecycleListeners,
-					newTransactionLifecycleListeners)) {
-
-				return true;
-			}
-		}
+		return _transactionLifecycleListeners.remove(
+			transactionLifecycleListener);
 	}
 
-	private static final AtomicReference<TransactionLifecycleListener[]>
-		_transactionLifecycleListenersReference = new AtomicReference<>(
-			new TransactionLifecycleListener[0]);
+	private static final Set<TransactionLifecycleListener>
+		_transactionLifecycleListeners = new CopyOnWriteArraySet<>();
 
 }

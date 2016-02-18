@@ -16,7 +16,6 @@ package com.liferay.portal.background.task.internal;
 
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskCompletionDateComparator;
 import com.liferay.background.task.kernel.util.comparator.BackgroundTaskCreateDateComparator;
-import com.liferay.background.task.kernel.util.comparator.BackgroundTaskNameComparator;
 import com.liferay.portal.background.task.service.BackgroundTaskLocalService;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
@@ -656,10 +655,6 @@ public class BackgroundTaskManagerImpl implements BackgroundTaskManager {
 			return new com.liferay.portal.background.task.internal.comparator.
 				BackgroundTaskCreateDateComparator(
 					orderByComparator.isAscending());
-		}
-		else if (orderByComparator instanceof BackgroundTaskNameComparator) {
-			return new com.liferay.portal.background.task.internal.comparator.
-				BackgroundTaskNameComparator(orderByComparator.isAscending());
 		}
 
 		throw new IllegalArgumentException(

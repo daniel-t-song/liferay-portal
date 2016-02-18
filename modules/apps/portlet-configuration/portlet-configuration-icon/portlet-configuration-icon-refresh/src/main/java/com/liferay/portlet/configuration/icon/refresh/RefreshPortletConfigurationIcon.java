@@ -14,24 +14,19 @@
 
 package com.liferay.portlet.configuration.icon.refresh;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
-import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(immediate = true, service = PortletConfigurationIcon.class)
 public class RefreshPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
+
+	public RefreshPortletConfigurationIcon(PortletRequest portletRequest) {
+		super(portletRequest);
+	}
 
 	@Override
 	public String getCssClass() {
@@ -39,48 +34,23 @@ public class RefreshPortletConfigurationIcon
 	}
 
 	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "refresh");
+	public String getMessage() {
+		return "refresh";
 	}
 
 	@Override
-	public String getOnClick(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public String getOnClick() {
 		return "Liferay.Portlet.refresh('#p_p_id_".concat(
 			portletDisplay.getId()).concat("_'); return false;");
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public String getURL() {
 		return portletDisplay.getURLRefresh();
 	}
 
 	@Override
-	public double getWeight() {
-		return 17.0;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
+	public boolean isShow() {
 		return portletDisplay.isShowRefreshIcon();
 	}
 

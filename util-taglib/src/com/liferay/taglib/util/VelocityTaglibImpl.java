@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.TagSupport;
 import com.liferay.taglib.portlet.ActionURLTag;
+import com.liferay.taglib.portletext.IconBackTag;
 import com.liferay.taglib.portletext.IconOptionsTag;
 import com.liferay.taglib.portletext.IconPortletTag;
 import com.liferay.taglib.portletext.RuntimeTag;
@@ -682,8 +683,7 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 	@Deprecated
 	@Override
 	public void portletIconBack() throws Exception {
-		com.liferay.taglib.portletext.IconBackTag iconBackTag =
-			new com.liferay.taglib.portletext.IconBackTag();
+		IconBackTag iconBackTag = new IconBackTag();
 
 		setUp(iconBackTag);
 

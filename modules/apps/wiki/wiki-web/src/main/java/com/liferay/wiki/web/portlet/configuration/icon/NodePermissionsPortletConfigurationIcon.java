@@ -14,60 +14,43 @@
 
 package com.liferay.wiki.web.portlet.configuration.icon;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
-import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.security.PermissionsURLTag;
-import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.permission.WikiNodePermissionChecker;
-import com.liferay.wiki.web.portlet.action.ActionUtil;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Roberto Díaz
  */
-@Component(
-	immediate = true,
-	property = {
-		"javax.portlet.name=" + WikiPortletKeys.WIKI_ADMIN,
-		"path=/wiki/view_pages"
-	},
-	service = PortletConfigurationIcon.class
-)
 public class NodePermissionsPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
-	@Override
-	public String getMessage(PortletRequest portletRequest) {
-		return LanguageUtil.get(
-			getResourceBundle(getLocale(portletRequest)), "permissions");
+	public NodePermissionsPortletConfigurationIcon(
+		PortletRequest portletRequest, WikiNode node) {
+
+		super(portletRequest);
+
+		_node = node;
 	}
 
 	@Override
-	public String getURL(
-		PortletRequest portletRequest, PortletResponse portletResponse) {
+	public String getMessage() {
+		return "permissions";
+	}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
+	@Override
+	public String getURL() {
 		String url = StringPool.BLANK;
 
 		try {
-			WikiNode node = ActionUtil.getNode(portletRequest);
-
 			url = PermissionsURLTag.doTag(
-				StringPool.BLANK, WikiNode.class.getName(), node.getName(),
-				null, String.valueOf(node.getNodeId()),
+				StringPool.BLANK, WikiNode.class.getName(), _node.getName(),
+				null, String.valueOf(_node.getNodeId()),
 				LiferayWindowState.POP_UP.toString(), null,
 				themeDisplay.getRequest());
 		}
@@ -78,31 +61,16 @@ public class NodePermissionsPortletConfigurationIcon
 	}
 
 	@Override
-	public double getWeight() {
-		return 104;
-	}
-
-	@Override
-	public boolean isShow(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		try {
-			WikiNode node = ActionUtil.getNode(portletRequest);
-
-			return WikiNodePermissionChecker.contains(
-				themeDisplay.getPermissionChecker(), node,
-				ActionKeys.PERMISSIONS);
-		}
-		catch (Exception e) {
-		}
-
-		return false;
+	public boolean isShow() {
+		return WikiNodePermissionChecker.contains(
+			themeDisplay.getPermissionChecker(), _node, ActionKeys.PERMISSIONS);
 	}
 
 	@Override
 	public boolean isUseDialog() {
 		return true;
 	}
+
+	private final WikiNode _node;
 
 }

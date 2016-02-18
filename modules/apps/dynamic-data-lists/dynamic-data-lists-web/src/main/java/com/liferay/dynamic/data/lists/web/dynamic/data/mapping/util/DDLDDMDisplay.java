@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -49,9 +48,7 @@ public class DDLDDMDisplay extends BaseDDMDisplay {
 
 	@Override
 	public String getStructureName(Locale locale) {
-		ResourceBundle resourceBundle = getResourceBundle(locale);
-
-		return LanguageUtil.get(resourceBundle, "data-definition");
+		return LanguageUtil.get(locale, "data-definition");
 	}
 
 	@Override
@@ -64,11 +61,6 @@ public class DDLDDMDisplay extends BaseDDMDisplay {
 		DDMTemplate template, long classNameId) {
 
 		return PortalUtil.getClassNameId(DDLRecordSet.class);
-	}
-
-	@Override
-	public boolean isShowBackURLInTitleBar() {
-		return true;
 	}
 
 }

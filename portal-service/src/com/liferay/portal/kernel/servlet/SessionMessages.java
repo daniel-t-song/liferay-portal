@@ -71,23 +71,23 @@ public class SessionMessages {
 		".updatedPreferences";
 
 	public static void add(HttpServletRequest request, Class<?> clazz) {
-		add(_getPortalSession(request), clazz.getName());
+		add(request.getSession(false), clazz.getName());
 	}
 
 	public static void add(
 		HttpServletRequest request, Class<?> clazz, Object value) {
 
-		add(_getPortalSession(request), clazz.getName(), value);
+		add(request.getSession(false), clazz.getName(), value);
 	}
 
 	public static void add(HttpServletRequest request, String key) {
-		add(_getPortalSession(request), key);
+		add(request.getSession(false), key);
 	}
 
 	public static void add(
 		HttpServletRequest request, String key, Object value) {
 
-		add(_getPortalSession(request), key, value);
+		add(request.getSession(false), key, value);
 	}
 
 	public static void add(HttpSession session, Class<?> clazz) {
@@ -151,7 +151,7 @@ public class SessionMessages {
 	}
 
 	public static void clear(HttpServletRequest request) {
-		clear(_getPortalSession(request));
+		clear(request.getSession(false));
 	}
 
 	public static void clear(HttpSession session) {
@@ -171,11 +171,11 @@ public class SessionMessages {
 	}
 
 	public static boolean contains(HttpServletRequest request, Class<?> clazz) {
-		return contains(_getPortalSession(request), clazz.getName());
+		return contains(request.getSession(false), clazz.getName());
 	}
 
 	public static boolean contains(HttpServletRequest request, String key) {
-		return contains(_getPortalSession(request), key);
+		return contains(request.getSession(false), key);
 	}
 
 	public static boolean contains(HttpSession session, Class<?> clazz) {
@@ -209,11 +209,11 @@ public class SessionMessages {
 	}
 
 	public static Object get(HttpServletRequest request, Class<?> clazz) {
-		return get(_getPortalSession(request), clazz.getName());
+		return get(request.getSession(false), clazz.getName());
 	}
 
 	public static Object get(HttpServletRequest request, String key) {
-		return get(_getPortalSession(request), key);
+		return get(request.getSession(false), key);
 	}
 
 	public static Object get(HttpSession session, Class<?> clazz) {
@@ -245,7 +245,7 @@ public class SessionMessages {
 	}
 
 	public static boolean isEmpty(HttpServletRequest request) {
-		return isEmpty(_getPortalSession(request));
+		return isEmpty(request.getSession(false));
 	}
 
 	public static boolean isEmpty(HttpSession session) {
@@ -269,7 +269,7 @@ public class SessionMessages {
 	}
 
 	public static Iterator<String> iterator(HttpServletRequest request) {
-		return iterator(_getPortalSession(request));
+		return iterator(request.getSession(false));
 	}
 
 	public static Iterator<String> iterator(HttpSession session) {
@@ -301,7 +301,7 @@ public class SessionMessages {
 	}
 
 	public static Set<String> keySet(HttpServletRequest request) {
-		return keySet(_getPortalSession(request));
+		return keySet(request.getSession(false));
 	}
 
 	public static Set<String> keySet(HttpSession session) {
@@ -325,7 +325,7 @@ public class SessionMessages {
 	}
 
 	public static void print(HttpServletRequest request) {
-		print(_getPortalSession(request));
+		print(request.getSession(false));
 	}
 
 	public static void print(HttpSession session) {
@@ -345,7 +345,7 @@ public class SessionMessages {
 	}
 
 	public static int size(HttpServletRequest request) {
-		return size(_getPortalSession(request));
+		return size(request.getSession(false));
 	}
 
 	public static int size(HttpSession session) {
@@ -419,20 +419,15 @@ public class SessionMessages {
 			createIfAbsent);
 	}
 
-	private static HttpSession _getPortalSession(HttpServletRequest request) {
-		HttpServletRequest originalRequest =
-			PortalUtil.getOriginalServletRequest(request);
-
-		return originalRequest.getSession();
-	}
-
 	private static HttpSession _getPortalSession(
 		PortletRequest portletRequest) {
 
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			portletRequest);
 
-		return _getPortalSession(request);
+		request = PortalUtil.getOriginalServletRequest(request);
+
+		return request.getSession();
 	}
 
 	private static final String _CLASS_NAME = SessionMessages.class.getName();

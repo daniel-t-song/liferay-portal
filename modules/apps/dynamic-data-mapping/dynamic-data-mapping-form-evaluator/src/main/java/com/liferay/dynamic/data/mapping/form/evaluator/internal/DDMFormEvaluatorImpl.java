@@ -14,12 +14,12 @@
 
 package com.liferay.dynamic.data.mapping.form.evaluator.internal;
 
-import com.liferay.dynamic.data.mapping.expression.DDMExpressionFactory;
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluationException;
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluationResult;
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluator;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
+import com.liferay.portal.expression.ExpressionFactory;
 import com.liferay.portal.kernel.exception.PortalException;
 
 import java.util.Locale;
@@ -42,8 +42,7 @@ public class DDMFormEvaluatorImpl implements DDMFormEvaluator {
 			DDMFormEvaluatorHelper ddmFormEvaluatorHelper =
 				new DDMFormEvaluatorHelper(ddmForm, ddmFormValues, locale);
 
-			ddmFormEvaluatorHelper.setDDMExpressionFactory(
-				_ddmExpressionFactory);
+			ddmFormEvaluatorHelper.setExpressionFactory(_expressionFactory);
 
 			return ddmFormEvaluatorHelper.evaluate();
 		}
@@ -53,12 +52,10 @@ public class DDMFormEvaluatorImpl implements DDMFormEvaluator {
 	}
 
 	@Reference(unbind = "-")
-	protected void setDDMExpressionFactory(
-		DDMExpressionFactory ddmExpressionFactory) {
-
-		_ddmExpressionFactory = ddmExpressionFactory;
+	protected void setExpressionFactory(ExpressionFactory expressionFactory) {
+		_expressionFactory = expressionFactory;
 	}
 
-	private DDMExpressionFactory _ddmExpressionFactory;
+	private ExpressionFactory _expressionFactory;
 
 }

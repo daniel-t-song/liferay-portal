@@ -71,13 +71,8 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 		%>
 
 		<div id="<portlet:namespace />scopesBoxes">
-			<c:if test="<%= selectedGroups.isEmpty() %>">
-				<p class="text-muted">
-					<%= StringUtil.toLowerCase(LanguageUtil.get(request, "none")) %>
-				</p>
-			</c:if>
-
 			<liferay-ui:search-container
+				emptyResultsMessage="no-groups-were-found"
 				iteratorURL="<%= configurationRenderURL %>"
 				total="<%= selectedGroups.size() %>"
 			>

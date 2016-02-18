@@ -136,7 +136,6 @@ public class HttpImplTest extends PowerMockito {
 
 	@Test
 	public void testNormalizePath() {
-		Assert.assertEquals("/", _httpImpl.normalizePath("/.."));
 		Assert.assertEquals(
 			"/api/axis", _httpImpl.normalizePath("/api/%61xis"));
 		Assert.assertEquals(
