@@ -221,7 +221,13 @@ if (group.isLayoutPrototype()) {
 	showExportImportIcon = false;
 }
 
-if ((group.isStaged() || group.isStagedRemotely()) && !group.hasLocalOrRemoteStagingGroup()) {
+Group checkingStagingGroup = group;
+
+if (checkingStagingGroup.isControlPanel()) {
+	checkingStagingGroup = GroupLocalServiceUtil.fetchGroup(themeDisplay.getSiteGroupId());
+}
+
+if ((checkingStagingGroup.isStaged() || checkingStagingGroup.isStagedRemotely()) && !checkingStagingGroup.hasLocalOrRemoteStagingGroup()) {
 	showStagingIcon = true;
 }
 
@@ -475,9 +481,6 @@ if (portlet.getConfigurationActionInstance() != null) {
 	if (Validator.isNotNull(settingsScope)) {
 		urlConfiguration.setParameter("settingsScope", settingsScope);
 	}
-}
-else if (PortletPermissionUtil.contains(permissionChecker, layout, portletDisplay.getId(), ActionKeys.PERMISSIONS)) {
-	urlConfiguration.setParameter("mvcPath", "/edit_permissions.jsp");
 }
 else {
 	urlConfiguration.setParameter("mvcPath", "/edit_sharing.jsp");

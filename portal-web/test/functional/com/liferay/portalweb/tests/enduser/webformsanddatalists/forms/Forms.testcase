@@ -124,7 +124,7 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Data Provider Select Field" />
 			<var name="fieldValue" value="united-states" />
 		</execute>
@@ -190,7 +190,6 @@
 
 	<command name="NavigateToCorrectForm" priority="5">
 		<description message="This is a use case for LPS-59331" />
-		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -293,7 +292,6 @@
 
 	<command name="PreviewAndPublishForm" priority="5">
 		<description message="This is a use case for LPS-61740" />
-		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -446,7 +444,7 @@
 			<var name="formName" value="Test Form" />
 		</execute>
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text Field" />
 			<var name="fieldValue" value="testEntry1" />
 		</execute>
@@ -456,7 +454,7 @@
 				<var name="searchTerm" value="${fieldValue}" />
 			</execute>
 
-			<execute macro="FormsAdmin#viewFormEntry">
+			<execute macro="FormsAdmin#viewFormTableEntry">
 				<var name="fieldLabel" value="Text Field" />
 				<var name="fieldValue" value="${fieldValue}" />
 			</execute>
@@ -467,7 +465,7 @@
 						<equals arg1="${fieldValueNotVisible}" arg2="${fieldValue}" />
 					</not>
 					<then>
-						<execute macro="FormsAdmin#viewEntryNotPresent">
+						<execute macro="FormsAdmin#viewTableEntryNotPresent">
 							<var name="fieldLabel" value="Text Field" />
 							<var name="fieldValue" value="${fieldValueNotVisible}" />
 						</execute>
@@ -622,7 +620,7 @@
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
 		<for list="one,two,three,four,five" param="fieldLabel">
-			<execute macro="FormsAdmin#viewFormEntry">
+			<execute macro="FormsAdmin#viewFormTableEntry">
 				<var name="fieldLabel" value="${fieldLabel}" />
 				<var name="fieldValue" value="Field ${fieldLabel}" />
 			</execute>
@@ -630,8 +628,6 @@
 	</command>
 
 	<command name="SubmitFormWithCustomTextContainingValidation" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -723,7 +719,7 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text" />
 			<var name="fieldValue" value="Test" />
 		</execute>
@@ -885,23 +881,48 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text Field" />
 			<var name="fieldValue" value="Text Field Value" />
 		</execute>
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Checkbox Field" />
 			<var name="fieldValue" value="Yes" />
 		</execute>
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Radio Field" />
 			<var name="fieldValue" value="Option 1" />
 		</execute>
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Select Field" />
+			<var name="fieldValue" value="Select 2" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoView" />
+
+		<execute macro="FormsAdmin#viewTextEntry">
+			<var name="fieldLabel" value="Text Field" />
+			<var name="fieldName" value="TextField" />
+			<var name="fieldValue" value="Text Field Value" />
+		</execute>
+
+		<execute macro="FormsAdmin#viewCheckboxEntry">
+			<var name="fieldLabel" value="Checkbox Field" />
+			<var name="fieldName" value="CheckboxField" />
+		</execute>
+
+		<execute macro="FormsAdmin#viewRadioEntry">
+			<var name="fieldLabel" value="Radio Field" />
+			<var name="fieldName" value="RadioField" />
+			<var name="fieldValue" value="Option 1" />
+		</execute>
+
+		<execute macro="FormsAdmin#viewSelectEntry">
+			<var name="fieldLabel" value="Select Field" />
+			<var name="fieldName" value="SelectField" />
 			<var name="fieldValue" value="Select 2" />
 		</execute>
 	</command>
@@ -992,9 +1013,16 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Form" />
 			<var name="fieldValue" value="Approved" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoView" />
+
+		<execute macro="FormsAdmin#viewParagraphEntry">
+			<var name="fieldName" value="ParagraphField" />
+			<var name="fieldValue" value="Paragraph field body text." />
 		</execute>
 	</command>
 
@@ -1073,7 +1101,7 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Checkbox Field" />
 			<var name="fieldValue" value="Yes" />
 		</execute>
@@ -1165,7 +1193,7 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text Field" />
 			<var name="fieldValue" value="Text Field Value" />
 		</execute>
@@ -1260,15 +1288,13 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Radio Field" />
 			<var name="fieldValue" value="Option 1" />
 		</execute>
 	</command>
 
 	<command name="SubmitFormWithRequiredRepeatingTextField" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<description message="This is a use case for LPS-59335." />
 
 		<execute macro="Navigator#openURL" />
@@ -1349,7 +1375,7 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text" />
 			<var name="fieldValue" value="Text Field Value, Text Field Value Repeat" />
 		</execute>
@@ -1433,7 +1459,7 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text Field" />
 			<var name="fieldValue" value="Text Field Value" />
 		</execute>
@@ -1512,15 +1538,20 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Checkbox Field" />
 			<var name="fieldValue" value="Yes" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoView" />
+
+		<execute macro="FormsAdmin#viewCheckboxEntry">
+			<var name="fieldLabel" value="Checkbox Field" />
+			<var name="fieldName" value="CheckboxField" />
 		</execute>
 	</command>
 
 	<command name="SubmitFormWithTextField" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -1588,15 +1619,21 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text Field" />
+			<var name="fieldValue" value="Text Field Value" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoView" />
+
+		<execute macro="FormsAdmin#viewTextEntry">
+			<var name="fieldLabel" value="Text Field" />
+			<var name="fieldName" value="TextField" />
 			<var name="fieldValue" value="Text Field Value" />
 		</execute>
 	</command>
 
 	<command name="SubmitFormWithThreePages" priority="5">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -1745,17 +1782,17 @@
 
 		<execute macro="FormsAdminNavigator#gotoViewEntries" />
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Text" />
 			<var name="fieldValue" value="Text Field Value" />
 		</execute>
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Radio" />
 			<var name="fieldValue" value="Option 2" />
 		</execute>
 
-		<execute macro="FormsAdmin#viewFormEntry">
+		<execute macro="FormsAdmin#viewFormTableEntry">
 			<var name="fieldLabel" value="Checkbox" />
 			<var name="fieldValue" value="Yes" />
 		</execute>
