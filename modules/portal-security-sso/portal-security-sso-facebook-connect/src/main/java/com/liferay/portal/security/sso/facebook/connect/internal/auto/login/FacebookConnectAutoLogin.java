@@ -103,17 +103,10 @@ public class FacebookConnectAutoLogin extends BaseAutoLogin {
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void setFacebookConnect(FacebookConnect facebookConnect) {
-		_facebookConnect = facebookConnect;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
+	@Reference
 	private FacebookConnect _facebookConnect;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

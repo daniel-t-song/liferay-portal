@@ -252,16 +252,10 @@ public class FacebookConnectImpl implements FacebookConnect {
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		FacebookConnectImpl.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
 
 }
