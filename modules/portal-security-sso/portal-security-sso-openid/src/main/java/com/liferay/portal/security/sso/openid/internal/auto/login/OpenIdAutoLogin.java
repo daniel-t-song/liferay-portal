@@ -76,17 +76,10 @@ public class OpenIdAutoLogin extends BaseAutoLogin {
 		return credentials;
 	}
 
-	@Reference(unbind = "-")
-	protected void setOpenId(OpenId openId) {
-		_openId = openId;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
+	@Reference
 	private OpenId _openId;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

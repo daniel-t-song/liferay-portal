@@ -469,18 +469,6 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		return identity;
 	}
 
-	@Reference(unbind = "-")
-	protected void setOpenIdProviderRegistry(
-		OpenIdProviderRegistry openIdProviderRegistry) {
-
-		_openIdProviderRegistry = openIdProviderRegistry;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	protected String[] splitFullName(String fullName) {
 		if (Validator.isNull(fullName)) {
 			return null;
@@ -516,7 +504,11 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		OpenIdServiceHandlerImpl.class);
 
 	private ConsumerManager _consumerManager;
+
+	@Reference
 	private OpenIdProviderRegistry _openIdProviderRegistry;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }
