@@ -144,14 +144,10 @@ public class RememberMeAutoLogin extends BaseAutoLogin {
 		CookieKeys.addCookie(request, response, cookie);
 	}
 
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		RememberMeAutoLogin.class);
 
+	@Reference
 	private UserLocalService _userLocalService;
 
 }
