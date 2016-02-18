@@ -117,13 +117,6 @@ public class TokenLogoutAction extends Action {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.AT_LEAST_ONE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -141,7 +134,9 @@ public class TokenLogoutAction extends Action {
 	private static final Log _log = LogFactoryUtil.getLog(
 		TokenLogoutAction.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
+
 	private final Map<LogoutProcessorType, LogoutProcessor> _logoutProcessors =
 		new ConcurrentHashMap<>();
 

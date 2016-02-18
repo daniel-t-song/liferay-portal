@@ -191,13 +191,6 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		return user;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.AT_LEAST_ONE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -207,26 +200,22 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		_tokenRetrievers.put(tokenRetriever.getTokenLocation(), tokenRetriever);
 	}
 
-	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	protected void unsetTokenRetriever(TokenRetriever tokenRetriever) {
 		_tokenRetrievers.remove(tokenRetriever.getTokenLocation());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(TokenAutoLogin.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
+
 	private final Map<TokenLocation, TokenRetriever> _tokenRetrievers =
 		new ConcurrentHashMap<>();
+
+	@Reference
 	private UserImporter _userImporter;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }
