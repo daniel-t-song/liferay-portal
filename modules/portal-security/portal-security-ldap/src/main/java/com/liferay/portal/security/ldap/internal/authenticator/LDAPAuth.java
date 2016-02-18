@@ -721,36 +721,6 @@ public class LDAPAuth implements Authenticator {
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapSettings(LDAPSettings ldapSettings) {
-		_ldapSettings = ldapSettings;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLdapUserImporter(LDAPUserImporter ldapUserImporter) {
-		_ldapUserImporter = ldapUserImporter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setOmniadmin(Omniadmin omniadmin) {
-		_omniadmin = omniadmin;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPasswordEncryptor(PasswordEncryptor passwordEncryptor) {
-		_passwordEncryptor = passwordEncryptor;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortalLDAP(PortalLDAP portalLDAP) {
-		_portalLDAP = portalLDAP;
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
 	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration)",
 		unbind = "-"
@@ -760,11 +730,6 @@ public class LDAPAuth implements Authenticator {
 			systemLDAPConfigurationProvider) {
 
 		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(LDAPAuth.class);
@@ -781,14 +746,29 @@ public class LDAPAuth implements Authenticator {
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
+
+	@Reference
 	private LDAPSettings _ldapSettings;
+
+	@Reference
 	private LDAPUserImporter _ldapUserImporter;
+
+	@Reference
 	private Omniadmin _omniadmin;
+
+	@Reference
 	private PasswordEncryptor _passwordEncryptor;
+
+	@Reference
 	private PortalLDAP _portalLDAP;
+
+	@Reference
 	private Props _props;
+
 	private ConfigurationProvider<SystemLDAPConfiguration>
 		_systemLDAPConfigurationProvider;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

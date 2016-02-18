@@ -314,11 +314,6 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		_systemLDAPConfigurationProvider = systemLDAPConfigurationProvider;
 	}
 
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultLDAPSettings.class);
 
@@ -332,6 +327,8 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		_ldapServerConfigurationProvider;
 	private ConfigurationProvider<SystemLDAPConfiguration>
 		_systemLDAPConfigurationProvider;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

@@ -15,6 +15,12 @@ compileJava {
 	dependsOn.remove "generateGrammarSource"
 }
 
+configurations {
+	compile {
+		transitive = false
+	}
+}
+
 dependencies {
 	antlr group: "org.antlr", name: "antlr", version: "3.0.1"
 

@@ -942,13 +942,6 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapFilterValidator(
-		LDAPFilterValidator ldapFilterValidator) {
-
-		_ldapFilterValidator = ldapFilterValidator;
-	}
-
 	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
 		unbind = "-"
@@ -958,11 +951,6 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			ldapServerConfigurationProvider) {
 
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLdapSettings(LDAPSettings ldapSettings) {
-		_ldapSettings = ldapSettings;
 	}
 
 	@Reference(unbind = "-")
@@ -1098,10 +1086,16 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		DefaultPortalLDAP.class);
 
 	private String _companySecurityAuthType;
+
+	@Reference
 	private LDAPFilterValidator _ldapFilterValidator;
+
 	private ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
+
+	@Reference
 	private LDAPSettings _ldapSettings;
+
 	private ConfigurationProvider<SystemLDAPConfiguration>
 		_systemLDAPConfigurationProvider;
 

@@ -60,16 +60,6 @@ public class ContactModelListener extends BaseModelListener<Contact> {
 		}
 	}
 
-	@Reference(unbind = "-")
-	public void setUserExporter(UserExporter userExporter) {
-		_userExporter = userExporter;
-	}
-
-	@Reference(unbind = "-")
-	public void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	protected void exportToLDAP(Contact contact) throws Exception {
 		if (UserImportTransactionThreadLocal.isOriginatesFromImport()) {
 			return;
@@ -94,7 +84,10 @@ public class ContactModelListener extends BaseModelListener<Contact> {
 		_userExporter.exportUser(contact, expandoBridgeAttributes);
 	}
 
+	@Reference
 	private UserExporter _userExporter;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }
