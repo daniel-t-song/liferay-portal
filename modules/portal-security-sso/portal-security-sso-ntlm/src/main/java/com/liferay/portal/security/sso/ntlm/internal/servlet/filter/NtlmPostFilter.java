@@ -108,15 +108,9 @@ public class NtlmPostFilter extends BaseFilter {
 			NtlmPostFilter.class.getName(), request, response, filterChain);
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(NtlmPostFilter.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
 
 }

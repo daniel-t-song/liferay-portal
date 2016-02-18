@@ -91,19 +91,10 @@ public class NtlmAutoLogin extends BaseAutoLogin {
 		return credentials;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
+	@Reference
 	private ConfigurationProvider _configurationProvider;
+
+	@Reference
 	private UserImporter _userImporter;
 
 }

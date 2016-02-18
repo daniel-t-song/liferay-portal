@@ -169,16 +169,10 @@ public class NetlogonConnectionManagerImpl
 		return negotiateFlags;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		NetlogonConnectionManagerImpl.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
 
 }

@@ -105,25 +105,13 @@ public class NtlmCompanySettingsVerifyProcess
 		return NtlmConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
-
+	@Reference
 	private CompanyLocalService _companyLocalService;
+
+	@Reference
 	private PrefsProps _prefsProps;
+
+	@Reference
 	private SettingsFactory _settingsFactory;
 
 }
