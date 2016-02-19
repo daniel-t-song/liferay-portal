@@ -26,14 +26,9 @@ import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfoplus;
 
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.Contact;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.UserGroupRole;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
-import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.configuration.ConfigurationFactory;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -43,10 +38,15 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.Contact;
+import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.sso.google.GoogleAuthorization;
 import com.liferay.portal.security.sso.google.configuration.GoogleAuthorizationConfiguration;
 import com.liferay.portal.security.sso.google.constants.GoogleConstants;
 import com.liferay.portal.security.sso.google.constants.GoogleWebKeys;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalService;
 
 import java.lang.reflect.Method;
 
@@ -75,7 +75,7 @@ public class GoogleAuthorizationImpl implements GoogleAuthorization {
 			Class<?> clazz = getClass();
 
 			_doAddOrUpdateUser = clazz.getDeclaredMethod(
-				"doAddOrUpdateUser", HttpSession.class, long.class,
+				"doProcessAction", HttpSession.class, long.class,
 				Userinfoplus.class);
 		}
 		catch (Exception e) {
@@ -288,7 +288,7 @@ public class GoogleAuthorizationImpl implements GoogleAuthorization {
 		long companyId) {
 
 		try {
-			return _configurationProvider.getConfiguration(
+			return _configurationFactory.getConfiguration(
 				GoogleAuthorizationConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, GoogleConstants.SERVICE_NAME));
@@ -386,7 +386,7 @@ public class GoogleAuthorizationImpl implements GoogleAuthorization {
 	private static final String _ONLINE_ACCESS_TYPE = "online";
 
 	@Reference
-	private ConfigurationProvider _configurationProvider;
+	private ConfigurationFactory _configurationFactory;
 
 	private final Method _doAddOrUpdateUser;
 
