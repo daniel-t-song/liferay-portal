@@ -104,7 +104,7 @@ public class S3Store extends BaseStore {
 		}
 
 		try {
-			String key = _s3KeyTransformer.getFileVersionKey(
+			String key = s3KeyTransformer.getFileVersionKey(
 				companyId, repositoryId, fileName, VERSION_DEFAULT);
 
 			PutObjectRequest putObjectRequest = new PutObjectRequest(
@@ -130,7 +130,7 @@ public class S3Store extends BaseStore {
 	public void deleteDirectory(
 		long companyId, long repositoryId, String dirName) {
 
-		String key = _s3KeyTransformer.getDirectoryKey(
+		String key = s3KeyTransformer.getDirectoryKey(
 			companyId, repositoryId, dirName);
 
 		deleteObjects(key);
@@ -138,7 +138,7 @@ public class S3Store extends BaseStore {
 
 	@Override
 	public void deleteFile(long companyId, long repositoryId, String fileName) {
-		String key = _s3KeyTransformer.getFileKey(
+		String key = s3KeyTransformer.getFileKey(
 			companyId, repositoryId, fileName);
 
 		deleteObjects(key);
@@ -150,7 +150,7 @@ public class S3Store extends BaseStore {
 		String versionLabel) {
 
 		try {
-			String key = _s3KeyTransformer.getFileVersionKey(
+			String key = s3KeyTransformer.getFileVersionKey(
 				companyId, repositoryId, fileName, versionLabel);
 
 			DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(
@@ -173,9 +173,9 @@ public class S3Store extends BaseStore {
 			S3Object s3Object = getS3Object(
 				companyId, repositoryId, fileName, versionLabel);
 
-			File file = _s3FileCache.getCacheFile(s3Object, fileName);
+			File file = s3FileCache.getCacheFile(s3Object, fileName);
 
-			_s3FileCache.cleanUpCacheFiles();
+			s3FileCache.cleanUpCacheFiles();
 
 			return file;
 		}
@@ -208,10 +208,10 @@ public class S3Store extends BaseStore {
 		String key = null;
 
 		if (Validator.isNull(dirName)) {
-			key = _s3KeyTransformer.getRepositoryKey(companyId, repositoryId);
+			key = s3KeyTransformer.getRepositoryKey(companyId, repositoryId);
 		}
 		else {
-			key = _s3KeyTransformer.getDirectoryKey(
+			key = s3KeyTransformer.getDirectoryKey(
 				companyId, repositoryId, dirName);
 		}
 
@@ -224,7 +224,7 @@ public class S3Store extends BaseStore {
 		for (int i = 0; i < fileNames.length; i++) {
 			S3ObjectSummary s3ObjectSummary = iterator.next();
 
-			fileNames[i] = _s3KeyTransformer.getFileName(
+			fileNames[i] = s3KeyTransformer.getFileName(
 				s3ObjectSummary.getKey());
 		}
 
@@ -238,7 +238,7 @@ public class S3Store extends BaseStore {
 		String headVersionLabel = getHeadVersionLabel(
 			companyId, repositoryId, fileName);
 
-		String key = _s3KeyTransformer.getFileVersionKey(
+		String key = s3KeyTransformer.getFileVersionKey(
 			companyId, repositoryId, fileName, headVersionLabel);
 
 		GetObjectMetadataRequest getObjectMetadataRequest =
@@ -302,9 +302,9 @@ public class S3Store extends BaseStore {
 				companyId, newRepositoryId, fileName);
 		}
 
-		String oldKey = _s3KeyTransformer.getFileKey(
+		String oldKey = s3KeyTransformer.getFileKey(
 			companyId, repositoryId, fileName);
-		String newKey = _s3KeyTransformer.getFileKey(
+		String newKey = s3KeyTransformer.getFileKey(
 			companyId, newRepositoryId, fileName);
 
 		moveObjects(oldKey, newKey);
@@ -320,9 +320,9 @@ public class S3Store extends BaseStore {
 			throw new DuplicateFileException(companyId, repositoryId, fileName);
 		}
 
-		String oldKey = _s3KeyTransformer.getFileKey(
+		String oldKey = s3KeyTransformer.getFileKey(
 			companyId, repositoryId, fileName);
-		String newKey = _s3KeyTransformer.getFileKey(
+		String newKey = s3KeyTransformer.getFileKey(
 			companyId, repositoryId, newFileName);
 
 		moveObjects(oldKey, newKey);
@@ -340,7 +340,7 @@ public class S3Store extends BaseStore {
 		}
 
 		try {
-			String key = _s3KeyTransformer.getFileVersionKey(
+			String key = s3KeyTransformer.getFileVersionKey(
 				companyId, repositoryId, fileName, versionLabel);
 
 			PutObjectRequest putObjectRequest = new PutObjectRequest(
@@ -472,7 +472,7 @@ public class S3Store extends BaseStore {
 			long companyId, long repositoryId, String fileName)
 		throws NoSuchFileException {
 
-		String key = _s3KeyTransformer.getFileKey(
+		String key = s3KeyTransformer.getFileKey(
 			companyId, repositoryId, fileName);
 
 		List<S3ObjectSummary> s3ObjectSummaries = getS3ObjectSummaries(key);
@@ -511,7 +511,7 @@ public class S3Store extends BaseStore {
 					companyId, repositoryId, fileName);
 			}
 
-			String key = _s3KeyTransformer.getFileVersionKey(
+			String key = s3KeyTransformer.getFileVersionKey(
 				companyId, repositoryId, fileName, versionLabel);
 
 			GetObjectRequest getObjectRequest = new GetObjectRequest(
@@ -617,7 +617,7 @@ public class S3Store extends BaseStore {
 		for (S3ObjectSummary s3ObjectSummary : oldS3ObjectSummaries) {
 			String oldKey = s3ObjectSummary.getKey();
 
-			String newKey = _s3KeyTransformer.moveKey(
+			String newKey = s3KeyTransformer.moveKey(
 				oldKey, oldPrefix, newPrefix);
 
 			CopyObjectRequest copyObjectRequest = new CopyObjectRequest(
@@ -634,16 +634,6 @@ public class S3Store extends BaseStore {
 
 			_amazonS3.deleteObject(deleteObjectRequest);
 		}
-	}
-
-	@Reference(unbind = "-")
-	protected void setS3FileCache(S3FileCache s3FileCache) {
-		_s3FileCache = s3FileCache;
-	}
-
-	@Reference(unbind = "-")
-	protected void setS3KeyTransformer(S3KeyTransformer s3KeyTransformer) {
-		_s3KeyTransformer = s3KeyTransformer;
 	}
 
 	protected SystemException transform(
@@ -688,8 +678,13 @@ public class S3Store extends BaseStore {
 	private AmazonS3 _amazonS3;
 	private AWSCredentialsProvider _awsCredentialsProvider;
 	private String _bucketName;
-	private S3FileCache _s3FileCache;
-	private S3KeyTransformer _s3KeyTransformer;
+
+	@Reference
+	protected S3FileCache s3FileCache;
+
+	@Reference
+	protected S3KeyTransformer s3KeyTransformer;
+
 	private StorageClass _storageClass;
 
 }

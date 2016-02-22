@@ -52,21 +52,16 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true)
 public class DBStoreRegistrator {
 
-	@Reference(unbind = "-")
-	public void setDBStore(DBStore dbStore) {
-		_dbStore = dbStore;
-	}
-
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		Dictionary<String, String> properties = new Hashtable<>();
 
 		properties.put("store.type", "com.liferay.portal.store.db.DBStore");
 
-		_dbStore = prepare(_dbStore);
+		dbStore = prepare(dbStore);
 
 		_serviceRegistration = bundleContext.registerService(
-			Store.class, _dbStore, properties);
+			Store.class, dbStore, properties);
 	}
 
 	@Deactivate
@@ -103,7 +98,9 @@ public class DBStoreRegistrator {
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
-	private Store _dbStore;
+	@Reference
+	protected Store dbStore;
+
 	private ServiceRegistration<Store> _serviceRegistration;
 
 	/**
