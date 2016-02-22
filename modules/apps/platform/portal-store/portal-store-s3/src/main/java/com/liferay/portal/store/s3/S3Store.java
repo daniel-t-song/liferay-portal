@@ -665,6 +665,12 @@ public class S3Store extends BaseStore {
 		}
 	}
 
+	@Reference
+	protected S3FileCache s3FileCache;
+
+	@Reference
+	protected S3KeyTransformer s3KeyTransformer;
+
 	private static final int _DELETE_MAX = 1000;
 
 	private static final String _ERROR_CODE_FILE_NOT_FOUND = "NoSuchKey";
@@ -678,13 +684,6 @@ public class S3Store extends BaseStore {
 	private AmazonS3 _amazonS3;
 	private AWSCredentialsProvider _awsCredentialsProvider;
 	private String _bucketName;
-
-	@Reference
-	protected S3FileCache s3FileCache;
-
-	@Reference
-	protected S3KeyTransformer s3KeyTransformer;
-
 	private StorageClass _storageClass;
 
 }

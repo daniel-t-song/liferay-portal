@@ -103,8 +103,7 @@ public class DBStore extends BaseStore {
 
 	@Override
 	public void deleteFile(long companyId, long repositoryId, String fileName) {
-		dlContentLocalService.deleteContents(
-			companyId, repositoryId, fileName);
+		dlContentLocalService.deleteContents(companyId, repositoryId, fileName);
 	}
 
 	@Override
@@ -465,9 +464,9 @@ public class DBStore extends BaseStore {
 		}
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(DBStore.class);
-
 	@Reference
 	protected DLContentLocalService dlContentLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(DBStore.class);
 
 }
