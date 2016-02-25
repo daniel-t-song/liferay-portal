@@ -51,7 +51,7 @@ public class OpenIdAutoLogin extends BaseAutoLogin {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
-		if (!_openId.isEnabled(companyId)) {
+		if (!openId.isEnabled(companyId)) {
 			return null;
 		}
 
@@ -65,7 +65,7 @@ public class OpenIdAutoLogin extends BaseAutoLogin {
 
 		session.removeAttribute(WebKeys.OPEN_ID_LOGIN);
 
-		User user = _userLocalService.getUserById(userId);
+		User user = userLocalService.getUserById(userId);
 
 		String[] credentials = new String[3];
 
@@ -76,17 +76,10 @@ public class OpenIdAutoLogin extends BaseAutoLogin {
 		return credentials;
 	}
 
-	@Reference(unbind = "-")
-	protected void setOpenId(OpenId openId) {
-		_openId = openId;
-	}
+	@Reference
+	protected OpenId openId;
 
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
-	private OpenId _openId;
-	private UserLocalService _userLocalService;
+	@Reference
+	protected UserLocalService userLocalService;
 
 }

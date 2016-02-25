@@ -45,7 +45,7 @@ public class OpenIdCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class OpenIdCompanySettingsVerifyProcess
 
 		dictionary.put(
 			OpenIdConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenIdPropsKeys.OPENID_AUTH_ENABLED,
 				StringPool.FALSE));
 
@@ -68,7 +68,7 @@ public class OpenIdCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
@@ -76,25 +76,13 @@ public class OpenIdCompanySettingsVerifyProcess
 		return OpenIdConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	@Reference
+	protected CompanyLocalService companyLocalService;
 
-		_companyLocalService = companyLocalService;
-	}
+	@Reference
+	protected PrefsProps prefsProps;
 
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
-
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 }
