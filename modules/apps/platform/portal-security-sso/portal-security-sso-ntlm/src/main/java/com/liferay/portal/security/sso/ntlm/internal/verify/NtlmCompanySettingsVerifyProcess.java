@@ -45,7 +45,7 @@ public class NtlmCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -59,36 +59,36 @@ public class NtlmCompanySettingsVerifyProcess
 
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_DOMAIN,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_DOMAIN, "EXAMPLE"));
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_DOMAIN_CONTROLLER,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_DOMAIN_CONTROLLER,
 				"127.0.0.1"));
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_DOMAIN_CONTROLLER_NAME,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_DOMAIN_CONTROLLER_NAME,
 				"EXAMPLE"));
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_ENABLED,
 				StringPool.FALSE));
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_NEGOTIATE_FLAGS,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_NEGOTIATE_FLAGS,
 				"0x600FFFFF"));
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_SERVICE_ACCOUNT,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_SERVICE_ACCOUNT,
 				"LIFERAY$@EXAMPLE.COM"));
 		dictionary.put(
 			NtlmConfigurationKeys.AUTH_SERVICE_PASSWORD,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyNtlmPropsKeys.NTLM_AUTH_SERVICE_PASSWORD,
 				"test"));
 
@@ -97,7 +97,7 @@ public class NtlmCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
@@ -105,25 +105,13 @@ public class NtlmCompanySettingsVerifyProcess
 		return NtlmConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	@Reference
+	protected CompanyLocalService companyLocalService;
 
-		_companyLocalService = companyLocalService;
-	}
+	@Reference
+	protected PrefsProps prefsProps;
 
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
-
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 }

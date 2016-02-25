@@ -56,7 +56,7 @@ public class NtlmAutoLogin extends BaseAutoLogin {
 		long companyId = PortalUtil.getCompanyId(request);
 
 		NtlmConfiguration ntlmConfiguration =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				NtlmConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, NtlmConstants.SERVICE_NAME));
@@ -74,7 +74,7 @@ public class NtlmAutoLogin extends BaseAutoLogin {
 
 		request.removeAttribute(NtlmWebKeys.NTLM_REMOTE_USER);
 
-		User user = _userImporter.importUserByScreenName(companyId, screenName);
+		User user = userImporter.importUserByScreenName(companyId, screenName);
 
 		if (user == null) {
 			return null;
@@ -91,19 +91,10 @@ public class NtlmAutoLogin extends BaseAutoLogin {
 		return credentials;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
-		_configurationProvider = configurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
-	private ConfigurationProvider _configurationProvider;
-	private UserImporter _userImporter;
+	@Reference
+	protected UserImporter userImporter;
 
 }
