@@ -83,17 +83,10 @@ public class SSOImpl implements SSO {
 		return casConfiguration.enabled();
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	private CASConfiguration getCASConfiguration(long companyId) {
 		try {
 			CASConfiguration casCompanyServiceSettings =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					CASConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, CASConstants.SERVICE_NAME));
@@ -109,6 +102,7 @@ public class SSOImpl implements SSO {
 
 	private static final Log _log = LogFactoryUtil.getLog(SSOImpl.class);
 
-	private ConfigurationProvider _configurationProvider;
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 }

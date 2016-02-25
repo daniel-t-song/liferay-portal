@@ -76,7 +76,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 	 */
 	@Deprecated
 	protected User addUser(long companyId, String screenName) throws Exception {
-		return _userImporter.importUser(
+		return userImporter.importUser(
 			companyId, StringPool.BLANK, screenName);
 	}
 
@@ -108,7 +108,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 		long companyId = PortalUtil.getCompanyId(request);
 
 		CASConfiguration casConfiguration =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				CASConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, CASConstants.SERVICE_NAME));
@@ -147,11 +147,11 @@ public class CASAutoLogin extends BaseAutoLogin {
 		if (casConfiguration.importFromLDAP()) {
 			try {
 				if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-					user = _userImporter.importUser(
+					user = userImporter.importUser(
 						companyId, StringPool.BLANK, login);
 				}
 				else {
-					user = _userImporter.importUser(
+					user = userImporter.importUser(
 						companyId, login, StringPool.BLANK);
 				}
 			}
@@ -161,10 +161,10 @@ public class CASAutoLogin extends BaseAutoLogin {
 
 		if (user == null) {
 			if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-				user = _userLocalService.getUserByScreenName(companyId, login);
+				user = userLocalService.getUserByScreenName(companyId, login);
 			}
 			else {
-				user = _userLocalService.getUserByEmailAddress(
+				user = userLocalService.getUserByEmailAddress(
 					companyId, login);
 			}
 		}
@@ -180,27 +180,15 @@ public class CASAutoLogin extends BaseAutoLogin {
 		return credentials;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(CASAutoLogin.class);
 
-	private ConfigurationProvider _configurationProvider;
-	private UserImporter _userImporter;
-	private UserLocalService _userLocalService;
+	@Reference
+	protected ConfigurationProvider configurationProvider;
+
+	@Reference
+	protected UserImporter userImporter;
+
+	@Reference
+	protected UserLocalService userLocalService;
 
 }
