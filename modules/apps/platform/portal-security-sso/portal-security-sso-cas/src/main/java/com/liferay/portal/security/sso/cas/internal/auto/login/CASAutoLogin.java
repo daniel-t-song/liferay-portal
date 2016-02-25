@@ -76,8 +76,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 	 */
 	@Deprecated
 	protected User addUser(long companyId, String screenName) throws Exception {
-		return userImporter.importUser(
-			companyId, StringPool.BLANK, screenName);
+		return userImporter.importUser(companyId, StringPool.BLANK, screenName);
 	}
 
 	@Override
@@ -164,8 +163,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 				user = userLocalService.getUserByScreenName(companyId, login);
 			}
 			else {
-				user = userLocalService.getUserByEmailAddress(
-					companyId, login);
+				user = userLocalService.getUserByEmailAddress(companyId, login);
 			}
 		}
 
@@ -180,8 +178,6 @@ public class CASAutoLogin extends BaseAutoLogin {
 		return credentials;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(CASAutoLogin.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
 
@@ -190,5 +186,7 @@ public class CASAutoLogin extends BaseAutoLogin {
 
 	@Reference
 	protected UserLocalService userLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(CASAutoLogin.class);
 
 }

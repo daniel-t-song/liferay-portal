@@ -488,6 +488,12 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		return null;
 	}
 
+	@Reference
+	protected OpenIdProviderRegistry openIdProviderRegistry;
+
+	@Reference
+	protected UserLocalService userLocalService;
+
 	private static final String _OPEN_ID_AX_ATTR_EMAIL = "email";
 
 	private static final String _OPEN_ID_AX_ATTR_FIRST_NAME = "firstname";
@@ -504,11 +510,5 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		OpenIdServiceHandlerImpl.class);
 
 	private ConsumerManager _consumerManager;
-
-	@Reference
-	protected OpenIdProviderRegistry openIdProviderRegistry;
-
-	@Reference
-	protected UserLocalService userLocalService;
 
 }

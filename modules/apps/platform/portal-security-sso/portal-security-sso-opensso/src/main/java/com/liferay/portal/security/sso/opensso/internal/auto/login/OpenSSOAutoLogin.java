@@ -251,9 +251,6 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 				companyId, OpenSSOConstants.SERVICE_NAME));
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		OpenSSOAutoLogin.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
 
@@ -268,5 +265,8 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 
 	@Reference
 	protected UserLocalService userLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		OpenSSOAutoLogin.class);
 
 }

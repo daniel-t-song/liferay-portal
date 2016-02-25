@@ -76,9 +76,9 @@ public class SSOImpl implements SSO {
 		return false;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(SSOImpl.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
+
+	private static final Log _log = LogFactoryUtil.getLog(SSOImpl.class);
 
 }

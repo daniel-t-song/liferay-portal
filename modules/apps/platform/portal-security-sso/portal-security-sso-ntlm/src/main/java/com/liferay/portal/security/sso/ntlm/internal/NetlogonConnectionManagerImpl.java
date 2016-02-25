@@ -169,10 +169,10 @@ public class NetlogonConnectionManagerImpl
 		return negotiateFlags;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		NetlogonConnectionManagerImpl.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		NetlogonConnectionManagerImpl.class);
 
 }

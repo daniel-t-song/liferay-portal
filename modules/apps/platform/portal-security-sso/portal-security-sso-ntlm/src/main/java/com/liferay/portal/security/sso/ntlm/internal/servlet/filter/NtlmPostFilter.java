@@ -108,9 +108,9 @@ public class NtlmPostFilter extends BaseFilter {
 			NtlmPostFilter.class.getName(), request, response, filterChain);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(NtlmPostFilter.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
+
+	private static final Log _log = LogFactoryUtil.getLog(NtlmPostFilter.class);
 
 }

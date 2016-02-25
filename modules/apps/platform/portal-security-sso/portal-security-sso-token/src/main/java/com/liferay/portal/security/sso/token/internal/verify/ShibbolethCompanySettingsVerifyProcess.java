@@ -106,9 +106,6 @@ public class ShibbolethCompanySettingsVerifyProcess
 		return TokenConstants.SERVICE_NAME;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		ShibbolethCompanySettingsVerifyProcess.class);
-
 	@Reference
 	protected CompanyLocalService companyLocalService;
 
@@ -117,5 +114,8 @@ public class ShibbolethCompanySettingsVerifyProcess
 
 	@Reference
 	protected SettingsFactory settingsFactory;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ShibbolethCompanySettingsVerifyProcess.class);
 
 }

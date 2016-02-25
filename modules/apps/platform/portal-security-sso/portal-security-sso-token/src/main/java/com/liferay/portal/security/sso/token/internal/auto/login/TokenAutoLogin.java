@@ -204,18 +204,18 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		_tokenRetrievers.remove(tokenRetriever.getTokenLocation());
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(TokenAutoLogin.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
-
-	private final Map<TokenLocation, TokenRetriever> _tokenRetrievers =
-		new ConcurrentHashMap<>();
 
 	@Reference
 	protected UserImporter userImporter;
 
 	@Reference
 	protected UserLocalService userLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(TokenAutoLogin.class);
+
+	private final Map<TokenLocation, TokenRetriever> _tokenRetrievers =
+		new ConcurrentHashMap<>();
 
 }

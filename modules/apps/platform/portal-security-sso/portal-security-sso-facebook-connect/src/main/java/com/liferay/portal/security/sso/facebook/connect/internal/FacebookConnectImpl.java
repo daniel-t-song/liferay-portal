@@ -252,10 +252,10 @@ public class FacebookConnectImpl implements FacebookConnect {
 		return null;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		FacebookConnectImpl.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		FacebookConnectImpl.class);
 
 }

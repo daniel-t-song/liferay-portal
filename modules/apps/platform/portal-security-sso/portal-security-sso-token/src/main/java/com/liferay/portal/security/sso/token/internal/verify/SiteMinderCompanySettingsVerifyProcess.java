@@ -101,9 +101,6 @@ public class SiteMinderCompanySettingsVerifyProcess
 		return TokenConstants.SERVICE_NAME;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		SiteMinderCompanySettingsVerifyProcess.class);
-
 	@Reference
 	protected CompanyLocalService companyLocalService;
 
@@ -112,5 +109,8 @@ public class SiteMinderCompanySettingsVerifyProcess
 
 	@Reference
 	protected SettingsFactory settingsFactory;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SiteMinderCompanySettingsVerifyProcess.class);
 
 }

@@ -131,11 +131,11 @@ public class TokenLogoutAction extends Action {
 		_logoutProcessors.remove(logoutProcessor.getLogoutProcessorType());
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		TokenLogoutAction.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		TokenLogoutAction.class);
 
 	private final Map<LogoutProcessorType, LogoutProcessor> _logoutProcessors =
 		new ConcurrentHashMap<>();

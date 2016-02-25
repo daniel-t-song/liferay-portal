@@ -217,14 +217,14 @@ public class OpenSSOFilter extends BaseFilter {
 		response.sendRedirect(redirect);
 	}
 
-	private static final String _SUBJECT_ID_KEY = "open.sso.subject.id";
-
-	private static final Log _log = LogFactoryUtil.getLog(OpenSSOFilter.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
 
 	@Reference
 	protected OpenSSO openSSO;
+
+	private static final String _SUBJECT_ID_KEY = "open.sso.subject.id";
+
+	private static final Log _log = LogFactoryUtil.getLog(OpenSSOFilter.class);
 
 }

@@ -251,12 +251,12 @@ public class CASFilter extends BaseFilter {
 			CASFilter.class.getName(), request, response, filterChain);
 	}
 
+	@Reference
+	protected ConfigurationProvider configurationProvider;
+
 	private static final Log _log = LogFactoryUtil.getLog(CASFilter.class);
 
 	private static final Map<Long, TicketValidator> _ticketValidators =
 		new ConcurrentHashMap<>();
-
-	@Reference
-	protected ConfigurationProvider configurationProvider;
 
 }

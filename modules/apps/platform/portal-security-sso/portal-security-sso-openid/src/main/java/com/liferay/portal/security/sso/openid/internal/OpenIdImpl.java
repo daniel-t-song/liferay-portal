@@ -61,9 +61,9 @@ public class OpenIdImpl implements OpenId {
 		return false;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(OpenIdImpl.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
+
+	private static final Log _log = LogFactoryUtil.getLog(OpenIdImpl.class);
 
 }

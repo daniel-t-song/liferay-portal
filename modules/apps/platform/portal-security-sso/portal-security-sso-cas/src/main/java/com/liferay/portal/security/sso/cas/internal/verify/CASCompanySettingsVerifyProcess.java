@@ -124,9 +124,6 @@ public class CASCompanySettingsVerifyProcess
 		return CASConstants.SERVICE_NAME;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		CASCompanySettingsVerifyProcess.class);
-
 	@Reference
 	protected CompanyLocalService companyLocalService;
 
@@ -135,5 +132,8 @@ public class CASCompanySettingsVerifyProcess
 
 	@Reference
 	protected SettingsFactory settingsFactory;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CASCompanySettingsVerifyProcess.class);
 
 }

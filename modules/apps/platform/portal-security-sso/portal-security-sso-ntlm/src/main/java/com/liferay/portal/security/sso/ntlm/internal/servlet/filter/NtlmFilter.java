@@ -347,13 +347,13 @@ public class NtlmFilter extends BaseFilter {
 			NtlmPostFilter.class.getName(), request, response, filterChain);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(NtlmFilter.class);
-
 	@Reference
 	protected ConfigurationProvider configurationProvider;
 
 	@Reference
 	protected NetlogonConnectionManager netlogonConnectionManager;
+
+	private static final Log _log = LogFactoryUtil.getLog(NtlmFilter.class);
 
 	private final Map<Long, NtlmManager> _ntlmManagers =
 		new ConcurrentHashMap<>();
