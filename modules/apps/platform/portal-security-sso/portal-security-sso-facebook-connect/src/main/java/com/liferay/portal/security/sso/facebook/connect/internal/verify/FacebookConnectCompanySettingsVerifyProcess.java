@@ -46,7 +46,7 @@ public class FacebookConnectCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -61,44 +61,44 @@ public class FacebookConnectCompanySettingsVerifyProcess
 
 		dictionary.put(
 			FacebookConnectConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyFacebookConnectPropsKeys.AUTH_ENABLED,
 				StringPool.FALSE));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.APP_ID,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyFacebookConnectPropsKeys.APP_ID,
 				StringPool.BLANK));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.APP_SECRET,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyFacebookConnectPropsKeys.APP_SECRET,
 				StringPool.BLANK));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.GRAPH_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyFacebookConnectPropsKeys.GRAPH_URL,
 				StringPool.BLANK));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.OAUTH_AUTH_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyFacebookConnectPropsKeys.OAUTH_AUTH_URL,
 				StringPool.BLANK));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.OAUTH_REDIRECT_URL,
 			upgradeLegacyRedirectURI(
-				_prefsProps.getString(
+				prefsProps.getString(
 					companyId,
 					LegacyFacebookConnectPropsKeys.OAUTH_REDIRECT_URL,
 					StringPool.BLANK)));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.OAUTH_TOKEN_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyFacebookConnectPropsKeys.OAUTH_TOKEN_URL,
 				StringPool.BLANK));
 		dictionary.put(
 			FacebookConnectConfigurationKeys.VERIFIED_ACCOUNT_REQUIRED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId,
 				LegacyFacebookConnectPropsKeys.VERIFIED_ACCOUNT_REQUIRED,
 				StringPool.FALSE));
@@ -108,29 +108,12 @@ public class FacebookConnectCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
 	protected String getSettingsId() {
 		return FacebookConnectConstants.SERVICE_NAME;
-	}
-
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
 	}
 
 	protected String upgradeLegacyRedirectURI(String legacyRedirectURI) {
@@ -143,8 +126,13 @@ public class FacebookConnectCompanySettingsVerifyProcess
 			"/c/portal/facebook_connect_oauth");
 	}
 
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
+	@Reference
+	protected CompanyLocalService companyLocalService;
+
+	@Reference
+	protected PrefsProps prefsProps;
+
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 }
