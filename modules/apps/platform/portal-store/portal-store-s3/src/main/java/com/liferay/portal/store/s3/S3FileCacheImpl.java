@@ -96,7 +96,7 @@ public class S3FileCacheImpl implements S3FileCache {
 		sb.append(
 			DateUtil.getCurrentDate(
 				_CACHE_DIR_PATTERN, LocaleUtil.getDefault()));
-		sb.append(_s3KeyTransformer.getNormalizedFileName(fileName));
+		sb.append(s3KeyTransformer.getNormalizedFileName(fileName));
 
 		ObjectMetadata objectMetadata = s3Object.getObjectMetadata();
 
@@ -196,10 +196,8 @@ public class S3FileCacheImpl implements S3FileCache {
 		return SystemProperties.get(SystemProperties.TMP_DIR) + _CACHE_DIR_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setS3KeyTransformer(S3KeyTransformer s3KeyTransformer) {
-		_s3KeyTransformer = s3KeyTransformer;
-	}
+	@Reference
+	protected S3KeyTransformer s3KeyTransformer;
 
 	private static final String _CACHE_DIR_NAME = "/liferay/s3";
 
@@ -211,7 +209,6 @@ public class S3FileCacheImpl implements S3FileCache {
 	private AtomicInteger _cacheDirCleanUpExpunge;
 	private AtomicInteger _cacheDirCleanUpFrequency;
 	private int _calledCleanUpCacheFilesCount;
-	private S3KeyTransformer _s3KeyTransformer;
 	private volatile S3StoreConfiguration _s3StoreConfiguration;
 
 }
