@@ -33,13 +33,13 @@ public class KaleoDatabaseConverter implements DatabaseConverter {
 	public void convert(DataSource dataSource) throws Exception {
 		Class<?> clazz = getClass();
 
-		modelMigrator.migrate(
+		_modelMigrator.migrate(
 			dataSource,
 			HibernateModelUtil.getModelClassNames(
 				clazz.getClassLoader(), ".*Kaleo.*"));
 	}
 
 	@Reference
-	protected ModelMigrator modelMigrator;
+	private ModelMigrator _modelMigrator;
 
 }
