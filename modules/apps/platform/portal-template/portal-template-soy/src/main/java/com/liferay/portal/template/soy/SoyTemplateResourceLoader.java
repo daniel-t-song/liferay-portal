@@ -82,18 +82,18 @@ public class SoyTemplateResourceLoader implements TemplateResourceLoader {
 			TemplateConstants.LANG_TYPE_SOY,
 			_soyTemplateEngineConfiguration.templateParsers(),
 			_soyTemplateEngineConfiguration.resourceModificationCheck(),
-			multiVMPool, singleVMPool);
+			_multiVMPool, _singleVMPool);
 	}
-
-	@Reference
-	protected MultiVMPool multiVMPool;
-
-	@Reference
-	protected SingleVMPool singleVMPool;
 
 	private static volatile DefaultTemplateResourceLoader
 		_defaultTemplateResourceLoader;
 	private static volatile SoyTemplateEngineConfiguration
 		_soyTemplateEngineConfiguration;
+
+	@Reference
+	private MultiVMPool _multiVMPool;
+
+	@Reference
+	private SingleVMPool _singleVMPool;
 
 }
