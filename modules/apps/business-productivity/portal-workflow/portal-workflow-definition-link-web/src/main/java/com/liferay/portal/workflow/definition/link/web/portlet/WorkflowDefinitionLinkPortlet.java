@@ -67,7 +67,7 @@ public class WorkflowDefinitionLinkPortlet extends MVCPortlet {
 		try {
 			WorkflowDefinitionLinkDisplayContext displayContext =
 				new WorkflowDefinitionLinkDisplayContext(
-					renderRequest, workflowDefinitionLinkLocalService);
+					renderRequest, _workflowDefinitionLinkLocalService);
 
 			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT, displayContext);
@@ -79,8 +79,7 @@ public class WorkflowDefinitionLinkPortlet extends MVCPortlet {
 		super.render(renderRequest, renderResponse);
 	}
 
-	@Reference
-	protected WorkflowDefinitionLinkLocalService
-		workflowDefinitionLinkLocalService;
+	private WorkflowDefinitionLinkLocalService
+		_workflowDefinitionLinkLocalService;
 
 }

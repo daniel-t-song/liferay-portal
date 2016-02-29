@@ -74,7 +74,7 @@ public class DeleteWorkflowInstanceMVCActionCommand
 		long classPK = GetterUtil.getLong(
 			workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
 
-		workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
+		_workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
 			companyId, groupId, className, classPK);
 	}
 
@@ -160,6 +160,6 @@ public class DeleteWorkflowInstanceMVCActionCommand
 	}
 
 	@Reference
-	protected WorkflowInstanceLinkLocalService workflowInstanceLinkLocalService;
+	private WorkflowInstanceLinkLocalService _workflowInstanceLinkLocalService;
 
 }
