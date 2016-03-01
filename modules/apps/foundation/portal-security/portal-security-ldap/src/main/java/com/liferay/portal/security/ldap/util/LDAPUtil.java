@@ -233,13 +233,7 @@ public class LDAPUtil {
 		_ldapFilterValidator.validate(filter, filterPropertyName);
 	}
 
-	@Reference(unbind = "-")
-	protected void setLDAPFilterValidator(
-		LDAPFilterValidator ldapFilterValidator) {
-
-		_ldapFilterValidator = ldapFilterValidator;
-	}
-
+	@Reference
 	private static LDAPFilterValidator _ldapFilterValidator;
 
 }

@@ -132,13 +132,6 @@ public class BasicAuthHeaderAutoLogin extends BaseAutoLogin {
 		return basicAuthHeaderAutoLoginConfiguration.enabled();
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	private BasicAuthHeaderAutoLoginConfiguration
 		_getBasicAuthHeaderAutoLoginConfiguration(long companyId) {
 
@@ -163,6 +156,7 @@ public class BasicAuthHeaderAutoLogin extends BaseAutoLogin {
 	private static final Log _log = LogFactoryUtil.getLog(
 		BasicAuthHeaderAutoLogin.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
 
 }

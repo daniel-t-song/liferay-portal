@@ -350,28 +350,16 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		return 0;
 	}
 
-	@Reference(unbind = "-")
-	protected void setContactPersistence(
-		ContactPersistence contactPersistence) {
-
-		_contactPersistence = contactPersistence;
-	}
-
-	@Reference(unbind = "-")
-	protected void setListTypeService(ListTypeService listTypeService) {
-		_listTypeService = listTypeService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserPersistence(UserPersistence userPersistence) {
-		_userPersistence = userPersistence;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultLDAPToPortalConverter.class);
 
+	@Reference
 	private ContactPersistence _contactPersistence;
+
+	@Reference
 	private ListTypeService _listTypeService;
+
+	@Reference
 	private UserPersistence _userPersistence;
 
 }

@@ -263,11 +263,7 @@ public class PortalLDAPUtil {
 		return _portalLDAP;
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortalLDAP(PortalLDAP portalLDAP) {
-		_portalLDAP = portalLDAP;
-	}
-
+	@Reference
 	private static PortalLDAP _portalLDAP;
 
 }

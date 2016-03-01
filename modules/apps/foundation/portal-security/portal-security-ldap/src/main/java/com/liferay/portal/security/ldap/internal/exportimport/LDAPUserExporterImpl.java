@@ -378,13 +378,6 @@ public class LDAPUserExporterImpl implements UserExporter {
 		}
 	}
 
-	@Reference(unbind = "-")
-	public void setPortalToLDAPConverter(
-		PortalToLDAPConverter portalToLDAPConverter) {
-
-		_portalToLDAPConverter = portalToLDAPConverter;
-	}
-
 	protected Binding addGroup(
 			long ldapServerId, LdapContext ldapContext, UserGroup userGroup,
 			User user, Properties groupMappings, Properties userMappings)
@@ -441,37 +434,25 @@ public class LDAPUserExporterImpl implements UserExporter {
 		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapSettings(LDAPSettings ldapSettings) {
-		_ldapSettings = ldapSettings;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortalLDAP(PortalLDAP portalLDAP) {
-		_portalLDAP = portalLDAP;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserGroupLocalService(
-		UserGroupLocalService userGroupLocalService) {
-
-		_userGroupLocalService = userGroupLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		LDAPUserExporterImpl.class);
 
 	private ConfigurationProvider<LDAPAuthConfiguration>
 		_ldapAuthConfigurationProvider;
+
+	@Reference
 	private LDAPSettings _ldapSettings;
+
+	@Reference
 	private PortalLDAP _portalLDAP;
+
+	@Reference
 	private PortalToLDAPConverter _portalToLDAPConverter;
+
+	@Reference
 	private UserGroupLocalService _userGroupLocalService;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

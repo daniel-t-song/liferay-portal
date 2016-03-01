@@ -468,20 +468,6 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	}
 
 	@Reference(unbind = "-")
-	public void setAttributesTransformer(
-		AttributesTransformer attributesTransformer) {
-
-		_attributesTransformer = attributesTransformer;
-	}
-
-	@Reference(unbind = "-")
-	public void setLDAPToPortalConverter(
-		LDAPToPortalConverter ldapToPortalConverter) {
-
-		_ldapToPortalConverter = ldapToPortalConverter;
-	}
-
-	@Reference(unbind = "-")
 	public void setSingleVMPool(SingleVMPool singleVMPool) {
 		_portalCache = (PortalCache<String, Long>)singleVMPool.getPortalCache(
 			UserImporter.class.getName(), false);
@@ -1249,25 +1235,6 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setExpandoValueLocalService(
-		ExpandoValueLocalService expandoValueLocalService) {
-
-		_expandoValueLocalService = expandoValueLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setGroupLocalService(GroupLocalService groupLocalService) {
-		_groupLocalService = groupLocalService;
-	}
-
 	@Reference(
 		target = "(factoryPid=com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration)",
 		unbind = "-"
@@ -1290,50 +1257,12 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
-	@Reference(unbind = "-")
-	protected void setLdapSettings(LDAPSettings ldapSettings) {
-		_ldapSettings = ldapSettings;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLockManager(LockManager lockManager) {
-		_lockManager = lockManager;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortalLDAP(PortalLDAP portalLDAP) {
-		_portalLDAP = portalLDAP;
-	}
-
 	protected void setProperty(
 		Object bean1, Object bean2, String propertyName) {
 
 		Object value = BeanPropertiesUtil.getObject(bean2, propertyName);
 
 		BeanPropertiesUtil.setProperty(bean1, propertyName, value);
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_companySecurityAuthType = GetterUtil.getString(
-			props.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE));
-	}
-
-	@Reference(unbind = "-")
-	protected void setRoleLocalService(RoleLocalService roleLocalService) {
-		_roleLocalService = roleLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserGroupLocalService(
-		UserGroupLocalService userGroupLocalService) {
-
-		_userGroupLocalService = userGroupLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
 	}
 
 	protected void updateExpandoAttributes(
@@ -1591,23 +1520,48 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		LDAPUserImporterImpl.class);
 
+	@Reference
 	private AttributesTransformer _attributesTransformer;
+
+	@Reference
 	private CompanyLocalService _companyLocalService;
+
+	@Reference
 	private String _companySecurityAuthType;
+
+	@Reference
 	private ExpandoValueLocalService _expandoValueLocalService;
+
+	@Reference
 	private GroupLocalService _groupLocalService;
+
 	private long _lastImportTime;
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
+
+	@Reference
 	private LDAPSettings _ldapSettings;
+
+	@Reference
 	private LDAPToPortalConverter _ldapToPortalConverter;
+
+	@Reference
 	private LockManager _lockManager;
+
 	private PortalCache<String, Long> _portalCache;
+
+	@Reference
 	private PortalLDAP _portalLDAP;
+
+	@Reference
 	private RoleLocalService _roleLocalService;
+
+	@Reference
 	private UserGroupLocalService _userGroupLocalService;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

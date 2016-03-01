@@ -86,13 +86,6 @@ public class UserImportMessageListener
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
 	@Reference(
 		target = "(destination.name=" + DestinationNames.SCHEDULED_USER_LDAP_IMPORT + ")",
 		unbind = "-"
@@ -112,25 +105,19 @@ public class UserImportMessageListener
 	}
 
 	@Reference(unbind = "-")
-	protected void setLdapUserImporter(LDAPUserImporter ldapUserImporter) {
-		_ldapUserImporter = ldapUserImporter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSchedulerEngineHelper(
-		SchedulerEngineHelper schedulerEngineHelper) {
-
-		_schedulerEngineHelper = schedulerEngineHelper;
-	}
-
-	@Reference(unbind = "-")
 	protected void setTriggerFactory(TriggerFactory triggerFactory) {
 	}
 
+	@Reference
 	private CompanyLocalService _companyLocalService;
+
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
+
+	@Reference
 	private LDAPUserImporter _ldapUserImporter;
+
+	@Reference
 	private SchedulerEngineHelper _schedulerEngineHelper;
 
 }

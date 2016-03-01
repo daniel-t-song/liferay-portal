@@ -139,18 +139,6 @@ public class RequestParameterAutoLogin extends BaseAutoLogin {
 		return requestParameterAutoLoginConfiguration.enabled();
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	private RequestParameterAutoLoginConfiguration
 		_getRequestParameterAutoLoginConfiguration(long companyId) {
 
@@ -180,7 +168,10 @@ public class RequestParameterAutoLogin extends BaseAutoLogin {
 	private static final Log _log = LogFactoryUtil.getLog(
 		RequestParameterAutoLogin.class);
 
+	@Reference
 	private ConfigurationProvider _configurationProvider;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }
