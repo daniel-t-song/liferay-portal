@@ -27,13 +27,13 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.exportimport.UserExporter;
 import com.liferay.portal.security.exportimport.UserOperation;
 import com.liferay.portal.security.ldap.GroupConverterKeys;
+import com.liferay.portal.security.ldap.LDAPHelper;
 import com.liferay.portal.security.ldap.PortalLDAP;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.exportimport.Modifications;
 import com.liferay.portal.security.ldap.exportimport.PortalToLDAPConverter;
 import com.liferay.portal.security.ldap.internal.PortalLDAPContext;
-import com.liferay.portal.security.ldap.util.LDAPUtil;
 
 import java.io.Serializable;
 
@@ -300,11 +300,11 @@ public class LDAPUserExporterImpl implements UserExporter {
 					_portalLDAP.getNameInNamespace(
 						ldapServerId, companyId, binding));
 
-				String modifyTimestamp = LDAPUtil.getAttributeString(
+				String modifyTimestamp = _ldapHelper.getAttributeString(
 					attributes, "modifyTimestamp");
 
 				if (Validator.isNotNull(modifyTimestamp)) {
-					Date modifiedDate = LDAPUtil.parseDate(modifyTimestamp);
+					Date modifiedDate = _ldapHelper.parseDate(modifyTimestamp);
 
 					if (modifiedDate.equals(user.getModifiedDate())) {
 						if (_log.isDebugEnabled()) {
@@ -454,5 +454,8 @@ public class LDAPUserExporterImpl implements UserExporter {
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	@Reference
+	private LDAPHelper _ldapHelper;
 
 }

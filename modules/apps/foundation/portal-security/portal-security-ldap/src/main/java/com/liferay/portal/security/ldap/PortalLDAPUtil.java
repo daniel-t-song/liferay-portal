@@ -31,13 +31,13 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true)
 public class PortalLDAPUtil {
 
-	public static LdapContext getContext(long ldapServerId, long companyId)
+	public LdapContext getContext(long ldapServerId, long companyId)
 		throws Exception {
 
 		return getInstance().getContext(ldapServerId, companyId);
 	}
 
-	public static LdapContext getContext(
+	public LdapContext getContext(
 			long companyId, String providerURL, String principal,
 			String credentials)
 		throws Exception {
@@ -46,14 +46,14 @@ public class PortalLDAPUtil {
 			companyId, providerURL, principal, credentials);
 	}
 
-	public static Binding getGroup(
+	public Binding getGroup(
 			long ldapServerId, long companyId, String groupName)
 		throws Exception {
 
 		return getInstance().getGroup(ldapServerId, companyId, groupName);
 	}
 
-	public static Attributes getGroupAttributes(
+	public Attributes getGroupAttributes(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			String fullDistinguishedName)
 		throws Exception {
@@ -62,7 +62,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, ldapContext, fullDistinguishedName);
 	}
 
-	public static Attributes getGroupAttributes(
+	public Attributes getGroupAttributes(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			String fullDistinguishedName, boolean includeReferenceAttributes)
 		throws Exception {
@@ -72,7 +72,7 @@ public class PortalLDAPUtil {
 			includeReferenceAttributes);
 	}
 
-	public static byte[] getGroups(
+	public byte[] getGroups(
 			long companyId, LdapContext ldapContext, byte[] cookie,
 			int maxResults, String baseDN, String groupFilter,
 			List<SearchResult> searchResults)
@@ -83,7 +83,7 @@ public class PortalLDAPUtil {
 			searchResults);
 	}
 
-	public static byte[] getGroups(
+	public byte[] getGroups(
 			long companyId, LdapContext ldapContext, byte[] cookie,
 			int maxResults, String baseDN, String groupFilter,
 			String[] attributeIds, List<SearchResult> searchResults)
@@ -94,7 +94,7 @@ public class PortalLDAPUtil {
 			attributeIds, searchResults);
 	}
 
-	public static byte[] getGroups(
+	public byte[] getGroups(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			byte[] cookie, int maxResults, List<SearchResult> searchResults)
 		throws Exception {
@@ -104,7 +104,7 @@ public class PortalLDAPUtil {
 			searchResults);
 	}
 
-	public static byte[] getGroups(
+	public byte[] getGroups(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			byte[] cookie, int maxResults, String[] attributeIds,
 			List<SearchResult> searchResults)
@@ -115,13 +115,13 @@ public class PortalLDAPUtil {
 			attributeIds, searchResults);
 	}
 
-	public static String getGroupsDN(long ldapServerId, long companyId)
+	public String getGroupsDN(long ldapServerId, long companyId)
 		throws Exception {
 
 		return getInstance().getGroupsDN(ldapServerId, companyId);
 	}
 
-	public static long getLdapServerId(
+	public long getLdapServerId(
 			long companyId, String screenName, String emailAddress)
 		throws Exception {
 
@@ -129,7 +129,7 @@ public class PortalLDAPUtil {
 			companyId, screenName, emailAddress);
 	}
 
-	public static Attribute getMultivaluedAttribute(
+	public Attribute getMultivaluedAttribute(
 			long companyId, LdapContext ldapContext, String baseDN,
 			String filter, Attribute attribute)
 		throws Exception {
@@ -138,7 +138,7 @@ public class PortalLDAPUtil {
 			companyId, ldapContext, baseDN, filter, attribute);
 	}
 
-	public static String getNameInNamespace(
+	public String getNameInNamespace(
 			long ldapServerId, long companyId, Binding binding)
 		throws Exception {
 
@@ -146,7 +146,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, binding);
 	}
 
-	public static Binding getUser(
+	public Binding getUser(
 			long ldapServerId, long companyId, String screenName,
 			String emailAddress)
 		throws Exception {
@@ -155,7 +155,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, screenName, emailAddress);
 	}
 
-	public static Binding getUser(
+	public Binding getUser(
 			long ldapServerId, long companyId, String screenName,
 			String emailAddress, boolean checkOriginalEmail)
 		throws Exception {
@@ -165,7 +165,7 @@ public class PortalLDAPUtil {
 			checkOriginalEmail);
 	}
 
-	public static Attributes getUserAttributes(
+	public Attributes getUserAttributes(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			String fullDistinguishedName)
 		throws Exception {
@@ -174,7 +174,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, ldapContext, fullDistinguishedName);
 	}
 
-	public static byte[] getUsers(
+	public byte[] getUsers(
 			long companyId, LdapContext ldapContext, byte[] cookie,
 			int maxResults, String baseDN, String userFilter,
 			List<SearchResult> searchResults)
@@ -185,7 +185,7 @@ public class PortalLDAPUtil {
 			searchResults);
 	}
 
-	public static byte[] getUsers(
+	public byte[] getUsers(
 			long companyId, LdapContext ldapContext, byte[] cookie,
 			int maxResults, String baseDN, String userFilter,
 			String[] attributeIds, List<SearchResult> searchResults)
@@ -196,7 +196,7 @@ public class PortalLDAPUtil {
 			attributeIds, searchResults);
 	}
 
-	public static byte[] getUsers(
+	public byte[] getUsers(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			byte[] cookie, int maxResults, List<SearchResult> searchResults)
 		throws Exception {
@@ -206,7 +206,7 @@ public class PortalLDAPUtil {
 			searchResults);
 	}
 
-	public static byte[] getUsers(
+	public byte[] getUsers(
 			long ldapServerId, long companyId, LdapContext ldapContext,
 			byte[] cookie, int maxResults, String[] attributeIds,
 			List<SearchResult> searchResults)
@@ -217,13 +217,13 @@ public class PortalLDAPUtil {
 			attributeIds, searchResults);
 	}
 
-	public static String getUsersDN(long ldapServerId, long companyId)
+	public String getUsersDN(long ldapServerId, long companyId)
 		throws Exception {
 
 		return getInstance().getUsersDN(ldapServerId, companyId);
 	}
 
-	public static boolean hasUser(
+	public boolean hasUser(
 			long ldapServerId, long companyId, String screenName,
 			String emailAddress)
 		throws Exception {
@@ -232,7 +232,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, screenName, emailAddress);
 	}
 
-	public static boolean isGroupMember(
+	public boolean isGroupMember(
 			long ldapServerId, long companyId, String groupDN, String userDN)
 		throws Exception {
 
@@ -240,7 +240,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, groupDN, userDN);
 	}
 
-	public static boolean isUserGroupMember(
+	public boolean isUserGroupMember(
 			long ldapServerId, long companyId, String groupDN, String userDN)
 		throws Exception {
 
@@ -248,7 +248,7 @@ public class PortalLDAPUtil {
 			ldapServerId, companyId, groupDN, userDN);
 	}
 
-	public static byte[] searchLDAP(
+	public byte[] searchLDAP(
 			long companyId, LdapContext ldapContext, byte[] cookie,
 			int maxResults, String baseDN, String filter, String[] attributeIds,
 			List<SearchResult> searchResults)
@@ -259,11 +259,11 @@ public class PortalLDAPUtil {
 			attributeIds, searchResults);
 	}
 
-	protected static PortalLDAP getInstance() {
+	protected PortalLDAP getInstance() {
 		return _portalLDAP;
 	}
 
 	@Reference
-	private static PortalLDAP _portalLDAP;
+	private PortalLDAP _portalLDAP;
 
 }

@@ -42,11 +42,11 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.ldap.ContactConverterKeys;
 import com.liferay.portal.security.ldap.GroupConverterKeys;
+import com.liferay.portal.security.ldap.LDAPHelper;
 import com.liferay.portal.security.ldap.UserConverterKeys;
 import com.liferay.portal.security.ldap.exportimport.LDAPGroup;
 import com.liferay.portal.security.ldap.exportimport.LDAPToPortalConverter;
 import com.liferay.portal.security.ldap.exportimport.LDAPUser;
-import com.liferay.portal.security.ldap.util.LDAPUtil;
 
 import java.text.ParseException;
 
@@ -80,13 +80,14 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		ldapGroup.setCompanyId(companyId);
 
-		String description = LDAPUtil.getAttributeString(
+		String description = _ldapHelper.getAttributeString(
 			attributes, groupMappings, GroupConverterKeys.DESCRIPTION);
 
 		ldapGroup.setDescription(description);
 
-		String groupName = LDAPUtil.getAttributeString(
-			attributes, groupMappings, GroupConverterKeys.GROUP_NAME);
+		String groupName = StringUtil.toLowerCase(
+			_ldapHelper.getAttributeString(
+				attributes, groupMappings, GroupConverterKeys.GROUP_NAME));
 
 		ldapGroup.setGroupName(groupName);
 
@@ -104,9 +105,9 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 			companyId, PropsKeys.USERS_SCREEN_NAME_ALWAYS_AUTOGENERATE);
 
 		String screenName = StringUtil.toLowerCase(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, userMappings, UserConverterKeys.SCREEN_NAME));
-		String emailAddress = LDAPUtil.getAttributeString(
+		String emailAddress = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.EMAIL_ADDRESS);
 
 		if (_log.isDebugEnabled()) {
@@ -115,11 +116,11 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 					emailAddress);
 		}
 
-		String firstName = LDAPUtil.getAttributeString(
+		String firstName = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.FIRST_NAME);
-		String middleName = LDAPUtil.getAttributeString(
+		String middleName = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.MIDDLE_NAME);
-		String lastName = LDAPUtil.getAttributeString(
+		String lastName = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.LAST_NAME);
 
 		FullNameDefinition fullNameDefinition =
@@ -129,7 +130,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 			(fullNameDefinition.isFieldRequired("last-name") &&
 			 Validator.isNull(lastName))) {
 
-			String fullName = LDAPUtil.getAttributeString(
+			String fullName = _ldapHelper.getAttributeString(
 				attributes, userMappings, UserConverterKeys.FULL_NAME);
 
 			FullNameGenerator fullNameGenerator =
@@ -182,7 +183,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		contact.setSuffixId(suffixId);
 
-		String gender = LDAPUtil.getAttributeString(
+		String gender = _ldapHelper.getAttributeString(
 			attributes, contactMappings, ContactConverterKeys.GENDER);
 
 		gender = StringUtil.toLowerCase(gender);
@@ -198,7 +199,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		try {
 			Date birthday = DateUtil.parseDate(
-				LDAPUtil.getAttributeString(
+				_ldapHelper.getAttributeString(
 					attributes, contactMappings, ContactConverterKeys.BIRTHDAY),
 				LocaleUtil.getDefault());
 
@@ -212,22 +213,22 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		}
 
 		contact.setSmsSn(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, contactMappings, ContactConverterKeys.SMS_SN));
 		contact.setFacebookSn(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, contactMappings, ContactConverterKeys.FACEBOOK_SN));
 		contact.setJabberSn(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, contactMappings, ContactConverterKeys.JABBER_SN));
 		contact.setSkypeSn(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, contactMappings, ContactConverterKeys.SKYPE_SN));
 		contact.setTwitterSn(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, contactMappings, ContactConverterKeys.TWITTER_SN));
 		contact.setJobTitle(
-			LDAPUtil.getAttributeString(
+			_ldapHelper.getAttributeString(
 				attributes, contactMappings, ContactConverterKeys.JOB_TITLE));
 
 		ldapUser.setContact(contact);
@@ -242,7 +243,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		ldapUser.setOrganizationIds(null);
 		ldapUser.setPasswordReset(false);
 
-		Object portrait = LDAPUtil.getAttributeObject(
+		Object portrait = _ldapHelper.getAttributeObject(
 			attributes, userMappings.getProperty(UserConverterKeys.PORTRAIT));
 
 		if (portrait != null) {
@@ -260,7 +261,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		String uuid = LDAPUtil.getAttributeString(
+		String uuid = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.UUID);
 
 		serviceContext.setUuid(uuid);
@@ -275,7 +276,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		user.setEmailAddress(emailAddress);
 		user.setFirstName(firstName);
 
-		String jobTitle = LDAPUtil.getAttributeString(
+		String jobTitle = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.JOB_TITLE);
 
 		user.setJobTitle(jobTitle);
@@ -290,7 +291,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		user.setPasswordUnencrypted(password);
 		user.setScreenName(screenName);
 
-		String status = LDAPUtil.getAttributeString(
+		String status = _ldapHelper.getAttributeString(
 			attributes, userMappings, UserConverterKeys.STATUS);
 
 		if (Validator.isNotNull(status)) {
@@ -319,7 +320,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		for (Object key : expandoMappings.keySet()) {
 			String name = (String)key;
 
-			String[] value = LDAPUtil.getAttributeStringArray(
+			String[] value = _ldapHelper.getAttributeStringArray(
 				attributes, expandoMappings, name);
 
 			if (value != null) {
@@ -338,7 +339,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 		List<ListType> contactPrefixListTypes = _listTypeService.getListTypes(
 			listTypeType);
 
-		String name = LDAPUtil.getAttributeString(
+		String name = _ldapHelper.getAttributeString(
 			attributes, contactMappings, contactMappingsKey);
 
 		for (ListType listType : contactPrefixListTypes) {
@@ -361,5 +362,8 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 	@Reference
 	private UserPersistence _userPersistence;
+
+	@Reference
+	private LDAPHelper _ldapHelper;
 
 }

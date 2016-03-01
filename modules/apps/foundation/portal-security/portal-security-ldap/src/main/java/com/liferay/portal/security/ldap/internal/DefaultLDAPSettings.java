@@ -24,13 +24,13 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.security.ldap.LDAPHelper;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.configuration.SystemLDAPConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
-import com.liferay.portal.security.ldap.util.LDAPUtil;
 
 import java.util.Properties;
 
@@ -70,7 +70,7 @@ public class DefaultLDAPSettings implements LDAPSettings {
 				String.valueOf(companyId), emailAddress, screenName, userId
 			});
 
-		LDAPUtil.validateFilter(filter);
+		_ldapHelper.validateFilter(filter);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Search filter after transformation " + filter);
@@ -330,5 +330,8 @@ public class DefaultLDAPSettings implements LDAPSettings {
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	@Reference
+	private LDAPHelper _ldapHelper;
 
 }

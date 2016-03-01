@@ -58,6 +58,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.exportimport.UserImporter;
 import com.liferay.portal.security.ldap.ContactConverterKeys;
+import com.liferay.portal.security.ldap.LDAPHelper;
 import com.liferay.portal.security.ldap.PortalLDAP;
 import com.liferay.portal.security.ldap.UserConverterKeys;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
@@ -68,7 +69,6 @@ import com.liferay.portal.security.ldap.exportimport.LDAPUser;
 import com.liferay.portal.security.ldap.exportimport.LDAPUserImporter;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
 import com.liferay.portal.security.ldap.internal.UserImportTransactionThreadLocal;
-import com.liferay.portal.security.ldap.util.LDAPUtil;
 
 import java.io.Serializable;
 
@@ -198,7 +198,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 					String.valueOf(companyId), emailAddress, screenName
 				});
 
-			LDAPUtil.validateFilter(filter);
+			_ldapHelper.validateFilter(filter);
 
 			if (_log.isDebugEnabled()) {
 				_log.debug("Search filter after transformation " + filter);
@@ -663,7 +663,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 		String groupSearchFilter = ldapServerConfiguration.groupSearchFilter();
 
-		LDAPUtil.validateFilter(
+		_ldapHelper.validateFilter(
 			groupSearchFilter, "LDAPServerConfiguration.groupSearchFilter");
 
 		sb.append(groupSearchFilter);
@@ -882,7 +882,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			String groupSearchFilter =
 				ldapServerConfiguration.groupSearchFilter();
 
-			LDAPUtil.validateFilter(
+			_ldapHelper.validateFilter(
 				groupSearchFilter, "LDAPServerConfiguration.groupSearchFilter");
 
 			sb.append(groupSearchFilter);
@@ -1010,7 +1010,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 				isNew = true;
 			}
 
-			String modifyTimestamp = LDAPUtil.getAttributeString(
+			String modifyTimestamp = _ldapHelper.getAttributeString(
 				attributes, "modifyTimestamp");
 
 			user = updateUser(
@@ -1364,7 +1364,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 		try {
 			if (Validator.isNotNull(modifyTimestamp)) {
-				modifiedDate = LDAPUtil.parseDate(modifyTimestamp);
+				modifiedDate = _ldapHelper.parseDate(modifyTimestamp);
 
 				if (modifiedDate.equals(user.getModifiedDate())) {
 					updateUserPassword(
@@ -1562,5 +1562,8 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	@Reference
+	private LDAPHelper _ldapHelper;
 
 }

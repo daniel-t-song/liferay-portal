@@ -37,7 +37,7 @@ import com.liferay.portal.security.ldap.LDAPServerNameException;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.constants.LDAPConstants;
-import com.liferay.portal.security.ldap.util.LDAPUtil;
+import com.liferay.portal.security.ldap.internal.verify.DefaultLDAPHelper;
 import com.liferay.portal.security.ldap.validator.LDAPFilterException;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 
@@ -264,12 +264,12 @@ public class PortalSettingsEditLDAPServerMVCActionCommand
 		String userFilter = ParamUtil.getString(
 			actionRequest, "importUserSearchFilter");
 
-		LDAPUtil.validateFilter(userFilter, "importUserSearchFilter");
+		DefaultLDAPHelper.validateFilter(userFilter, "importUserSearchFilter");
 
 		String groupFilter = ParamUtil.getString(
 			actionRequest, "importGroupSearchFilter");
 
-		LDAPUtil.validateFilter(groupFilter, "importGroupSearchFilter");
+		DefaultLDAPHelper.validateFilter(groupFilter, "importGroupSearchFilter");
 	}
 
 	private void splitStringArrays(
