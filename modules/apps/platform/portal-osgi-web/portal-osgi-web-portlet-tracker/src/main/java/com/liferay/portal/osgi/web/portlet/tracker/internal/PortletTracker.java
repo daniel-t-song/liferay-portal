@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.application.type.ApplicationType;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -50,12 +49,10 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.JavaConstants;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -63,7 +60,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.QName;
 import com.liferay.portal.kernel.xml.SAXReader;
-import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.model.impl.PublicRenderParameterImpl;
 import com.liferay.portal.osgi.web.servlet.jsp.compiler.JspServlet;
 import com.liferay.portal.util.WebAppPool;
@@ -81,11 +77,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -334,10 +327,6 @@ public class PortletTracker
 				bundlePortletApp.getServletContextName(), bundleClassLoader,
 				serviceRegistrations);
 
-			checkResourceBundles(
-				bundle.getBundleContext(), bundleClassLoader, portletModel,
-				serviceRegistrations);
-
 			List<Company> companies = _companyLocalService.getCompanies();
 
 			deployPortlet(serviceReference, portletModel, companies);
@@ -380,58 +369,6 @@ public class PortletTracker
 		portletModel.setStrutsPath(portletId);
 
 		return portletModel;
-	}
-
-	protected void checkResourceBundles(
-		BundleContext bundleContext, ClassLoader classLoader,
-		com.liferay.portal.kernel.model.Portlet portletModel,
-		ServiceRegistrations serviceRegistrations) {
-
-		if (Validator.isBlank(portletModel.getResourceBundle())) {
-			return;
-		}
-
-		for (Locale locale : LanguageUtil.getAvailableLocales()) {
-			try {
-				ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-					portletModel.getResourceBundle(), locale, classLoader);
-
-				Dictionary<String, Object> properties =
-					new HashMapDictionary<>();
-
-				properties.put(
-					"javax.portlet.name", portletModel.getPortletId());
-				properties.put("language.id", LocaleUtil.toLanguageId(locale));
-
-				ServiceRegistration<ResourceBundle> serviceRegistration =
-					bundleContext.registerService(
-						ResourceBundle.class, resourceBundle, properties);
-
-				serviceRegistrations.addServiceRegistration(
-					serviceRegistration);
-			}
-			catch (MissingResourceException mre) {
-				if (_log.isInfoEnabled()) {
-					_log.info(
-						"Portlet " + portletModel.getPortletName() + " does " +
-							"not have translations for available locale " +
-								locale);
-				}
-			}
-
-			Dictionary<String, Object> properties = new HashMapDictionary<>();
-
-			properties.put("javax.portlet.name", portletModel.getPortletId());
-			properties.put("language.id", LocaleUtil.toLanguageId(locale));
-			properties.put("service.ranking", Integer.MIN_VALUE);
-
-			ServiceRegistration<ResourceBundle> serviceRegistration =
-				bundleContext.registerService(
-					ResourceBundle.class,
-					LanguageResources.getResourceBundle(locale), properties);
-
-			serviceRegistrations.addServiceRegistration(serviceRegistration);
-		}
 	}
 
 	protected void checkWebResources(
@@ -1295,13 +1232,6 @@ public class PortletTracker
 	}
 
 	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
-
-		_companyLocalService = companyLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setHttpServiceRuntime(
 		HttpServiceRuntime httpServiceRuntime, Map<String, Object> properties) {
 
@@ -1316,42 +1246,6 @@ public class PortletTracker
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletInstanceFactory(
-		PortletInstanceFactory portletInstanceFactory) {
-
-		_portletInstanceFactory = portletInstanceFactory;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
-
-		_portletLocalService = portletLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
-	@Reference(unbind = "-")
-	protected void setResourceActionLocalService(
-		ResourceActionLocalService resourceActionLocalService) {
-
-		_resourceActionLocalService = resourceActionLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setResourceActions(ResourceActions resourceActions) {
-		_resourceActions = resourceActions;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSAXReader(SAXReader saxReader) {
-		_saxReader = saxReader;
 	}
 
 	protected String toLowerCase(Object object) {
@@ -1397,17 +1291,33 @@ public class PortletTracker
 
 	private static final Log _log = LogFactoryUtil.getLog(PortletTracker.class);
 
+	@Reference
 	private CompanyLocalService _companyLocalService;
+
 	private ComponentContext _componentContext;
 	private String _httpServiceEndpoint = StringPool.BLANK;
+
+	@Reference
 	private PortletInstanceFactory _portletInstanceFactory;
+
+	@Reference
 	private PortletLocalService _portletLocalService;
+
 	private final PortletPropertyValidator _portletPropertyValidator =
 		new PortletPropertyValidator();
+
+	@Reference
 	private Props _props;
+
+	@Reference
 	private ResourceActionLocalService _resourceActionLocalService;
+
+	@Reference
 	private ResourceActions _resourceActions;
+
+	@Reference
 	private SAXReader _saxReader;
+
 	private final ConcurrentMap<Bundle, ServiceRegistrations>
 		_serviceRegistrations = new ConcurrentHashMap<>();
 	private ServiceTracker<Portlet, com.liferay.portal.kernel.model.Portlet>
