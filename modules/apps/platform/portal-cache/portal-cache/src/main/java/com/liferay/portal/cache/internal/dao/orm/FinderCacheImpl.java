@@ -272,21 +272,6 @@ public class FinderCacheImpl
 			FinderCacheImpl.this);
 	}
 
-	@Reference(unbind = "-")
-	protected void setEntityCache(EntityCache entityCache) {
-		_entityCache = entityCache;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMultiVMPool(MultiVMPool multiVMPool) {
-		_multiVMPool = multiVMPool;
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
 	private PortalCache<Serializable, Serializable> _getPortalCache(
 		String className) {
 
@@ -384,13 +369,21 @@ public class FinderCacheImpl
 	private static final String _GROUP_KEY_PREFIX =
 		FinderCache.class.getName() + StringPool.PERIOD;
 
+	@Reference
 	private EntityCache _entityCache;
+
 	private ThreadLocal<LRUMap> _localCache;
 	private boolean _localCacheAvailable;
+
+	@Reference
 	private MultiVMPool _multiVMPool;
+
 	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches = new ConcurrentHashMap<>();
+
+	@Reference
 	private Props _props;
+
 	private boolean _valueObjectEntityBlockingCacheEnabled;
 	private boolean _valueObjectFinderCacheEnabled;
 

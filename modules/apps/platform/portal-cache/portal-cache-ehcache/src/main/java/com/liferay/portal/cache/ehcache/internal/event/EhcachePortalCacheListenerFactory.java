@@ -86,13 +86,7 @@ public class EhcachePortalCacheListenerFactory
 		return clazz.getClassLoader();
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortalCacheReplicatorFactory(
-		PortalCacheReplicatorFactory portalCacheReplicatorFactory) {
-
-		_portalCacheReplicatorFactory = portalCacheReplicatorFactory;
-	}
-
+	@Reference
 	private PortalCacheReplicatorFactory _portalCacheReplicatorFactory;
 
 }
