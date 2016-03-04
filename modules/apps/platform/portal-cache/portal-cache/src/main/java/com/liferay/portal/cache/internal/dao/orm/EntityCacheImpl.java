@@ -438,7 +438,7 @@ public class EntityCacheImpl
 
 	@Reference
 	private Props _props;
-	
+
 	private boolean _valueObjectEntityBlockingCacheEnabled;
 	private boolean _valueObjectEntityCacheEnabled;
 	private boolean _valueObjectMVCCEntityCacheEnabled;
