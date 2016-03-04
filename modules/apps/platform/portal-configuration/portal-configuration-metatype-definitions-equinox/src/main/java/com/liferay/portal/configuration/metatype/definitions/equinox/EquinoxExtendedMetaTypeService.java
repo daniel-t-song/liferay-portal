@@ -33,11 +33,7 @@ public class EquinoxExtendedMetaTypeService implements ExtendedMetaTypeService {
 			_metaTypeService.getMetaTypeInformation(bundle));
 	}
 
-	@Reference(unbind = "-")
-	protected void setMetaTypeService(MetaTypeService metaTypeService) {
-		_metaTypeService = metaTypeService;
-	}
-
+	@Reference
 	private MetaTypeService _metaTypeService;
 
 }

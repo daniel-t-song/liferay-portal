@@ -40,13 +40,6 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class ConfigurationMessageListener extends BaseMessageListener {
 
-	@Reference(unbind = "-")
-	public void setReloadablePersistenceManager(
-		ReloadablePersistenceManager reloadablePersistenceManager) {
-
-		_reloadablePersistenceManager = reloadablePersistenceManager;
-	}
-
 	@Override
 	protected void doReceive(Message message) throws Exception {
 		StringBundler sb = new StringBundler(5);
@@ -100,13 +93,6 @@ public class ConfigurationMessageListener extends BaseMessageListener {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationAdmin(
-		ConfigurationAdmin configurationAdmin) {
-
-		_configurationAdmin = configurationAdmin;
-	}
-
 	@Reference(
 		target = "(destination.name=" + DestinationNames.CONFIGURATION + ")",
 		unbind = "-"
@@ -114,7 +100,10 @@ public class ConfigurationMessageListener extends BaseMessageListener {
 	protected void setDestination(Destination destination) {
 	}
 
+	@Reference
 	private ConfigurationAdmin _configurationAdmin;
+
+	@Reference
 	private ReloadablePersistenceManager _reloadablePersistenceManager;
 
 }
