@@ -25,54 +25,55 @@ import java.util.Properties;
  * @auther Daniel Song
  */
 public interface LDAPHelper {
-	Object getAttributeObject(
+
+	public Object getAttributeObject(
 			Attributes attributes, Properties properties, String key)
 		throws NamingException;
 
-	Object getAttributeObject(
+	public Object getAttributeObject(
 			Attributes attributes, Properties properties, String key,
 			Object defaultValue)
             throws NamingException;
 
-	Object getAttributeObject(Attributes attributes, String id)
+	public Object getAttributeObject(Attributes attributes, String id)
                 throws NamingException;
 
-	Object getAttributeObject(
+	public Object getAttributeObject(
 			Attributes attributes, String id, Object defaultValue)
                     throws NamingException;
 
-	String getAttributeString(
+	public String getAttributeString(
 			Attributes attributes, Properties properties, String key)
                         throws NamingException;
 
-	String getAttributeString(
+	public String getAttributeString(
 			Attributes attributes, Properties properties, String key,
 			String defaultValue)
                             throws NamingException;
 
-	String getAttributeString(Attributes attributes, String id)
+	public String getAttributeString(Attributes attributes, String id)
                                 throws NamingException;
 
-	String getAttributeString(
+	public String getAttributeString(
 			Attributes attributes, String id, String defaultValue)
                                     throws NamingException;
 
-	String[] getAttributeStringArray(
+	public String[] getAttributeStringArray(
 			Attributes attributes, Properties properties, String key)
                                         throws NamingException;
 
-	String[] getAttributeStringArray(
+	public String[] getAttributeStringArray(
 			Attributes attributes, String id)
                                             throws NamingException;
 
-	String getFullProviderURL(String baseURL, String baseDN);
+	public String getFullProviderURL(String baseURL, String baseDN);
 
-	boolean isValidFilter(String filter);
+	public boolean isValidFilter(String filter);
 
-	Date parseDate(String date) throws Exception;
+	public Date parseDate(String date) throws Exception;
 
-	void validateFilter(String filter) throws PortalException;
+	public void validateFilter(String filter) throws PortalException;
 
-	void validateFilter(String filter, String filterPropertyName)
+	public void validateFilter(String filter, String filterPropertyName)
                                                 throws PortalException;
 }

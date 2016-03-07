@@ -49,10 +49,11 @@ page import="com.liferay.portal.security.ldap.configuration.LDAPServerConfigurat
 page import="com.liferay.portal.security.ldap.constants.LDAPConstants" %><%@
 page import="com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration" %><%@
 page import="com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration" %><%@
-page import="com.liferay.portal.security.ldap.internal.verify.DefaultLDAPHelper" %><%@
+page import="com.liferay.portal.security.ldap.internal.DefaultLDAPHelper" %><%@
 page import="com.liferay.portal.security.ldap.validator.LDAPFilterException" %><%@
 page import="com.liferay.portal.settings.authentication.ldap.web.internal.portlet.util.ConfigurationProviderUtil" %><%@
-page import="com.liferay.portal.util.PropsValues" %>
+page import="com.liferay.portal.util.PropsValues" %><%@
+page import="com.liferay.portal.security.ldap.LDAPHelperUtil" %>
 
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.List" %><%@

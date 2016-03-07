@@ -37,7 +37,7 @@ import com.liferay.portal.security.ldap.LDAPServerNameException;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.constants.LDAPConstants;
-import com.liferay.portal.security.ldap.internal.verify.DefaultLDAPHelper;
+import com.liferay.portal.security.ldap.internal.DefaultLDAPHelper;
 import com.liferay.portal.security.ldap.validator.LDAPFilterException;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 

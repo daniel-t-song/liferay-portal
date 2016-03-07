@@ -60,7 +60,7 @@ if (Validator.isNull(ParamUtil.getString(request, "userMappingScreenName")) ||
 
 String userFilter = ParamUtil.getString(request, "importUserSearchFilter");
 
-if (!LDAPUtil.isValidFilter(userFilter)) {
+if (!LDAPHelperUtil.isValidFilter(userFilter)) {
 %>
 
 	<liferay-ui:message key="please-enter-a-valid-ldap-search-filter" />
@@ -136,13 +136,13 @@ portletURL.setWindowState(LiferayWindowState.POP_UP);
 		<%
 		Attributes attributes = searchResult.getAttributes();
 
-		String emailAddress = LDAPUtil.getAttributeString(attributes, userMappings.getProperty("emailAddress"));
-		String firstName = LDAPUtil.getAttributeString(attributes, userMappings.getProperty("firstName"));
-		String lastName = LDAPUtil.getAttributeString(attributes, userMappings.getProperty("lastName"));
-		String jobTitle = LDAPUtil.getAttributeString(attributes, userMappings.getProperty("jobTitle"));
+		String emailAddress = LDAPHelperUtil.getAttributeString(attributes, userMappings.getProperty("emailAddress"));
+		String firstName = LDAPHelperUtil.getAttributeString(attributes, userMappings.getProperty("firstName"));
+		String lastName = LDAPHelperUtil.getAttributeString(attributes, userMappings.getProperty("lastName"));
+		String jobTitle = LDAPHelperUtil.getAttributeString(attributes, userMappings.getProperty("jobTitle"));
 
-		String password = StringUtil.toLowerCase(LDAPUtil.getAttributeString(attributes, userMappings.getProperty("password")));
-		String screenName = StringUtil.toLowerCase(LDAPUtil.getAttributeString(attributes, userMappings.getProperty("screenName")));
+		String password = StringUtil.toLowerCase(LDAPHelperUtil.getAttributeString(attributes, userMappings.getProperty("password")));
+		String screenName = StringUtil.toLowerCase(LDAPHelperUtil.getAttributeString(attributes, userMappings.getProperty("screenName")));
 
 		Attribute attribute = attributes.get(userMappings.getProperty("group"));
 

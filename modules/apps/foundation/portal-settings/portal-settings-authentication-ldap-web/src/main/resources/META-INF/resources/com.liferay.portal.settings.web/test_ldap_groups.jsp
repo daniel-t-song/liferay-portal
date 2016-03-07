@@ -54,7 +54,7 @@ if (Validator.isNull(ParamUtil.getString(request, "groupMappingGroupName")) ||
 
 String groupFilter = ParamUtil.getString(request, "importGroupSearchFilter");
 
-if (!LDAPUtil.isValidFilter(groupFilter)) {
+if (!LDAPHelperUtil.isValidFilter(groupFilter)) {
 %>
 
 	<liferay-ui:message key="please-enter-a-valid-ldap-search-filter" />
@@ -95,8 +95,8 @@ int counter = 0;
 for (SearchResult searchResult : searchResults) {
 	Attributes attributes = searchResult.getAttributes();
 
-	String name = StringUtil.toLowerCase(LDAPUtil.getAttributeString(attributes, groupMappings.getProperty("groupName")));
-	String description = LDAPUtil.getAttributeString(attributes, groupMappings.getProperty("description"));
+	String name = StringUtil.toLowerCase(LDAPHelperUtil.getAttributeString(attributes, groupMappings.getProperty("groupName")));
+	String description = LDAPHelperUtil.getAttributeString(attributes, groupMappings.getProperty("description"));
 	Attribute attribute = attributes.get(groupMappings.getProperty("user"));
 
 	if (Validator.isNull(name)) {
