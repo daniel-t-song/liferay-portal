@@ -159,8 +159,7 @@ public class DefaultLDAPHelper implements LDAPHelper {
 	}
 
 	@Override
-	public String[] getAttributeStringArray(
-			Attributes attributes, String id)
+	public String[] getAttributeStringArray(Attributes attributes, String id)
 		throws NamingException {
 
 		if (Validator.isNull(id)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,13 +16,14 @@ package com.liferay.portal.security.ldap;
 
 import com.liferay.portal.kernel.exception.PortalException;
 
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+
 /**
- * @auther Daniel Song
+ * @author Daniel Song
  */
 public interface LDAPHelper {
 
@@ -33,38 +34,37 @@ public interface LDAPHelper {
 	public Object getAttributeObject(
 			Attributes attributes, Properties properties, String key,
 			Object defaultValue)
-            throws NamingException;
+		throws NamingException;
 
 	public Object getAttributeObject(Attributes attributes, String id)
-                throws NamingException;
+		throws NamingException;
 
 	public Object getAttributeObject(
 			Attributes attributes, String id, Object defaultValue)
-                    throws NamingException;
+		throws NamingException;
 
 	public String getAttributeString(
 			Attributes attributes, Properties properties, String key)
-                        throws NamingException;
+		throws NamingException;
 
 	public String getAttributeString(
 			Attributes attributes, Properties properties, String key,
 			String defaultValue)
-                            throws NamingException;
+		throws NamingException;
 
 	public String getAttributeString(Attributes attributes, String id)
-                                throws NamingException;
+		throws NamingException;
 
 	public String getAttributeString(
 			Attributes attributes, String id, String defaultValue)
-                                    throws NamingException;
+		throws NamingException;
 
 	public String[] getAttributeStringArray(
 			Attributes attributes, Properties properties, String key)
-                                        throws NamingException;
+		throws NamingException;
 
-	public String[] getAttributeStringArray(
-			Attributes attributes, String id)
-                                            throws NamingException;
+	public String[] getAttributeStringArray(Attributes attributes, String id)
+		throws NamingException;
 
 	public String getFullProviderURL(String baseURL, String baseDN);
 
@@ -75,5 +75,6 @@ public interface LDAPHelper {
 	public void validateFilter(String filter) throws PortalException;
 
 	public void validateFilter(String filter, String filterPropertyName)
-                                                throws PortalException;
+		throws PortalException;
+
 }

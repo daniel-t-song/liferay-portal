@@ -358,12 +358,12 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 	private ContactPersistence _contactPersistence;
 
 	@Reference
+	private LDAPHelper _ldapHelper;
+
+	@Reference
 	private ListTypeService _listTypeService;
 
 	@Reference
 	private UserPersistence _userPersistence;
-
-	@Reference
-	private LDAPHelper _ldapHelper;
 
 }

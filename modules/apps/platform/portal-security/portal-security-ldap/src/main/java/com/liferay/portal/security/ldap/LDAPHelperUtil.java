@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General public static License as published by the Free
@@ -15,121 +15,121 @@
 package com.liferay.portal.security.ldap;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+
+import java.util.Date;
+import java.util.Properties;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-import java.util.Date;
-import java.util.Properties;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Daniel Song
  */
-
 @Component(immediate = true)
 public class LDAPHelperUtil {
 
-    public static Object getAttributeObject(
-            Attributes attributes, Properties properties, String key)
-            throws NamingException {
+	public static Object getAttributeObject(
+			Attributes attributes, Properties properties, String key)
+		throws NamingException {
 
-        return getInstance().getAttributeObject(attributes, properties, key);
-    }
+		return getInstance().getAttributeObject(attributes, properties, key);
+	}
 
-    public static Object getAttributeObject(
-            Attributes attributes, Properties properties, String key,
-            Object defaultValue)
-            throws NamingException {
+	public static Object getAttributeObject(
+			Attributes attributes, Properties properties, String key,
+			Object defaultValue)
+		throws NamingException {
 
-        return getInstance().getAttributeObject(attributes, properties, key);
-    }
+		return getInstance().getAttributeObject(attributes, properties, key);
+	}
 
-    public static Object getAttributeObject(Attributes attributes, String id)
-            throws NamingException {
+	public static Object getAttributeObject(Attributes attributes, String id)
+		throws NamingException {
 
-        return getInstance().getAttributeObject(attributes, id);
-    }
+		return getInstance().getAttributeObject(attributes, id);
+	}
 
-    public static Object getAttributeObject(
-            Attributes attributes, String id, Object defaultValue)
-            throws NamingException {
+	public static Object getAttributeObject(
+			Attributes attributes, String id, Object defaultValue)
+		throws NamingException {
 
-        return getInstance().getAttributeObject(attributes, id, defaultValue);
-    }
+		return getInstance().getAttributeObject(attributes, id, defaultValue);
+	}
 
-    public static String getAttributeString(
-            Attributes attributes, Properties properties, String key)
-            throws NamingException {
+	public static String getAttributeString(
+			Attributes attributes, Properties properties, String key)
+		throws NamingException {
 
-        return getInstance().getAttributeString(attributes, properties, key);
-    }
+		return getInstance().getAttributeString(attributes, properties, key);
+	}
 
-    public static String getAttributeString(
-            Attributes attributes, Properties properties, String key,
-            String defaultValue)
-            throws NamingException {
+	public static String getAttributeString(
+			Attributes attributes, Properties properties, String key,
+			String defaultValue)
+		throws NamingException {
 
-        return getInstance().getAttributeString(attributes, properties, key
-        , defaultValue);
-    }
+		return getInstance().getAttributeString(
+			attributes, properties, key, defaultValue);
+	}
 
-    public static String getAttributeString(Attributes attributes, String id)
-            throws NamingException {
+	public static String getAttributeString(Attributes attributes, String id)
+		throws NamingException {
 
-        return getInstance().getAttributeString(attributes, id);
-    }
+		return getInstance().getAttributeString(attributes, id);
+	}
 
-    public static String getAttributeString(
-            Attributes attributes, String id, String defaultValue)
-            throws NamingException {
+	public static String getAttributeString(
+			Attributes attributes, String id, String defaultValue)
+		throws NamingException {
 
-        return getInstance().getAttributeString(attributes, id, defaultValue);
-    }
+		return getInstance().getAttributeString(attributes, id, defaultValue);
+	}
 
-    public static String[] getAttributeStringArray(
-            Attributes attributes, Properties properties, String key)
-            throws NamingException {
+	public static String[] getAttributeStringArray(
+			Attributes attributes, Properties properties, String key)
+		throws NamingException {
 
-        return getInstance().getAttributeStringArray(attributes, properties, key);
-    }
+		return getInstance().getAttributeStringArray(
+			attributes, properties, key);
+	}
 
-    public static String[] getAttributeStringArray(
-            Attributes attributes, String id)
-            throws NamingException {
+	public static String[] getAttributeStringArray(
+			Attributes attributes, String id)
+		throws NamingException {
 
-        return getInstance().getAttributeStringArray(attributes, id);
-    }
+		return getInstance().getAttributeStringArray(attributes, id);
+	}
 
-    public static String getFullProviderURL(String baseURL, String baseDN) {
+	public static String getFullProviderURL(String baseURL, String baseDN) {
+		return getInstance().getFullProviderURL(baseURL, baseDN);
+	}
 
-        return getInstance().getFullProviderURL(baseURL, baseDN);
-    }
+	public static boolean isValidFilter(String filter) {
+		return getInstance().isValidFilter(filter);
+	}
 
-    public static boolean isValidFilter(String filter) {
+	public static Date parseDate(String date) throws Exception {
+		return getInstance().parseDate(date);
+	}
 
-        return getInstance().isValidFilter(filter);
-    }
+	public static void validateFilter(String filter) throws PortalException {
+		getInstance().validateFilter(filter);
+	}
 
-    public static Date parseDate(String date) throws Exception {
+	public static void validateFilter(String filter, String filterPropertyName)
+		throws PortalException {
 
-        return getInstance().parseDate(date);
-    }
+		getInstance().validateFilter(filter, filterPropertyName);
+	}
 
-    public static void validateFilter(String filter) throws PortalException {
+	protected static LDAPHelper getInstance() {
+		return _ldapHelper;
+	}
 
-        getInstance().validateFilter(filter);
-    }
-
-    public static void validateFilter(String filter, String filterPropertyName)
-            throws PortalException {
-
-        getInstance().validateFilter(filter, filterPropertyName);
-    }
-
-    protected static LDAPHelper getInstance() { return _ldapHelper; }
-
-    @Reference
-    private static LDAPHelper _ldapHelper;
+	@Reference
+	private static LDAPHelper _ldapHelper;
 
 }

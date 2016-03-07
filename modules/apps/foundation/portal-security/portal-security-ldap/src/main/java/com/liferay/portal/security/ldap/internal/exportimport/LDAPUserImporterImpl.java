@@ -1535,6 +1535,10 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	private GroupLocalService _groupLocalService;
 
 	private long _lastImportTime;
+
+	@Reference
+	private LDAPHelper _ldapHelper;
+
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
@@ -1562,8 +1566,5 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 
 	@Reference
 	private UserLocalService _userLocalService;
-
-	@Reference
-	private LDAPHelper _ldapHelper;
 
 }

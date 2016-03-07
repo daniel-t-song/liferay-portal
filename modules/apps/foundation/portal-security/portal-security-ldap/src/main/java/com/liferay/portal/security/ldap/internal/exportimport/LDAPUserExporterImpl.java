@@ -441,6 +441,9 @@ public class LDAPUserExporterImpl implements UserExporter {
 		_ldapAuthConfigurationProvider;
 
 	@Reference
+	private LDAPHelper _ldapHelper;
+
+	@Reference
 	private LDAPSettings _ldapSettings;
 
 	@Reference
@@ -454,8 +457,5 @@ public class LDAPUserExporterImpl implements UserExporter {
 
 	@Reference
 	private UserLocalService _userLocalService;
-
-	@Reference
-	private LDAPHelper _ldapHelper;
 
 }

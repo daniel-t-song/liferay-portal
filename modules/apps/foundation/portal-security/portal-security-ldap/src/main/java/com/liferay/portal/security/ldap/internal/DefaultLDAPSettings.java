@@ -321,6 +321,10 @@ public class DefaultLDAPSettings implements LDAPSettings {
 		_ldapAuthConfigurationProvider;
 	private ConfigurationProvider<LDAPExportConfiguration>
 		_ldapExportConfigurationProvider;
+
+	@Reference
+	private LDAPHelper _ldapHelper;
+
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
 	private ConfigurationProvider<LDAPServerConfiguration>
@@ -330,8 +334,5 @@ public class DefaultLDAPSettings implements LDAPSettings {
 
 	@Reference
 	private UserLocalService _userLocalService;
-
-	@Reference
-	private LDAPHelper _ldapHelper;
 
 }
