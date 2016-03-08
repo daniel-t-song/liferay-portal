@@ -397,16 +397,6 @@ public class EntityCacheImpl
 			EntityCacheImpl.this);
 	}
 
-	@Reference(unbind = "-")
-	protected void setMultiVMPool(MultiVMPool multiVMPool) {
-		_multiVMPool = multiVMPool;
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
 	private Serializable _encodeCacheKey(Serializable primaryKey) {
 		return primaryKey;
 	}
@@ -439,10 +429,16 @@ public class EntityCacheImpl
 
 	private ThreadLocal<LRUMap> _localCache;
 	private boolean _localCacheAvailable;
+
+	@Reference
 	private MultiVMPool _multiVMPool;
+
 	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches = new ConcurrentHashMap<>();
+
+	@Reference
 	private Props _props;
+
 	private boolean _valueObjectEntityBlockingCacheEnabled;
 	private boolean _valueObjectEntityCacheEnabled;
 	private boolean _valueObjectMVCCEntityCacheEnabled;
