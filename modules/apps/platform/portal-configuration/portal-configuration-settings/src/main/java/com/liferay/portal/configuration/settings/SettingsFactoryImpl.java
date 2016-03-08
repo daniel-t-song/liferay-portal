@@ -239,25 +239,6 @@ public class SettingsFactoryImpl implements SettingsFactory {
 		register(settingsId, configurationBeanClassSettingsDescriptor, null);
 	}
 
-	@Reference(unbind = "-")
-	protected void setGroupLocalService(GroupLocalService groupLocalService) {
-		_groupLocalService = groupLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletItemLocalService(
-		PortletItemLocalService portletItemLocalService) {
-
-		_portletItemLocalService = portletItemLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsLocatorHelper(
-		SettingsLocatorHelper settingsLocatorHelper) {
-
-		_settingsLocatorHelper = settingsLocatorHelper;
-	}
-
 	protected void unregister(String settingsId) {
 		_fallbackKeysMap.remove(settingsId);
 
@@ -284,10 +265,17 @@ public class SettingsFactoryImpl implements SettingsFactory {
 
 	private final ConcurrentMap<String, FallbackKeys> _fallbackKeysMap =
 		new ConcurrentHashMap<>();
+
+	@Reference
 	private GroupLocalService _groupLocalService;
+
+	@Reference
 	private PortletItemLocalService _portletItemLocalService;
+
 	private final Map<String, SettingsDescriptor> _settingsDescriptors =
 		new ConcurrentHashMap<>();
+
+	@Reference
 	private SettingsLocatorHelper _settingsLocatorHelper;
 
 }

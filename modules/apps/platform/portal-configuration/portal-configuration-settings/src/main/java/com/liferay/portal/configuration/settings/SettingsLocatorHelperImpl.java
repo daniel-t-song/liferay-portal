@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.resource.manager.ResourceManager;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
-import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.settings.ConfigurationBeanSettings;
 import com.liferay.portal.kernel.settings.LocationVariableResolver;
@@ -36,7 +35,6 @@ import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.settings.SettingsLocatorHelper;
 import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
 import com.liferay.portal.kernel.settings.definition.ConfigurationPidMapping;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -268,34 +266,6 @@ public class SettingsLocatorHelperImpl implements SettingsLocatorHelper {
 			configurationPidMapping.getConfigurationBeanClass());
 	}
 
-	@Reference(unbind = "-")
-	protected void setGroupLocalService(GroupLocalService groupLocalService) {
-		_groupLocalService = groupLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortal(Portal portal) {
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortalPreferencesLocalService(
-		PortalPreferencesLocalService portalPreferencesLocalService) {
-
-		_portalPreferencesLocalService = portalPreferencesLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletPreferencesLocalService(
-		PortletPreferencesLocalService portletPreferencesLocalService) {
-
-		_portletPreferencesLocalService = portletPreferencesLocalService;
-	}
-
 	protected void unsetConfigurationBeanDeclaration(
 		ConfigurationBeanDeclaration configurationBeanDeclaration) {
 
@@ -327,8 +297,14 @@ public class SettingsLocatorHelperImpl implements SettingsLocatorHelper {
 		new ConcurrentHashMap<>();
 	private final ConcurrentMap<Class<?>, ConfigurationBeanManagedService>
 		_configurationBeanManagedServices = new ConcurrentHashMap<>();
+
+	@Reference
 	private GroupLocalService _groupLocalService;
+
+	@Reference
 	private PortalPreferencesLocalService _portalPreferencesLocalService;
+
+	@Reference
 	private PortletPreferencesLocalService _portletPreferencesLocalService;
 
 }

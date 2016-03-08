@@ -147,19 +147,14 @@ public class ConfiguratorExtender extends AbstractExtender {
 			namedConfigurationContentFactory);
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationAdmin(
-		ConfigurationAdmin configurationAdmin) {
-
-		_configurationAdmin = configurationAdmin;
-	}
-
 	@Override
 	protected void warn(Bundle bundle, String s, Throwable throwable) {
 		_logger.log(Logger.LOG_WARNING, "[" + bundle + "] " + s);
 	}
 
+	@Reference
 	private ConfigurationAdmin _configurationAdmin;
+
 	private final Collection<ConfigurationDescriptionFactory>
 		_configurationDescriptionFactories = new CopyOnWriteArrayList<>();
 	private Logger _logger;
