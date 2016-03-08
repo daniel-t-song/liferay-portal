@@ -238,32 +238,9 @@ public class VerifyProcessTracker {
 		return verifyProcesses;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCounterLocalService(
-		CounterLocalService counterLocalService) {
-
-		_counterLocalService = counterLocalService;
-	}
-
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
-	@Reference(unbind = "-")
-	protected void setOutputStreamTracker(
-		OutputStreamContainerFactoryTracker
-			outputStreamContainerFactoryTracker) {
-
-		_outputStreamContainerFactoryTracker =
-			outputStreamContainerFactoryTracker;
-	}
-
-	@Reference(unbind = "-")
-	protected void setReleaseLocalService(
-		ReleaseLocalService releaseLocalService) {
-
-		_releaseLocalService = releaseLocalService;
 	}
 
 	private void _runAllVerifiersWithFactory(
@@ -283,10 +260,16 @@ public class VerifyProcessTracker {
 	private static final Log _log = LogFactoryUtil.getLog(
 		VerifyProcessTracker.class);
 
+	@Reference
 	private CounterLocalService _counterLocalService;
+
+	@Reference
 	private OutputStreamContainerFactoryTracker
 		_outputStreamContainerFactoryTracker;
+
+	@Reference
 	private ReleaseLocalService _releaseLocalService;
+
 	private ServiceTrackerMap<String, List<VerifyProcess>> _verifyProcesses;
 	private VerifyProcessTrackerConfiguration
 		_verifyProcessTrackerConfiguration;

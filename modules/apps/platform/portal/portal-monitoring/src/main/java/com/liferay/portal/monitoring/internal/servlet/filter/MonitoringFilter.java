@@ -218,11 +218,6 @@ public class MonitoringFilter
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setDataSampleFactory(DataSampleFactory dataSampleFactory) {
-		_dataSampleFactory = dataSampleFactory;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
 		policy = ReferencePolicy.DYNAMIC,
@@ -232,20 +227,6 @@ public class MonitoringFilter
 		LayoutLocalService layoutLocalService) {
 
 		_layoutLocalService = layoutLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected final void setPortletMonitoringControl(
-		PortletMonitoringControl portletMonitoringControl) {
-
-		_portletMonitoringControl = portletMonitoringControl;
-	}
-
-	@Reference(unbind = "-")
-	protected void setServiceMonitoringControl(
-		ServiceMonitoringControl serviceMonitoringControl) {
-
-		_serviceMonitoringControl = serviceMonitoringControl;
 	}
 
 	protected void unsetLayoutLocalService(
@@ -262,10 +243,16 @@ public class MonitoringFilter
 			MonitoringFilter.class + "._processFilterCount",
 			new AtomicInteger(0));
 
+	@Reference
 	private DataSampleFactory _dataSampleFactory;
+
 	private LayoutLocalService _layoutLocalService;
 	private boolean _monitorPortalRequest;
+
+	@Reference
 	private PortletMonitoringControl _portletMonitoringControl;
+
+	@Reference
 	private ServiceMonitoringControl _serviceMonitoringControl;
 
 }

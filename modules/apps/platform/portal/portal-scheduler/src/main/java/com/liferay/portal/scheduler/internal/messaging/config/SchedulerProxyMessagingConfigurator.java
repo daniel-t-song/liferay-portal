@@ -76,13 +76,6 @@ public class SchedulerProxyMessagingConfigurator {
 	}
 
 	@Reference(unbind = "-")
-	protected void setDestinationFactory(
-		DestinationFactory destinationFactory) {
-
-		_destinationFactory = destinationFactory;
-	}
-
-	@Reference(unbind = "-")
 	protected void setMessageBus(MessageBus messageBus) {
 	}
 
@@ -98,7 +91,10 @@ public class SchedulerProxyMessagingConfigurator {
 	}
 
 	private volatile BundleContext _bundleContext;
+
+	@Reference
 	private DestinationFactory _destinationFactory;
+
 	private volatile ServiceRegistration<Destination>
 		_destinationServiceRegistration;
 	private ProxyMessageListener _proxyMessageListener;

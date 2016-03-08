@@ -148,21 +148,6 @@ public class DefaultSingleDestinationMessageSenderFactory
 		return SynchronousMessageSender.Mode.valueOf(mode);
 	}
 
-	@Reference(unbind = "-")
-	protected void setEntityCache(EntityCache entityCache) {
-		_entityCache = entityCache;
-	}
-
-	@Reference(unbind = "-")
-	protected void setFinderCache(FinderCache finderCache) {
-		_finderCache = finderCache;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMessageBus(MessageBus messageBus) {
-		_messageBus = messageBus;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
 		policy = ReferencePolicy.DYNAMIC,
@@ -188,9 +173,16 @@ public class DefaultSingleDestinationMessageSenderFactory
 	private final Map<String, DefaultSingleDestinationSynchronousMessageSender>
 		_defaultSingleDestinationSynchronousMessageSenders =
 			new ConcurrentHashMap<>();
+
+	@Reference
 	private EntityCache _entityCache;
+
+	@Reference
 	private FinderCache _finderCache;
+
+	@Reference
 	private MessageBus _messageBus;
+
 	private final Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
 		_synchronousMessageSenders = new HashMap<>();
 

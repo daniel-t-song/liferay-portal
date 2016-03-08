@@ -164,25 +164,15 @@ public class DefaultRuleGroupProcessorImpl implements RuleGroupProcessor {
 		_ruleHandlers.remove(ruleHandler.getType());
 	}
 
-	@Reference(unbind = "-")
-	protected void setMdrRuleGroupInstanceLocalService(
-		MDRRuleGroupInstanceLocalService mdrRuleGroupInstanceLocalService) {
-
-		_mdrRuleGroupInstanceLocalService = mdrRuleGroupInstanceLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setMdrRuleGroupLocalService(
-		MDRRuleGroupLocalService mdrRuleGroupLocalService) {
-
-		_mdrRuleGroupLocalService = mdrRuleGroupLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultRuleGroupProcessorImpl.class);
 
+	@Reference
 	private MDRRuleGroupInstanceLocalService _mdrRuleGroupInstanceLocalService;
+
+	@Reference
 	private MDRRuleGroupLocalService _mdrRuleGroupLocalService;
+
 	private final Map<String, RuleHandler> _ruleHandlers = new HashMap<>();
 
 }

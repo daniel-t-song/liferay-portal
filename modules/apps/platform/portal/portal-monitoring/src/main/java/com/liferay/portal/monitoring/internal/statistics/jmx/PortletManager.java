@@ -371,7 +371,10 @@ public class PortletManager
 		_serverStatistics = serverStatistics;
 	}
 
+	@Reference
 	private PortletSummaryStatistics _portletSummaryStatistics;
+
+	@Reference
 	private ServerStatistics _serverStatistics;
 
 }

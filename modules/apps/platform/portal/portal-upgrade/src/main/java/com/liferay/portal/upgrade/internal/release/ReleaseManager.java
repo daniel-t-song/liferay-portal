@@ -219,25 +219,19 @@ public class ReleaseManager {
 		return release.getSchemaVersion();
 	}
 
-	@Reference(unbind = "-")
-	protected void setReleaseLocalService(
-		ReleaseLocalService releaseLocalService) {
-
-		_releaseLocalService = releaseLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setReleasePublisher(ReleasePublisher releasePublisher) {
-		_releasePublisher = releasePublisher;
-	}
-
 	private static Logger _logger;
 
 	private OutputStreamContainerFactoryTracker
 		_outputStreamContainerFactoryTracker;
+
+	@Reference
 	private ReleaseLocalService _releaseLocalService;
+
 	private ReleaseManagerConfiguration _releaseManagerConfiguration;
+
+	@Reference
 	private ReleasePublisher _releasePublisher;
+
 	private ServiceTrackerMap<String, List<UpgradeInfo>> _serviceTrackerMap;
 
 	private static class UpgradeServiceTrackerCustomizer

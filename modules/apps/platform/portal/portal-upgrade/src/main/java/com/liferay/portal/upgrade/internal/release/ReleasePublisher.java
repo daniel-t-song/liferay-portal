@@ -87,15 +87,11 @@ public final class ReleasePublisher {
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
-	@Reference(unbind = "-")
-	protected void setReleaseLocalService(
-		ReleaseLocalService releaseLocalService) {
-
-		_releaseLocalService = releaseLocalService;
-	}
-
 	private BundleContext _bundleContext;
+
+	@Reference
 	private ReleaseLocalService _releaseLocalService;
+
 	private final Map<String, ServiceRegistration<Release>>
 		_serviceConfiguratorRegistrations = new HashMap<>();
 
