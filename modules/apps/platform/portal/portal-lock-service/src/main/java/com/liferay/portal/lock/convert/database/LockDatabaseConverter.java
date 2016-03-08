@@ -39,11 +39,7 @@ public class LockDatabaseConverter implements DatabaseConverter {
 				clazz.getClassLoader(), ".*Lock.*"));
 	}
 
-	@Reference(unbind = "-")
-	private void setModelMigrator(ModelMigrator modelMigrator) {
-		_modelMigrator = modelMigrator;
-	}
-
+	@Reference
 	private ModelMigrator _modelMigrator;
 
 }

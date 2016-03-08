@@ -219,19 +219,10 @@ public class PortalManager extends StandardMBean implements PortalManagerMBean {
 		_serverStatistics.reset(webId);
 	}
 
-	@Reference(unbind = "-")
-	protected void setServerStatistics(ServerStatistics serverStatistics) {
-		_serverStatistics = serverStatistics;
-	}
-
-	@Reference(unbind = "-")
-	protected void setServerSummaryStatistics(
-		ServerSummaryStatistics serverSummaryStatistics) {
-
-		_serverSummaryStatistics = serverSummaryStatistics;
-	}
-
+	@Reference
 	private ServerStatistics _serverStatistics;
+
+	@Reference
 	private ServerSummaryStatistics _serverSummaryStatistics;
 
 }

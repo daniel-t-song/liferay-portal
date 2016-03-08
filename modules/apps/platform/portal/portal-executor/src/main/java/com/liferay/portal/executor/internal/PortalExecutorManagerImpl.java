@@ -79,13 +79,6 @@ public class PortalExecutorManagerImpl implements PortalExecutorManager {
 		return previousThreadPoolExecutor;
 	}
 
-	@Reference(unbind = "-")
-	public void setPortalExecutorFactory(
-		PortalExecutorFactory portalExecutorFactory) {
-
-		_portalExecutorFactory = portalExecutorFactory;
-	}
-
 	@Override
 	public void shutdown() {
 		shutdown(false);
@@ -125,7 +118,9 @@ public class PortalExecutorManagerImpl implements PortalExecutorManager {
 
 	}
 
+	@Reference
 	private PortalExecutorFactory _portalExecutorFactory;
+
 	private final ConcurrentMap<String, ThreadPoolExecutor>
 		_threadPoolExecutors = new ConcurrentHashMap<>();
 

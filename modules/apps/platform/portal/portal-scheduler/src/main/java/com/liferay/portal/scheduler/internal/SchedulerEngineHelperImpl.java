@@ -950,23 +950,6 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		_auditRouter = auditRouter;
 	}
 
-	@Reference(unbind = "-")
-	protected void setDestinationFactory(
-		DestinationFactory destinationFactory) {
-
-		_destinationFactory = destinationFactory;
-	}
-
-	@Reference(unbind = "-")
-	protected void setJsonFactory(JSONFactory jsonFactory) {
-		_jsonFactory = jsonFactory;
-	}
-
-	@Reference(unbind = "-")
-	protected void setProps(Props props) {
-		_props = props;
-	}
-
 	@Reference(target = "(scheduler.engine.proxy=true)", unbind = "-")
 	protected void setSchedulerEngine(SchedulerEngine schedulerEngine) {
 		_schedulerEngine = schedulerEngine;
@@ -987,13 +970,22 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 
 	private AuditRouter _auditRouter;
 	private volatile BundleContext _bundleContext;
+
+	@Reference
 	private DestinationFactory _destinationFactory;
+
 	private final Set<ServiceRegistration<Destination>>
 		_destinationServiceRegistrations = new HashSet<>();
+
+	@Reference
 	private JSONFactory _jsonFactory;
+
 	private final Map<String, ServiceRegistration<MessageListener>>
 		_messageListenerServiceRegistrations = new HashMap<>();
+
+	@Reference
 	private Props _props;
+
 	private SchedulerEngine _schedulerEngine;
 	private volatile boolean _schedulerEngineEnabled;
 	private volatile SchedulerEngineHelperConfiguration

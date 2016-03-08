@@ -245,13 +245,6 @@ public class POPNotificationsMessageListener
 	}
 
 	@Reference(unbind = "-")
-	protected void setSchedulerEngineHelper(
-		SchedulerEngineHelper schedulerEngineHelper) {
-
-		_schedulerEngineHelper = schedulerEngineHelper;
-	}
-
-	@Reference(unbind = "-")
 	protected void setTriggerFactory(TriggerFactory triggerFactory) {
 	}
 
@@ -260,6 +253,8 @@ public class POPNotificationsMessageListener
 
 	private final Map<MessageListener, MessageListenerWrapper>
 		_messageListenerWrappers = new ConcurrentHashMap<>();
+
+	@Reference
 	private SchedulerEngineHelper _schedulerEngineHelper;
 
 }
