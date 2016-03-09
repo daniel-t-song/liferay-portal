@@ -45,17 +45,7 @@ import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserGroupLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.CalendarFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PwdGenerator;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.security.exportimport.UserImporter;
 import com.liferay.portal.security.ldap.ContactConverterKeys;
 import com.liferay.portal.security.ldap.LDAPHelper;
@@ -1264,6 +1254,12 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		BeanPropertiesUtil.setProperty(bean1, propertyName, value);
 	}
 
+	@Reference(unbind = "-")
+	protected void setProps(Props props) {
+		_companySecurityAuthType = GetterUtil.getString(
+				props.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE));
+	}
+
 	protected void updateExpandoAttributes(
 			User user, LDAPUser ldapUser, Properties userExpandoMappings,
 			Properties contactExpandoMappings,
@@ -1525,7 +1521,6 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
-	@Reference
 	private String _companySecurityAuthType;
 
 	@Reference

@@ -251,7 +251,4 @@ public class DefaultLDAPHelper implements LDAPHelper {
 	@Reference
 	private LDAPFilterValidator _ldapFilterValidator;
 
-	@Reference
-	private LDAPHelper _ldapHelper;
-
 }
