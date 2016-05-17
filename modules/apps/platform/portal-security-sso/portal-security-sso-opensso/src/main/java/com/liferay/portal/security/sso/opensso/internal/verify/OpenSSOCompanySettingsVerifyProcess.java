@@ -45,7 +45,7 @@ public class OpenSSOCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -59,55 +59,55 @@ public class OpenSSOCompanySettingsVerifyProcess
 
 		dictionary.put(
 			OpenSSOConfigurationKeys.EMAIL_ADDRESS_ATTR,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_EMAIL_ADDRESS_ATTR,
 				"mail"));
 		dictionary.put(
 			OpenSSOConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_AUTH_ENABLED,
 				StringPool.FALSE));
 		dictionary.put(
 			OpenSSOConfigurationKeys.FIRST_NAME_ATTR,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_FIRST_NAME_ATTR,
 				"givenname"));
 		dictionary.put(
 			OpenSSOConfigurationKeys.IMPORT_FROM_LDAP,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_IMPORT_FROM_LDAP,
 				StringPool.FALSE));
 		dictionary.put(
 			OpenSSOConfigurationKeys.LAST_NAME_ATTR,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_LAST_NAME_ATTR,
 				"sn"));
 		dictionary.put(
 			OpenSSOConfigurationKeys.LOGIN_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_LOGIN_URL,
 				"http://openssohost.example.com:8080/opensso/UI/Login?goto=" +
 					"http://portalhost.example.com:8080/c/portal/login"));
 		dictionary.put(
 			OpenSSOConfigurationKeys.LOGOUT_ON_SESSION_EXPIRATION,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId,
 				LegacyOpenSSOPropsKeys.OPENSSO_LOGOUT_ON_SESSION_EXPIRATION,
 				StringPool.FALSE));
 		dictionary.put(
 			OpenSSOConfigurationKeys.LOGOUT_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_LOGOUT_URL,
 				"http://openssohost.example.com:8080/opensso/UI/Logout?goto=" +
 					"http://portalhost.example.com:8080/web/guest/home"));
 		dictionary.put(
 			OpenSSOConfigurationKeys.SCREEN_NAME_ATTR,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_SCREEN_NAME_ATTR,
 				"uid"));
 		dictionary.put(
 			OpenSSOConfigurationKeys.SERVICE_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyOpenSSOPropsKeys.OPENSSO_SERVICE_URL,
 				"http://openssohost.example.com:8080/opensso"));
 
@@ -116,7 +116,7 @@ public class OpenSSOCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
@@ -124,25 +124,13 @@ public class OpenSSOCompanySettingsVerifyProcess
 		return OpenSSOConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	@Reference
+	protected CompanyLocalService companyLocalService;
 
-		_companyLocalService = companyLocalService;
-	}
+	@Reference
+	protected PrefsProps prefsProps;
 
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
-
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 }

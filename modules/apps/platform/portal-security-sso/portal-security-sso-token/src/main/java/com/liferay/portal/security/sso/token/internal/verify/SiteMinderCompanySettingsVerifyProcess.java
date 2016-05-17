@@ -47,7 +47,7 @@ public class SiteMinderCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class SiteMinderCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
-		boolean siteMinderEnabled = _prefsProps.getBoolean(
+		boolean siteMinderEnabled = prefsProps.getBoolean(
 			companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED);
 
 		if (!siteMinderEnabled) {
@@ -68,17 +68,17 @@ public class SiteMinderCompanySettingsVerifyProcess
 
 		dictionary.put(
 			TokenConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SITEMINDER_AUTH_ENABLED,
 				StringPool.FALSE));
 		dictionary.put(
 			TokenConfigurationKeys.IMPORT_FROM_LDAP,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SITEMINDER_IMPORT_FROM_LDAP,
 				StringPool.FALSE));
 		dictionary.put(
 			TokenConfigurationKeys.USER_HEADER,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SITEMINDER_USER_HEADER,
 				"SM_USER"));
 
@@ -93,7 +93,7 @@ public class SiteMinderCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
@@ -101,28 +101,16 @@ public class SiteMinderCompanySettingsVerifyProcess
 		return TokenConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	@Reference
+	protected CompanyLocalService companyLocalService;
 
-		_companyLocalService = companyLocalService;
-	}
+	@Reference
+	protected PrefsProps prefsProps;
 
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SiteMinderCompanySettingsVerifyProcess.class);
-
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
 
 }

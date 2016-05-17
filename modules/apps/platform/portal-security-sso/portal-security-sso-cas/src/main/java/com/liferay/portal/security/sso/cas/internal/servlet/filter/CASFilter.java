@@ -103,7 +103,7 @@ public class CASFilter extends BaseFilter {
 			long companyId = PortalUtil.getCompanyId(request);
 
 			CASConfiguration casConfiguration =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					CASConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, CASConstants.SERVICE_NAME));
@@ -134,7 +134,7 @@ public class CASFilter extends BaseFilter {
 		}
 
 		CASConfiguration casConfiguration =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				CASConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, CASConstants.SERVICE_NAME));
@@ -171,7 +171,7 @@ public class CASFilter extends BaseFilter {
 		long companyId = PortalUtil.getCompanyId(request);
 
 		CASConfiguration casConfiguration =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				CASConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, CASConstants.SERVICE_NAME));
@@ -251,18 +251,12 @@ public class CASFilter extends BaseFilter {
 			CASFilter.class.getName(), request, response, filterChain);
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 	private static final Log _log = LogFactoryUtil.getLog(CASFilter.class);
 
 	private static final Map<Long, TicketValidator> _ticketValidators =
 		new ConcurrentHashMap<>();
-
-	private ConfigurationProvider _configurationProvider;
 
 }

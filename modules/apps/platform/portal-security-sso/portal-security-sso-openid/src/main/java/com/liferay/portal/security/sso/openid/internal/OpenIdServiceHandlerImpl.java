@@ -166,7 +166,7 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 						(FetchResponse)messageExtension;
 
 					OpenIdProvider openIdProvider =
-						_openIdProviderRegistry.getOpenIdProvider(
+						openIdProviderRegistry.getOpenIdProvider(
 							discoveryInformation.getOPEndpoint());
 
 					String[] openIdAXTypes = openIdProvider.getAxSchema();
@@ -234,7 +234,7 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 
 		String openId = normalize(authSuccess.getIdentity());
 
-		User user = _userLocalService.fetchUserByOpenId(
+		User user = userLocalService.fetchUserByOpenId(
 			themeDisplay.getCompanyId(), openId);
 
 		if (user != null) {
@@ -302,7 +302,7 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		user = _userLocalService.addUser(
+		user = userLocalService.addUser(
 			creatorUserId, companyId, autoPassword, password1, password2,
 			autoScreenName, screenName, emailAddress, facebookId, openId,
 			locale, firstName, middleName, lastName, prefixId, suffixId, male,
@@ -356,7 +356,7 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 				discoveryInformation, portletURL.toString(),
 				themeDisplay.getPortalURL());
 
-			if (_userLocalService.fetchUserByOpenId(
+			if (userLocalService.fetchUserByOpenId(
 					themeDisplay.getCompanyId(), openId) != null) {
 
 				response.sendRedirect(authRequest.getDestinationUrl(true));
@@ -366,11 +366,11 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 
 			String screenName = getScreenName(openId);
 
-			User user = _userLocalService.fetchUserByScreenName(
+			User user = userLocalService.fetchUserByScreenName(
 				themeDisplay.getCompanyId(), screenName);
 
 			if (user != null) {
-				_userLocalService.updateOpenId(user.getUserId(), openId);
+				userLocalService.updateOpenId(user.getUserId(), openId);
 
 				response.sendRedirect(authRequest.getDestinationUrl(true));
 
@@ -380,7 +380,7 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 			FetchRequest fetchRequest = FetchRequest.createFetchRequest();
 
 			OpenIdProvider openIdProvider =
-				_openIdProviderRegistry.getOpenIdProvider(
+				openIdProviderRegistry.getOpenIdProvider(
 					discoveryInformation.getOPEndpoint());
 
 			Map<String, String> openIdAXTypes = openIdProvider.getAxTypes();
@@ -469,18 +469,6 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		return identity;
 	}
 
-	@Reference(unbind = "-")
-	protected void setOpenIdProviderRegistry(
-		OpenIdProviderRegistry openIdProviderRegistry) {
-
-		_openIdProviderRegistry = openIdProviderRegistry;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	protected String[] splitFullName(String fullName) {
 		if (Validator.isNull(fullName)) {
 			return null;
@@ -500,6 +488,12 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		return null;
 	}
 
+	@Reference
+	protected OpenIdProviderRegistry openIdProviderRegistry;
+
+	@Reference
+	protected UserLocalService userLocalService;
+
 	private static final String _OPEN_ID_AX_ATTR_EMAIL = "email";
 
 	private static final String _OPEN_ID_AX_ATTR_FIRST_NAME = "firstname";
@@ -516,7 +510,5 @@ public class OpenIdServiceHandlerImpl implements OpenIdServiceHandler {
 		OpenIdServiceHandlerImpl.class);
 
 	private ConsumerManager _consumerManager;
-	private OpenIdProviderRegistry _openIdProviderRegistry;
-	private UserLocalService _userLocalService;
 
 }

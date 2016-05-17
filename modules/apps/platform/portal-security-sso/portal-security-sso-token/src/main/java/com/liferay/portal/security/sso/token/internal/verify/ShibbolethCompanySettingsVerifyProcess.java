@@ -47,7 +47,7 @@ public class ShibbolethCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ShibbolethCompanySettingsVerifyProcess
 	protected Dictionary<String, String> getPropertyValues(long companyId) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
-		boolean shibbolethEnabled = _prefsProps.getBoolean(
+		boolean shibbolethEnabled = prefsProps.getBoolean(
 			companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED);
 
 		if (!shibbolethEnabled) {
@@ -68,22 +68,22 @@ public class ShibbolethCompanySettingsVerifyProcess
 
 		dictionary.put(
 			TokenConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SHIBBOLETH_AUTH_ENABLED,
 				StringPool.FALSE));
 		dictionary.put(
 			TokenConfigurationKeys.IMPORT_FROM_LDAP,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SHIBBOLETH_IMPORT_FROM_LDAP,
 				StringPool.FALSE));
 		dictionary.put(
 			TokenConfigurationKeys.LOGOUT_REDIRECT_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SHIBBOLETH_LOGOUT_URL,
 				"/Shibboleth.sso/Logout"));
 		dictionary.put(
 			TokenConfigurationKeys.USER_HEADER,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyTokenPropsKeys.SHIBBOLETH_USER_HEADER,
 				"SHIBBOLETH_USER_EMAIL"));
 
@@ -98,7 +98,7 @@ public class ShibbolethCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
@@ -106,28 +106,16 @@ public class ShibbolethCompanySettingsVerifyProcess
 		return TokenConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	@Reference
+	protected CompanyLocalService companyLocalService;
 
-		_companyLocalService = companyLocalService;
-	}
+	@Reference
+	protected PrefsProps prefsProps;
 
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ShibbolethCompanySettingsVerifyProcess.class);
-
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
 
 }

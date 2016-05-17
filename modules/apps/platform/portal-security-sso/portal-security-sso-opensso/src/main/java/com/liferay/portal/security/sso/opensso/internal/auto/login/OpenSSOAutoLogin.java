@@ -106,7 +106,7 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 		boolean sendEmail = false;
 		ServiceContext serviceContext = new ServiceContext();
 
-		return _userLocalService.addUser(
+		return userLocalService.addUser(
 			creatorUserId, companyId, autoPassword, password1, password2,
 			autoScreenName, screenName, emailAddress, facebookId, openId,
 			locale, firstName, middleName, lastName, prefixId, suffixId, male,
@@ -128,13 +128,13 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 			return null;
 		}
 
-		if (!_openSSO.isAuthenticated(
+		if (!openSSO.isAuthenticated(
 				request, openSSOConfiguration.serviceURL())) {
 
 			return null;
 		}
 
-		Map<String, String> nameValues = _openSSO.getAttributes(
+		Map<String, String> nameValues = openSSO.getAttributes(
 			request, openSSOConfiguration.serviceURL());
 
 		String screenName = nameValues.get(
@@ -156,11 +156,11 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 		if (PrefsPropsUtil.getBoolean(
 				companyId, PropsKeys.USERS_SCREEN_NAME_ALWAYS_AUTOGENERATE)) {
 
-			user = _userLocalService.fetchUserByEmailAddress(
+			user = userLocalService.fetchUserByEmailAddress(
 				companyId, emailAddress);
 
 			if (user != null) {
-				screenName = _screenNameGenerator.generate(
+				screenName = screenNameGenerator.generate(
 					companyId, user.getUserId(), emailAddress);
 			}
 		}
@@ -172,11 +172,11 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 					PropsValues.COMPANY_SECURITY_AUTH_TYPE);
 
 				if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-					user = _userImporter.importUser(
+					user = userImporter.importUser(
 						companyId, StringPool.BLANK, screenName);
 				}
 				else {
-					user = _userImporter.importUser(
+					user = userImporter.importUser(
 						companyId, emailAddress, StringPool.BLANK);
 				}
 			}
@@ -191,7 +191,7 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 		}
 
 		if (user == null) {
-			user = _userLocalService.fetchUserByScreenName(
+			user = userLocalService.fetchUserByScreenName(
 				companyId, screenName);
 		}
 
@@ -245,48 +245,28 @@ public class OpenSSOAutoLogin extends BaseAutoLogin {
 	protected OpenSSOConfiguration getOpenSSOConfiguration(long companyId)
 		throws Exception {
 
-		return _configurationProvider.getConfiguration(
+		return configurationProvider.getConfiguration(
 			OpenSSOConfiguration.class,
 			new CompanyServiceSettingsLocator(
 				companyId, OpenSSOConstants.SERVICE_NAME));
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected OpenSSO openSSO;
 
-	@Reference(unbind = "-")
-	protected void setOpenSSO(OpenSSO openSSO) {
-		_openSSO = openSSO;
-	}
+	@Reference
+	protected ScreenNameGenerator screenNameGenerator;
 
-	@Reference(unbind = "-")
-	protected void setScreenNameGenerator(
-		ScreenNameGenerator screenNameGenerator) {
+	@Reference
+	protected UserImporter userImporter;
 
-		_screenNameGenerator = screenNameGenerator;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
+	@Reference
+	protected UserLocalService userLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		OpenSSOAutoLogin.class);
-
-	private ConfigurationProvider _configurationProvider;
-	private OpenSSO _openSSO;
-	private ScreenNameGenerator _screenNameGenerator;
-	private UserImporter _userImporter;
-	private UserLocalService _userLocalService;
 
 }

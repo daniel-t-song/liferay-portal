@@ -112,7 +112,7 @@ public class OpenSSOFilter extends BaseFilter {
 	protected OpenSSOConfiguration getOpenSSOConfiguration(long companyId)
 		throws Exception {
 
-		return _configurationProvider.getConfiguration(
+		return configurationProvider.getConfiguration(
 			OpenSSOConfiguration.class,
 			new CompanyServiceSettingsLocator(
 				companyId, OpenSSOConstants.SERVICE_NAME));
@@ -147,7 +147,7 @@ public class OpenSSOFilter extends BaseFilter {
 
 			// LEP-5943
 
-			authenticated = _openSSO.isAuthenticated(
+			authenticated = openSSO.isAuthenticated(
 				request, openSSOConfiguration.serviceURL());
 		}
 		catch (Exception e) {
@@ -165,7 +165,7 @@ public class OpenSSOFilter extends BaseFilter {
 
 			// LEP-5943
 
-			String newSubjectId = _openSSO.getSubjectId(
+			String newSubjectId = openSSO.getSubjectId(
 				request, openSSOConfiguration.serviceURL());
 
 			String oldSubjectId = (String)session.getAttribute(_SUBJECT_ID_KEY);
@@ -217,23 +217,14 @@ public class OpenSSOFilter extends BaseFilter {
 		response.sendRedirect(redirect);
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
-		_configurationProvider = configurationProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setOpenSSO(OpenSSO openSSO) {
-		_openSSO = openSSO;
-	}
+	@Reference
+	protected OpenSSO openSSO;
 
 	private static final String _SUBJECT_ID_KEY = "open.sso.subject.id";
 
 	private static final Log _log = LogFactoryUtil.getLog(OpenSSOFilter.class);
-
-	private ConfigurationProvider _configurationProvider;
-	private OpenSSO _openSSO;
 
 }

@@ -71,7 +71,7 @@ public class NtlmPostFilter extends BaseFilter {
 		long companyId = PortalInstances.getCompanyId(request);
 
 		NtlmConfiguration ntlmConfiguration =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				NtlmConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, NtlmConstants.SERVICE_NAME));
@@ -108,15 +108,9 @@ public class NtlmPostFilter extends BaseFilter {
 			NtlmPostFilter.class.getName(), request, response, filterChain);
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 	private static final Log _log = LogFactoryUtil.getLog(NtlmPostFilter.class);
-
-	private ConfigurationProvider _configurationProvider;
 
 }

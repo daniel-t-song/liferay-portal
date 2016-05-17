@@ -149,7 +149,7 @@ public class NetlogonConnectionManagerImpl
 
 		try {
 			NtlmConfiguration ntlmConfiguration =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					NtlmConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						CompanyThreadLocal.getCompanyId(),
@@ -169,16 +169,10 @@ public class NetlogonConnectionManagerImpl
 		return negotiateFlags;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		NetlogonConnectionManagerImpl.class);
-
-	private ConfigurationProvider _configurationProvider;
 
 }

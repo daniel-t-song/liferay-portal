@@ -76,7 +76,7 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		long companyId = PortalUtil.getCompanyId(request);
 
 		TokenConfiguration tokenCompanyServiceSettings =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				TokenConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, TokenConstants.SERVICE_NAME));
@@ -137,11 +137,11 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		if (tokenCompanyServiceSettings.importFromLDAP()) {
 			try {
 				if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-					user = _userImporter.importUser(
+					user = userImporter.importUser(
 						companyId, StringPool.BLANK, login);
 				}
 				else if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
-					user = _userImporter.importUser(
+					user = userImporter.importUser(
 						companyId, login, StringPool.BLANK);
 				}
 				else {
@@ -172,10 +172,10 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		}
 
 		if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
-			user = _userLocalService.getUserByScreenName(companyId, login);
+			user = userLocalService.getUserByScreenName(companyId, login);
 		}
 		else if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
-			user = _userLocalService.getUserByEmailAddress(companyId, login);
+			user = userLocalService.getUserByEmailAddress(companyId, login);
 		}
 		else {
 			if (_log.isWarnEnabled()) {
@@ -191,13 +191,6 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		return user;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.AT_LEAST_ONE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -207,26 +200,22 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		_tokenRetrievers.put(tokenRetriever.getTokenLocation(), tokenRetriever);
 	}
 
-	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
 	protected void unsetTokenRetriever(TokenRetriever tokenRetriever) {
 		_tokenRetrievers.remove(tokenRetriever.getTokenLocation());
 	}
 
+	@Reference
+	protected ConfigurationProvider configurationProvider;
+
+	@Reference
+	protected UserImporter userImporter;
+
+	@Reference
+	protected UserLocalService userLocalService;
+
 	private static final Log _log = LogFactoryUtil.getLog(TokenAutoLogin.class);
 
-	private ConfigurationProvider _configurationProvider;
 	private final Map<TokenLocation, TokenRetriever> _tokenRetrievers =
 		new ConcurrentHashMap<>();
-	private UserImporter _userImporter;
-	private UserLocalService _userLocalService;
 
 }

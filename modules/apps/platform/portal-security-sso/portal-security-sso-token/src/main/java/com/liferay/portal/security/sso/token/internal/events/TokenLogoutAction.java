@@ -77,7 +77,7 @@ public class TokenLogoutAction extends Action {
 			long companyId = PortalUtil.getCompanyId(request);
 
 			TokenConfiguration tokenCompanyServiceSettings =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					TokenConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, TokenConstants.SERVICE_NAME));
@@ -117,13 +117,6 @@ public class TokenLogoutAction extends Action {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
-
 	@Reference(
 		cardinality = ReferenceCardinality.AT_LEAST_ONE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -138,10 +131,12 @@ public class TokenLogoutAction extends Action {
 		_logoutProcessors.remove(logoutProcessor.getLogoutProcessorType());
 	}
 
+	@Reference
+	protected ConfigurationProvider configurationProvider;
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		TokenLogoutAction.class);
 
-	private ConfigurationProvider _configurationProvider;
 	private final Map<LogoutProcessorType, LogoutProcessor> _logoutProcessors =
 		new ConcurrentHashMap<>();
 

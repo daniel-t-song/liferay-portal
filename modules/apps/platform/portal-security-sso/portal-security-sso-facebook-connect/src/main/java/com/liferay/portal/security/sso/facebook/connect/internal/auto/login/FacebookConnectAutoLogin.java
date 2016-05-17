@@ -56,7 +56,7 @@ public class FacebookConnectAutoLogin extends BaseAutoLogin {
 
 		long companyId = PortalUtil.getCompanyId(request);
 
-		if (!_facebookConnect.isEnabled(companyId)) {
+		if (!facebookConnect.isEnabled(companyId)) {
 			return null;
 		}
 
@@ -86,7 +86,7 @@ public class FacebookConnectAutoLogin extends BaseAutoLogin {
 		if (Validator.isNotNull(emailAddress)) {
 			session.removeAttribute(WebKeys.FACEBOOK_USER_EMAIL_ADDRESS);
 
-			return _userLocalService.getUserByEmailAddress(
+			return userLocalService.getUserByEmailAddress(
 				companyId, emailAddress);
 		}
 		else {
@@ -95,7 +95,7 @@ public class FacebookConnectAutoLogin extends BaseAutoLogin {
 					FacebookConnectWebKeys.FACEBOOK_USER_ID));
 
 			if (facebookId > 0) {
-				return _userLocalService.getUserByFacebookId(
+				return userLocalService.getUserByFacebookId(
 					companyId, facebookId);
 			}
 		}
@@ -103,17 +103,10 @@ public class FacebookConnectAutoLogin extends BaseAutoLogin {
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void setFacebookConnect(FacebookConnect facebookConnect) {
-		_facebookConnect = facebookConnect;
-	}
+	@Reference
+	protected FacebookConnect facebookConnect;
 
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
-	private FacebookConnect _facebookConnect;
-	private UserLocalService _userLocalService;
+	@Reference
+	protected UserLocalService userLocalService;
 
 }

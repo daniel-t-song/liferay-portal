@@ -238,7 +238,7 @@ public class FacebookConnectImpl implements FacebookConnect {
 
 		try {
 			FacebookConnectConfiguration facebookConnectCompanyServiceSettings =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					FacebookConnectConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, FacebookConnectConstants.SERVICE_NAME));
@@ -252,16 +252,10 @@ public class FacebookConnectImpl implements FacebookConnect {
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		FacebookConnectImpl.class);
-
-	private ConfigurationProvider _configurationProvider;
 
 }

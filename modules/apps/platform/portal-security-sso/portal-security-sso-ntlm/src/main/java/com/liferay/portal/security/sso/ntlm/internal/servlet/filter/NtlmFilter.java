@@ -119,7 +119,7 @@ public class NtlmFilter extends BaseFilter {
 			long companyId = PortalInstances.getCompanyId(request);
 
 			NtlmConfiguration ntlmConfiguration =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					NtlmConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, NtlmConstants.SERVICE_NAME));
@@ -135,13 +135,6 @@ public class NtlmFilter extends BaseFilter {
 		}
 
 		return false;
-	}
-
-	@Reference(unbind = "-")
-	public void setNetlogonConnectionManager(
-		NetlogonConnectionManager netlogonConnectionManager) {
-
-		_netlogonConnectionManager = netlogonConnectionManager;
 	}
 
 	@Reference(unbind = "-")
@@ -173,7 +166,7 @@ public class NtlmFilter extends BaseFilter {
 
 	protected NtlmManager getNtlmManager(long companyId) throws Exception {
 		NtlmConfiguration ntlmConfiguration =
-			_configurationProvider.getConfiguration(
+			configurationProvider.getConfiguration(
 				NtlmConfiguration.class,
 				new CompanyServiceSettingsLocator(
 					companyId, NtlmConstants.SERVICE_NAME));
@@ -188,7 +181,7 @@ public class NtlmFilter extends BaseFilter {
 
 		if (ntlmManager == null) {
 			ntlmManager = new NtlmManager(
-				_netlogonConnectionManager, domain, domainController,
+				netlogonConnectionManager, domain, domainController,
 				domainControllerName, serviceAccount, servicePassword);
 
 			_ntlmManagers.put(companyId, ntlmManager);
@@ -354,17 +347,14 @@ public class NtlmFilter extends BaseFilter {
 			NtlmPostFilter.class.getName(), request, response, filterChain);
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected NetlogonConnectionManager netlogonConnectionManager;
 
 	private static final Log _log = LogFactoryUtil.getLog(NtlmFilter.class);
 
-	private ConfigurationProvider _configurationProvider;
-	private NetlogonConnectionManager _netlogonConnectionManager;
 	private final Map<Long, NtlmManager> _ntlmManagers =
 		new ConcurrentHashMap<>();
 	private PortalCache<String, byte[]> _portalCache;

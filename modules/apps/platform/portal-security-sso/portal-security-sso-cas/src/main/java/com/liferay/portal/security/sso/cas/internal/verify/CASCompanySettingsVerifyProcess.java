@@ -47,7 +47,7 @@ public class CASCompanySettingsVerifyProcess
 
 	@Override
 	protected CompanyLocalService getCompanyLocalService() {
-		return _companyLocalService;
+		return companyLocalService;
 	}
 
 	@Override
@@ -61,47 +61,47 @@ public class CASCompanySettingsVerifyProcess
 
 		dictionary.put(
 			CASConfigurationKeys.AUTH_ENABLED,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_AUTH_ENABLED,
 				StringPool.FALSE));
 		dictionary.put(
 			CASConfigurationKeys.IMPORT_FROM_LDAP,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_IMPORT_FROM_LDAP,
 				StringPool.FALSE));
 		dictionary.put(
 			CASConfigurationKeys.LOGIN_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_LOGIN_URL,
 				"https://localhost:8443/cas-web/login"));
 		dictionary.put(
 			CASConfigurationKeys.LOGOUT_ON_SESSION_EXPIRATION,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_LOGOUT_ON_SESSION_EXPIRATION,
 				StringPool.FALSE));
 		dictionary.put(
 			CASConfigurationKeys.LOGOUT_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_LOGOUT_URL,
 				"https://localhost:8443/cas-web/logout"));
 		dictionary.put(
 			CASConfigurationKeys.NO_SUCH_USER_REDIRECT_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_NO_SUCH_USER_REDIRECT_URL,
 				"http://localhost:8080"));
 		dictionary.put(
 			CASConfigurationKeys.SERVER_NAME,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_SERVER_NAME,
 				"https://localhost:8080"));
 		dictionary.put(
 			CASConfigurationKeys.SERVER_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_SERVER_URL,
 				"https://localhost:8443/cas-web/"));
 		dictionary.put(
 			CASConfigurationKeys.SERVICE_URL,
-			_prefsProps.getString(
+			prefsProps.getString(
 				companyId, LegacyCASPropsKeys.CAS_SERVICE_URL,
 				"https://localhost:8080"));
 
@@ -116,7 +116,7 @@ public class CASCompanySettingsVerifyProcess
 
 	@Override
 	protected SettingsFactory getSettingsFactory() {
-		return _settingsFactory;
+		return settingsFactory;
 	}
 
 	@Override
@@ -124,28 +124,16 @@ public class CASCompanySettingsVerifyProcess
 		return CASConstants.SERVICE_NAME;
 	}
 
-	@Reference(unbind = "-")
-	protected void setCompanyLocalService(
-		CompanyLocalService companyLocalService) {
+	@Reference
+	protected CompanyLocalService companyLocalService;
 
-		_companyLocalService = companyLocalService;
-	}
+	@Reference
+	protected PrefsProps prefsProps;
 
-	@Reference(unbind = "-")
-	protected void setPrefsProps(PrefsProps prefsProps) {
-		_prefsProps = prefsProps;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSettingsFactory(SettingsFactory settingsFactory) {
-		_settingsFactory = settingsFactory;
-	}
+	@Reference
+	protected SettingsFactory settingsFactory;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		CASCompanySettingsVerifyProcess.class);
-
-	private CompanyLocalService _companyLocalService;
-	private PrefsProps _prefsProps;
-	private SettingsFactory _settingsFactory;
 
 }

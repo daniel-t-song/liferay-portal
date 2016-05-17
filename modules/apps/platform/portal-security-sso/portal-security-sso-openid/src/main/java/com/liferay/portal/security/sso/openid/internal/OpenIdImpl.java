@@ -47,7 +47,7 @@ public class OpenIdImpl implements OpenId {
 	public boolean isEnabled(long companyId) {
 		try {
 			OpenIdConfiguration openIdConfiguration =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					OpenIdConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, OpenIdConstants.SERVICE_NAME));
@@ -61,15 +61,9 @@ public class OpenIdImpl implements OpenId {
 		return false;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 	private static final Log _log = LogFactoryUtil.getLog(OpenIdImpl.class);
-
-	private ConfigurationProvider _configurationProvider;
 
 }

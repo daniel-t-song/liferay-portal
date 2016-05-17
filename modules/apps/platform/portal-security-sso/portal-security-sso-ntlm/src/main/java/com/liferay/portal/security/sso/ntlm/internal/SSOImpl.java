@@ -52,7 +52,7 @@ public class SSOImpl implements SSO {
 	public boolean isLoginRedirectRequired(long companyId) {
 		try {
 			NtlmConfiguration ntlmConfiguration =
-				_configurationProvider.getConfiguration(
+				configurationProvider.getConfiguration(
 					NtlmConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, NtlmConstants.SERVICE_NAME));
@@ -76,15 +76,9 @@ public class SSOImpl implements SSO {
 		return false;
 	}
 
-	@Reference(unbind = "-")
-	protected void setConfigurationProvider(
-		ConfigurationProvider configurationProvider) {
-
-		_configurationProvider = configurationProvider;
-	}
+	@Reference
+	protected ConfigurationProvider configurationProvider;
 
 	private static final Log _log = LogFactoryUtil.getLog(SSOImpl.class);
-
-	private ConfigurationProvider _configurationProvider;
 
 }
