@@ -465,15 +465,9 @@ public class DBStore extends BaseStore {
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setDLContentLocalService(
-		DLContentLocalService dlContentLocalService) {
-
-		_dlContentLocalService = dlContentLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(DBStore.class);
 
+	@Reference
 	private DLContentLocalService _dlContentLocalService;
 
 }

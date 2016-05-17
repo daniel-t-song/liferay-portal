@@ -52,11 +52,6 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true)
 public class DBStoreRegistrator {
 
-	@Reference(unbind = "-")
-	public void setDBStore(DBStore dbStore) {
-		_dbStore = dbStore;
-	}
-
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		Dictionary<String, String> properties = new Hashtable<>();
@@ -103,7 +98,9 @@ public class DBStoreRegistrator {
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
+	@Reference
 	private Store _dbStore;
+
 	private ServiceRegistration<Store> _serviceRegistration;
 
 	/**
