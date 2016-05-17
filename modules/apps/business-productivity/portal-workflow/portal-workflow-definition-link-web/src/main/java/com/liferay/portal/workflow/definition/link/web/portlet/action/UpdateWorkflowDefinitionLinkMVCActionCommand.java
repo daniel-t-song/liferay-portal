@@ -74,16 +74,9 @@ public class UpdateWorkflowDefinitionLinkMVCActionCommand
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setWorkflowDefinitionLinkLocalService(
-		WorkflowDefinitionLinkLocalService workflowDefinitionLinkLocalService) {
-
-		_workflowDefinitionLinkLocalService =
-			workflowDefinitionLinkLocalService;
-	}
-
 	private static final String _PREFIX = "workflowDefinitionName@";
 
+	@Reference
 	private WorkflowDefinitionLinkLocalService
 		_workflowDefinitionLinkLocalService;
 
