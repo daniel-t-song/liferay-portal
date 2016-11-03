@@ -2397,7 +2397,7 @@ public class StringUtil {
 	 * <p>
 	 * <pre>
 	 * <code>
-	 * remove("red;blue;green;yellow", "blue", ";") returns "red;green;yellow;"
+	 * remove("red;blue;green;yellow", "blue", ";") returns "red;green;yellow"
 	 * remove("blue", "blue", ";") returns ""
 	 * remove("blue;", "blue", ";") returns ""
 	 * </code>
@@ -2417,10 +2417,6 @@ public class StringUtil {
 
 		if ((s == null) || (element == null) || (delimiter == null)) {
 			return null;
-		}
-
-		if (Validator.isNotNull(s) && !s.endsWith(delimiter)) {
-			s += delimiter;
 		}
 
 		String drd = delimiter.concat(element).concat(delimiter);
